@@ -52,27 +52,32 @@ export const Icon = (props: IIconProps) => {
         case 'map':
             return IconMap({size, color})
 
-
-        // FontAwesome
-        case "left" || "right" || 'heart' || 'envelop':
+        default:
+          // FontAwesome
+          // case "left" || "right" || 'heart' || 'envelop':
+          if (["left", "right", 'heart', 'envelop'].includes(name)) {
             if (name == "left") iconname = "chevron-left"
             else if (name == "right") iconname = "chevron-right"
             else if (name == "heart") iconname = "heart"
             else if (name == "envelop") iconname = "envelop-o"
             return <IconFontAwesome name={iconname} size={size} color={color} />;
-        
-        
-        // MaterialCommunityIcons
-        case 'busstop' || 'bus' || 'bell' || 'lock':
+          }
+          
+          // MaterialCommunityIcons
+          // case 'busstop' || 'bus' || 'bell' || 'lock':
+          if (['busstop', 'bus', 'bell', 'lock'].includes(name)) { 
             if (name == 'busstop') iconname = 'bus-stop-uncovered'
             else if (name == 'bus') iconname = 'bus-side'
             else if (name == 'bell') iconname = 'bell-circle'
             else if (name == 'lock') iconname = 'lock-outline'      
             
             return <IconMaterialCommunityIcons name={iconname} size={size} color={color} />;
-        
-        // Ionicons
-        case 'person' || 'personthin' || 'close' || 'location' || 'eyeshow' || 'eye-notshow' || 'back':
+          }
+
+
+          // Ionicons
+          // case 'person' || 'personthin' || 'close' || 'location' || 'eyeshow' || 'eye-notshow' || 'back':
+          if (['person' || 'personthin', 'close', 'location', 'eyeshow', 'eye-notshow', 'back'].includes(name)) { 
             if (name == 'person' || name == 'close') iconname = name
             else if (name == 'personthin') iconname = 'person-circle-outline'
             else if (name == 'location') iconname = 'location-outline'
@@ -81,23 +86,25 @@ export const Icon = (props: IIconProps) => {
             else if (name == 'back') iconname = 'arrow-back'
 
             return <IconIonicons name={iconname} size={size} color={color} />;
+          }
+          
         
-        
-        // Foundation
-        case 'target':
-            if (name == 'target') iconname = "target-two"
+          // Foundation
+          // case 'target':
+          if (name == 'target') { 
+            iconname = "target-two"
             return <IconFoundation name={iconname} size={size} color={color} />;
-
-        // MaterialIcons
-        case 'full' || 'fullexit':
+          }
+          
+          if (['full' || 'fullexit'].includes(name)) { 
             if (name == 'full') iconname = "fullscreen"
             else if (name == 'fullexit') iconname = "fullscreen-exit"
-
+    
             return <IconMaterialIcons name={iconname} size={size} color={color} />;
+          }
+          return <></>
 
-        default:
-            return <></>
-          break;
+
       }
 }
   

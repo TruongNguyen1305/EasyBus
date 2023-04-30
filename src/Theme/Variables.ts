@@ -8,6 +8,8 @@
 /**
  * Colors
  */
+
+
 export enum Colors {
   TRANSPARENT = "rgba(0,0,0,0)",
   INPUT_BACKGROUND = "#FFFFFF",
@@ -26,6 +28,9 @@ export enum Colors {
   SECONDARY40 = "#8ADBFF",
   SECONDARY20 = "#DDF0FF",
 
+  BLACK100 = 'black',
+  BLACK60 = '#666666',
+  BLACK30 = '#E4E4E4',
 
 
   SUCCESS = "#28a745",
@@ -59,21 +64,6 @@ export enum MetricsSizes {
   REGULAR = regular,
   LARGE = large,
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // export function Icon(size: Number, color: String): JSX.Element {
 
 

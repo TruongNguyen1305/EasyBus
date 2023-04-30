@@ -4,8 +4,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeContainer } from "@/Screens/Home";
 import { Icon } from "@/Theme/Icon/Icon";
 import { Colors, FontSize } from "@/Theme/Variables";
-const Tab = createBottomTabNavigator();
 
+const Tab = createBottomTabNavigator();
 // @refresh reset
 export const MainNavigator = () => {
 

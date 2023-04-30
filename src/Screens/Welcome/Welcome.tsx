@@ -6,8 +6,9 @@ import { Button } from "native-base";
 import { RootScreens } from "..";
 import LottieView from 'lottie-react-native';
 import { Colors } from '@/Theme/Variables';
+
 export const Welcome = (props: {
-onNavigate: (string: RootScreens) => void;
+  onNavigate: (string: RootScreens) => void;
 }) => {
   const animation = useRef(null);
   useEffect(() => {
@@ -37,7 +38,7 @@ onNavigate: (string: RootScreens) => void;
 
       <Text>{i18n.t(LocalizationKey.WELCOME)}</Text>
       <StatusBar style="auto" />
-      <Button onPress={() => props.onNavigate(RootScreens.MAIN)}>
+      <Button onPress={() => props.onNavigate(RootScreens.ONBOARDING)}>
         {i18n.t(LocalizationKey.START)}
       </Button>
     </View>

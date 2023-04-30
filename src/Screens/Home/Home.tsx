@@ -5,6 +5,8 @@ import { StatusBar } from "expo-status-bar";
 import { HStack, Spinner, Heading } from "native-base";
 import { User } from "@/Services";
 import { Icon } from "@/Theme/Icon/Icon";
+
+
 export interface IHomeProps {
   data: User | undefined;
   isLoading: boolean;
@@ -36,10 +38,10 @@ export const Home = (props: IHomeProps) => {
       <View style={{flexDirection: 'row'}}>
         <Text>Hello</Text>
         {
-            // Icon({name:'findroute', size:20 , color:'black'})
           < Icon name='findroute' size={20} color='black'/>
         }
       </View>
+
     </View>
   );
 };
