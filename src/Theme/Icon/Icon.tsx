@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { View } from "native-base";
 
-import Svg, { Circle, Rect, Path, G} from 'react-native-svg';
+import Svg, { Circle, Rect, Path, G, Defs, ClipPath} from 'react-native-svg';
 
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 
@@ -54,7 +54,11 @@ export const Icon = (props: IIconProps) => {
         case 'map':
             return IconMap({size, color})
         case 'vectorintro':
-          return VectorIntro({size, color})
+          return VectorIntro({ size, color })
+        case 'google':
+          return Google({ size, color })
+        case 'facebook':
+          return Facebook({size, color})
         default:
           // FontAwesome
           // case "left" || "right" || 'heart' || 'envelop':
@@ -80,7 +84,7 @@ export const Icon = (props: IIconProps) => {
 
           // Ionicons
           // case 'person' || 'personthin' || 'close' || 'location' || 'eyeshow' || 'eye-notshow' || 'back':
-          if (['person' || 'personthin', 'close', 'location', 'eyeshow', 'eye-notshow', 'back'].includes(name)) { 
+          if (['person', 'personthin', 'close', 'location', 'eyeshow', 'eye-notshow', 'back'].includes(name)) { 
             if (name == 'person' || name == 'close') iconname = name
             else if (name == 'personthin') iconname = 'person-circle-outline'
             else if (name == 'location') iconname = 'location-outline'
@@ -379,3 +383,66 @@ const VectorIntro = (props: ISvgProps) => (
     </Svg>
   </View>
 );
+
+const Google = (props: ISvgProps) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={props.size}
+    height={props.size}
+    viewBox="0 0 20 20"
+    xmlSpace="preserve"
+    {...props}
+    // width={props.size}
+    // height={props.size}
+    // viewBox="0 0 20 20"
+    // fill="none"
+    // xmlns="http://www.w3.org/2000/svg"
+    // {...props}
+  >
+    <G clipPath="url(#clip0_317_21007)">
+      <Path
+        d="M19.9895 10.1858C19.9895 9.36645 19.9214 8.76851 19.7742 8.14844H10.1992V11.8468H15.8195C15.7062 12.7658 15.0943 14.15 13.7346 15.08L13.7155 15.2038L16.7429 17.4957L16.9527 17.5161C18.8789 15.7777 19.9895 13.2198 19.9895 10.1858"
+        fill="#4285F4"
+      />
+      <Path
+        d="M10.1993 19.9322C12.9527 19.9322 15.2643 19.0463 16.9527 17.5183L13.7346 15.0822C12.8734 15.669 11.7176 16.0787 10.1993 16.0787C7.50242 16.0787 5.21352 14.3403 4.39759 11.9375L4.27799 11.9474L1.13003 14.3281L1.08887 14.4399C2.76588 17.6954 6.2106 19.9322 10.1993 19.9322Z"
+        fill="#34A853"
+      />
+      <Path
+        d="M4.39748 11.9383C4.18219 11.3182 4.05759 10.6538 4.05759 9.9673C4.05759 9.28073 4.18219 8.61638 4.38615 7.9963L4.38045 7.86424L1.19304 5.44531L1.08876 5.49379C0.397576 6.8447 0.000976562 8.36172 0.000976562 9.9673C0.000976562 11.5729 0.397576 13.0898 1.08876 14.4407L4.39748 11.9383"
+        fill="#FBBC05"
+      />
+      <Path
+        d="M10.1993 3.85336C12.1142 3.85336 13.406 4.66168 14.1425 5.33717L17.0207 2.59107C15.253 0.985496 12.9527 0 10.1993 0C6.21061 0 2.76588 2.23672 1.08887 5.49214L4.38626 7.99465C5.21352 5.59183 7.50243 3.85336 10.1993 3.85336"
+        fill="#EB4335"
+      />
+    </G>
+    <Defs>
+      <ClipPath>
+        <Rect width={20} height={20} fill="white" />
+      </ClipPath>
+    </Defs>
+  </Svg>
+)
+
+const Facebook = (props: ISvgProps) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={props.size}
+    height={props.size}
+    viewBox="0 0 20 20"
+    xmlSpace="preserve"
+    {...props}
+>
+  <Path
+    d="M9.99999 20C15.5228 20 20 15.5228 20 9.99999C20 4.47715 15.5228 0 9.99999 0C4.47715 0 0 4.47715 0 9.99999C0 15.5228 4.47715 20 9.99999 20Z"
+    fill="#1977F3"
+  />
+  <Path
+    d="M13.8921 12.8923L14.3351 10.001H11.5619V8.12506C11.5619 7.33474 11.9486 6.5627 13.1918 6.5627H14.4532V4.10172C14.4532 4.10172 13.3085 3.90625 12.2144 3.90625C9.93064 3.90625 8.43718 5.29002 8.43718 7.7974V10.001H5.89746V12.8923H8.43718V19.8801C8.94625 19.9602 9.46798 20.001 9.99955 20.001C10.5311 20.001 11.0528 19.9588 11.5619 19.8801V12.8923H13.8921Z"
+    fill="white"
+  />
+</Svg>
+)
+
+
