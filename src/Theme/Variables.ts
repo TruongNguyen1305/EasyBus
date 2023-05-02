@@ -45,10 +45,48 @@ export enum NavigationColors {
  * FontSize
  */
 export enum FontSize {
-  SMALL = 16,
-  REGULAR = 20,
-  LARGE = 40,
+  HEADLINE1 = 26,
+  HEADLINE2 = 20,
+  HEADLINE3 = 18,
+  HEADLINE4 = 16,
+
+  BODY_LARGE = 16,
+  BODY_SMALL = 14,
+  BODY_SMALL1 = 12,
+  BODY_SMALL2 = 10,
+
+  BUTTON_LARGE = 18,
+  BUTTON_NORMAL = 14,
+  BUTTON_SMALL = 12,
+  BUTTON_SMALL1 = 10,
+
+  SUBTITLES_NORMAL = 13,
+  SUBTITLES_SMALL = 12,
 }
+
+export enum FontWeight {
+  HEADLINE1 = '500',
+  HEADLINE2 = '500',
+  HEADLINE3 = '500',
+  HEADLINE4 = '500',
+
+  BODY_LARGE = '400',
+  BODY_SMALL = '400',
+  BODY_SMALL1 = '500',
+  BODY_SMALL2 = '500',
+
+  BUTTON_LARGE = '700',
+  BUTTON_NORMAL = '700',
+  BUTTON_SMALL = '700',
+  BUTTON_SMALL1 = '700',
+
+  SUBTITLES_NORMAL = '500',
+  SUBTITLES_SMALL = '500',
+}
+
+
+
+
 
 /**
  * Metrics Sizes
@@ -64,6 +102,9 @@ export enum MetricsSizes {
   REGULAR = regular,
   LARGE = large,
 }
+
+
+
 // export function Icon(size: Number, color: String): JSX.Element {
 
 

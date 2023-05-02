@@ -41,8 +41,7 @@ const data = [
 
 
 type OnboardingScreenNavigatorProps = NativeStackScreenProps<
-  RootStackParamList,
-  RootScreens.ONBOARDING
+  RootStackParamList
 >;
 
 export const Onboarding = ({navigation} : OnboardingScreenNavigatorProps) => {
@@ -103,6 +102,9 @@ export const Onboarding = ({navigation} : OnboardingScreenNavigatorProps) => {
                         >
                         </Button>
                     :
+                        <View style={{ width: '100%'}}>
+                        
+                            
                         <Button 
                         size="lg" style={{ width: '100%', height: 48, alignItems: 'center', justifyContent: 'center'}}
                         onPress={() => navigation.navigate(RootScreens.MAIN)}
@@ -116,6 +118,22 @@ export const Onboarding = ({navigation} : OnboardingScreenNavigatorProps) => {
                         borderColor={Colors.BLACK30}
                         > Bắt đầu
                         </Button>
+                            
+                        <Button 
+                        size="lg" style={{ width: '100%', height: 48, alignItems: 'center', justifyContent: 'center'}}
+                        onPress={() => navigation.navigate(RootScreens.AUTH)}
+                        _text={{        fontSize: 18,
+                            fontWeight: '800',
+                            textAlign: 'center',
+                            marginTop: -1
+                        }}
+                        borderWidth={1}
+                        bg={Colors.PRIMARY40}
+                        borderColor={Colors.BLACK30}
+                        > Đăng nhập
+                        </Button>
+
+                        </View>
                 }
 
                 {

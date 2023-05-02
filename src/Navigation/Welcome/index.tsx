@@ -6,20 +6,24 @@ import { StatusBar } from "native-base";
 import { Onboarding } from "@/Screens/Welcome/Onboarding";
 import { Intro } from "@/Screens/Welcome/Intro";
 
-const WelcomeStack = createNativeStackNavigator();
+export type WelcomeStackParamList = {
+    ['Intro']: undefined;
+    ['Onboarding']: undefined;
+}
 
+const WelcomeStack = createNativeStackNavigator<WelcomeStackParamList>();
 
 
 export const WelcomeContainer = ({ }) => {
     return (
         <WelcomeStack.Navigator screenOptions={{ headerShown: false }}>
             <WelcomeStack.Screen
-                name='Onboarding'
-                component={Onboarding}  
-            />
-            <WelcomeStack.Screen
                 name='Intro'
                 component={Intro}  
+            />
+            <WelcomeStack.Screen
+                name='Onboarding'
+                component={Onboarding}  
             />
         </WelcomeStack.Navigator>
     )

@@ -1,4 +1,3 @@
 import Slider from "./Slider";
-
-
-export { Slider }
+import ProgressIntro from "./ProgressIntro";
+export { Slider, ProgressIntro }
