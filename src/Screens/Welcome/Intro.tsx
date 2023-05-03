@@ -36,9 +36,8 @@ export const Intro = ({
     // animation.current?.play();
   }, []);
 
-  setInterval(() => setValue((value) => value<100 ? value + 1 : value), 100)
+  setInterval(() => setValue((value) => value<100 ? value + 20 : value), 100)
   
-  console.log('huhu')
   return (
     <View style = {styles.container}>
           

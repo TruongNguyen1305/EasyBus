@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { View } from "native-base";
 
-import Svg, { Circle, Rect, Path, G, Defs, ClipPath} from 'react-native-svg';
+import Svg, { Circle, Rect, Path, G, Defs, ClipPath, Image, Pattern} from 'react-native-svg';
 
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 
@@ -444,5 +444,3 @@ const Facebook = (props: ISvgProps) => (
   />
 </Svg>
 )
-
-

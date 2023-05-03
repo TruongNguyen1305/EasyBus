@@ -8,19 +8,19 @@ import { Colors, FontSize } from "@/Theme/Variables";
 const Tab = createBottomTabNavigator();
 // @refresh reset
 export const MainNavigator = () => {
-
   return (
     <Tab.Navigator
         screenOptions={{
             tabBarActiveTintColor: Colors.SECONDARY60,
             tabBarInactiveTintColor: 'black',
             tabBarActiveBackgroundColor: Colors.SECONDARY20,
-            tabBarStyle: {height: 60}
+            tabBarStyle: { height: 60 },
+            headerShown: false,
         }}
-    initialRouteName="Home"
+    initialRouteName="HomeContainer"
     >
       <Tab.Screen
-        name="Home"
+        name="HomeContainer"
         component={HomeContainer}
         options={{
             tabBarIcon: ({ color, focused }) => (
@@ -33,7 +33,6 @@ export const MainNavigator = () => {
             ),
         }}
       />
- 
       <Tab.Screen
         name="Payment"
         component={HomeContainer}

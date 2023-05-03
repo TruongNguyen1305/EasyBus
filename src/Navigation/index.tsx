@@ -26,7 +26,7 @@ const ApplicationNavigator = () => {
     <NavigationContainer
       theme={navTheme}
     >
-      {/* <StatusBar /> */}
+      <StatusBar />
       <RootStack.Navigator screenOptions={{ headerShown: false }} initialRouteName={RootScreens.WELCOME}>
         <RootStack.Screen
           name={RootScreens.WELCOME}

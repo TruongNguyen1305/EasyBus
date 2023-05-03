@@ -10,13 +10,27 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '@/Navigation/Auth';
 import LottieView from 'lottie-react-native';
 import ButtonEB from '@/Components/ButtonEB';
-
+import { RootScreens } from '..';
+import { RootStackParamList } from '@/Navigation';
+import { CompositeScreenProps } from '@react-navigation/native';
 
 type AuthScreenNavigatorProps = NativeStackScreenProps<
-    AuthStackParamList
+    AuthStackParamList,
+    'Login'
 >;
 
-export const Login = ({ navigation }: AuthScreenNavigatorProps) => {
+type RootScreenNavigatorProps = NativeStackScreenProps<
+    RootStackParamList,
+    RootScreens.AUTH
+    >
+
+type LoginScreenProps = CompositeScreenProps<
+    AuthScreenNavigatorProps,
+    RootScreenNavigatorProps
+>;
+
+
+export const Login = ({ navigation }: LoginScreenProps) => {
     const [data, setData] = useState({
         username: '',
         password: '',
@@ -83,7 +97,7 @@ export const Login = ({ navigation }: AuthScreenNavigatorProps) => {
                 </View>
             </View>
 
-            <ButtonEB title='Đăng nhập' onPress={() => alert(data.password + data.username)}/>
+            <ButtonEB title='Đăng nhập' onPress={() => navigation.navigate(RootScreens.MAIN)}/>
 
             <Text style={{
                 textAlign: 'center',
