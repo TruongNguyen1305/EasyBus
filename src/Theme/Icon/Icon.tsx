@@ -265,14 +265,14 @@ const IconFindRoute = (props: ISvgProps) => (
         xmlns="http://www.w3.org/2000/svg"
         width={props.size}
         height={props.size}
-        viewBox="0 0 20 20"
+        viewBox="0 0 22 22"
         xmlSpace="preserve"
         {...props}
     >
       <Path
         d="M19.5 1H2.5C1.67157 1 1 1.67157 1 2.5V19.5C1 20.3284 1.67157 21 2.5 21H19.5C20.3284 21 21 20.3284 21 19.5V2.5C21 1.67157 20.3284 1 19.5 1Z"
-        fill="black"
-        stroke={props.color}
+        fill={props.color}
+        stroke='black'
         strokeLinejoin="round"
       />
       <Path
@@ -284,13 +284,13 @@ const IconFindRoute = (props: ISvgProps) => (
       />
       <Path
         d="M6 14.5C7.33333 12.5697 8 11.2364 8 10.5C8 9.39543 7.10457 8.5 6 8.5C4.89543 8.5 4 9.39543 4 10.5C4 11.2364 4.66667 12.5697 6 14.5Z"
-        fill="black"
+        fill={props.color}
         stroke="white"
         strokeLinejoin="round"
       />
       <Path
         d="M16 10C17.3333 8.06971 18 6.73638 18 6C18 4.89543 17.1046 4 16 4C14.8954 4 14 4.89543 14 6C14 6.73638 14.6667 8.06971 16 10Z"
-        fill="black"
+        fill={props.color}
         stroke="white"
         strokeLinejoin="round"
       />
@@ -308,14 +308,14 @@ const IconMagnifying = (props: ISvgProps) => (
     >
       <Path
         d="M10.0169 19.0337C14.9967 19.0337 19.0337 14.9967 19.0337 10.0169C19.0337 5.03701 14.9967 1 10.0169 1C5.03701 1 1 5.03701 1 10.0169C1 14.9967 5.03701 19.0337 10.0169 19.0337Z"
-        fill="black"
-        stroke={props.color}
+        fill={props.color}
+        stroke='black'
         strokeLinejoin="round"
       />
       <G>
         <Path
           d="M13.0174 6.48595C12.2496 5.71809 11.1888 5.24316 10.017 5.24316C8.84533 5.24316 7.78452 5.71809 7.0166 6.48595"
-          fill="black"
+          fill={props.color}
         />
         <Path
           d="M13.0174 6.48595C12.2496 5.71809 11.1888 5.24316 10.017 5.24316C8.84533 5.24316 7.78452 5.71809 7.0166 6.48595"
@@ -325,10 +325,10 @@ const IconMagnifying = (props: ISvgProps) => (
         />
       </G>
       <G>
-        <Path d="M16.499 16.4995L20.9997 21.0001L16.499 16.4995Z" fill="black" />
+        <Path d="M16.499 16.4995L20.9997 21.0001L16.499 16.4995Z" fill="black"/>
         <Path
           d="M16.499 16.4995L20.9997 21.0001"
-          stroke={props.color}
+          stroke='black'
           strokeLinecap="round"
           strokeLinejoin="round"
         />

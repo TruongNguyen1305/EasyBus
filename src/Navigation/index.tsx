@@ -7,6 +7,7 @@ import { WelcomeContainer } from "./Welcome";
 import { RootScreens } from "@/Screens";
 import { Onboarding } from "@/Screens/Welcome/Onboarding";
 import { AuthContainer } from "./Auth";
+import { Colors } from "@/Theme/Variables";
 
 
 export type RootStackParamList = {
@@ -26,7 +27,9 @@ const ApplicationNavigator = () => {
     <NavigationContainer
       theme={navTheme}
     >
-      <StatusBar />
+      {/* <StatusBar hidden={false} backgroundColor={Colors.SECONDARY20}
+        translucent={false}
+      /> */}
       <RootStack.Navigator screenOptions={{ headerShown: false }} initialRouteName={RootScreens.WELCOME}>
         <RootStack.Screen
           name={RootScreens.WELCOME}
