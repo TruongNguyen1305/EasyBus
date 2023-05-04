@@ -16,9 +16,11 @@ interface IHeaderProps {
 }
 
 export default function Header(props: IHeaderProps) {
-    console.log(Dimensions.get('window').width, Dimensions.get('window').width / 3.5)
     return (
         <View style={{width:Dimensions.get('window').width, height: Dimensions.get('window').width / 3.5 + 36}}>
+            <View style={{ backgroundColor: Colors.SECONDARY20, height: 36, position:'relative', top:0}}>
+
+            </View>
             {
                 props.cover == '1' ?
                     <Image
@@ -28,7 +30,6 @@ export default function Header(props: IHeaderProps) {
                             zIndex: 5,
                             width: Dimensions.get('window').width,
                             height: Dimensions.get('window').width / 3.5,
-                            top: 36
                         }}
                     />
                     :
@@ -39,7 +40,6 @@ export default function Header(props: IHeaderProps) {
                             zIndex: 5,
                             width: Dimensions.get('window').width,
                             height: Dimensions.get('window').width / 3.5,
-                            top: 36
                         }}
                     />
             }
