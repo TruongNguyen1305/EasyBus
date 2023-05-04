@@ -26,7 +26,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
   console.log(nearbusOpen)
   return (
     <View style={styles.container}>
-      <Header cover={Status.COVER1} leftTitle="TP. Hồ Chí Minh" leftIconName="location" />
+      <Header cover={Status.COVER1} leftTitle="TP. Hồ Chí Minh" leftIconName="location" logoShow={true} />
       
       <View style={styles.options}>
         <TouchableOpacity style = {{width: '45%', alignItems:'center', justifyContent: 'center'}}>

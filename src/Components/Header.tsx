@@ -12,6 +12,7 @@ interface IHeaderProps {
     cover: Status,
     leftTitle: string,
     leftIconName: string,
+    logoShow: boolean,
 }
 
 export default function Header(props: IHeaderProps) {
@@ -42,16 +43,20 @@ export default function Header(props: IHeaderProps) {
                         }}
                     />
             }
-            <Image
-                source={require('@/../assets/logo.png')}
-                style={{
-                    position: 'absolute', zIndex: 5,
-                    width: 80,
-                    height: 62,
-                    bottom: 35,
-                    right: Dimensions.get('window').width / 2 - 40,
-                }}
-            />
+            {
+                props.logoShow &&
+                    <Image
+                        source={require('@/../assets/logo.png')}
+                        style={{
+                            position: 'absolute', zIndex: 5,
+                            width: 80,
+                            height: 62,
+                            bottom: 35,
+                            right: Dimensions.get('window').width / 2 - 40,
+                        }}
+                    />
+
+            }
             <View style={{
                 zIndex: 6, alignItems: 'center', position: 'absolute',
                 justifyContent: 'center', width: 40, height: 40,
@@ -71,7 +76,8 @@ export default function Header(props: IHeaderProps) {
                 <Icon name={props.leftIconName} size={14} color = 'black' />
                 <Text style={{
                     fontSize: FontSize.BODY_SMALL2,
-                    fontWeight: FontWeight.BODY_SMALL2
+                    fontWeight: FontWeight.BODY_SMALL2,
+                    marginLeft: 4
                 }}>{props.leftTitle}</Text>
             </View>
         </View>
