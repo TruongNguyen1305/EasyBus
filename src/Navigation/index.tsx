@@ -1,5 +1,4 @@
 import React from "react";
-import { StatusBar } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, DefaultTheme} from "@react-navigation/native";
 import { MainNavigator } from "./Main";
@@ -27,9 +26,7 @@ const ApplicationNavigator = () => {
     <NavigationContainer
       theme={navTheme}
     >
-      {/* <StatusBar hidden={false} backgroundColor={Colors.SECONDARY20}
-        translucent={false}
-      /> */}
+
       <RootStack.Navigator screenOptions={{ headerShown: false }} initialRouteName={RootScreens.WELCOME}>
         <RootStack.Screen
           name={RootScreens.WELCOME}

@@ -32,6 +32,10 @@ export enum Colors {
   BLACK60 = '#666666',
   BLACK30 = '#E4E4E4',
 
+  RED100 = 'red',
+  RED60 = '#FF5C5C',
+  RED30 = '#FF8080',
+
 
   SUCCESS = "#28a745",
   ERROR = "#dc3545",

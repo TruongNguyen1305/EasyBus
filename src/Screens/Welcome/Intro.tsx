@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { i18n, LocalizationKey } from "@/Localization";
 import { Text, StyleSheet, Dimensions } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { StatusBar } from "expo-status-bar"
+
 import { Button } from "native-base";
 import LottieView from 'lottie-react-native';
 import { Colors } from '@/Theme/Variables';
@@ -66,7 +67,7 @@ export const Intro = ({
       </View>
 
       <Text>{i18n.t(LocalizationKey.WELCOME)}</Text>
-      <StatusBar style="auto" />
+      <StatusBar style="auto" translucent={true} />
       <Button onPress={() => navigation.navigate('Onboarding')}>
         {i18n.t(LocalizationKey.START)}
       </Button>

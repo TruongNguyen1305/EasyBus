@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { View, StyleSheet, Text, Pressable, PanResponder } from "react-native";
+import { View, StyleSheet, Text, Pressable } from "react-native";
 import LottieView from 'lottie-react-native';
 import { Colors } from "@/Theme/Variables";
 import { Button } from "native-base";

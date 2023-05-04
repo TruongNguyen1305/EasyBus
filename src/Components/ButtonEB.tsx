@@ -15,8 +15,6 @@ export default function ButtonEB(props: IButtonProps) {
                 fontWeight: '700',
                 lineHeight: 18,
                 marginTop: 1
-                // textAlign: 'center',
-                // justifyContent: 'center',
             }}
             borderWidth={1}
             bg={Colors.PRIMARY40}

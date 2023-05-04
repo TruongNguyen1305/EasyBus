@@ -2,7 +2,7 @@ import { Progress, Box, Center } from "native-base";
 import { View } from "react-native";
 
 
-export interface IProgressProps {
+interface IProgressProps {
     value: number;
 }
 
