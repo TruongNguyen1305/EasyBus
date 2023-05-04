@@ -12,18 +12,18 @@ export default function Busstop(props: IBusstopProps) {
     return (
         <>
         <View style={{flexDirection:'row'}}>
-            <View style={{width:'10%'}}>
+            <View style={{width:'15%'}}>
                 <Icon name='busstop' size = {24} color = 'black' />
             </View>
 
             <View style={{
-                width: '80%'
+                width: '75%'
             }}>
                 <Text style={{
                     fontSize: FontSize.BUTTON_NORMAL, fontWeight: FontWeight.BUTTON_SMALL
                 }}>Đại học Bách Khoa - Cơ sở 2</Text>
                 <Text style={{
-                    fontSize: FontSize.BODY_SMALL, fontWeight: FontWeight.BODY_SMALL,
+                    fontSize: FontSize.BODY_SMALL, fontWeight: FontWeight.BODY_SMALL1,
                     color: Colors.BLACK60
                 }}
                 >Khu đô thị Đại học Quốc Gia TP. HCM,  Thủ Đức, TP. HCM</Text>
