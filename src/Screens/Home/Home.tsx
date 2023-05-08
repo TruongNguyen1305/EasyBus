@@ -29,7 +29,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
       <Header cover={Status.COVER1} leftTitle="TP. Hồ Chí Minh" leftIconName="location" logoShow={true} />
       
       <View style={styles.options}>
-        <TouchableOpacity style = {{width: '45%', alignItems:'center', justifyContent: 'center'}}>
+        <TouchableOpacity style = {{width: '45%', alignItems:'center', justifyContent: 'center'}} onPress={() => navigation.navigate('FindRoute', {status: 'FindRoute'})}>
             <Icon name='findroute' size={24} color={Colors.PRIMARY40} />
             <Text style={[styles.tbuttonsm, {marginTop: 6}]}>Tìm đường</Text>
         </TouchableOpacity>
@@ -38,7 +38,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
           <Divider bg={Colors.BLACK30} thickness="2" mx="2" orientation="vertical" height={'80%'} />
         </View>
 
-        <TouchableOpacity style={{ width: '45%', alignItems: 'center', justifyContent: 'center' }}>
+        <TouchableOpacity style={{ width: '45%', alignItems: 'center', justifyContent: 'center' }} onPress={() => navigation.navigate('FindRoute', { status: 'LookUp' })}>
           <Icon name = 'magnifying' size={24} color={Colors.PRIMARY40} />
           <Text style={[styles.tbuttonsm, {marginTop: 6}]}>Tra cứu</Text>
         </TouchableOpacity>

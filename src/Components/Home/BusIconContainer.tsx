@@ -19,7 +19,7 @@ export default function BusIconContainer(props: IBusIconContainerProps) {
             flexDirection: 'row', alignItems:'center',
             justifyContent: 'center',
             borderRadius: 20,
-            marginRight: 6,
+            marginHorizontal: 3,
             marginTop: 6
         }}>
             <Icon name='bus' size = {20} color = 'white' />

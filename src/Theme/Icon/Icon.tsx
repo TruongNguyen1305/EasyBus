@@ -72,11 +72,13 @@ export const Icon = (props: IIconProps) => {
           
           // MaterialCommunityIcons
           // case 'busstop' || 'bus' || 'bell' || 'lock':
-          if (['busstop', 'bus', 'bell', 'lock'].includes(name)) { 
+          if (['busstop', 'bus', 'bell', 'lock', 'run', 'clock'].includes(name)) { 
             if (name == 'busstop') iconname = 'bus-stop-uncovered'
             else if (name == 'bus') iconname = 'bus-side'
             else if (name == 'bell') iconname = 'bell-circle'
-            else if (name == 'lock') iconname = 'lock-outline'      
+            else if (name == 'lock') iconname = 'lock-outline'
+            else if (name == 'run') iconname = 'run'      
+            else if (name == 'clock') iconname = 'clock-outline'   
             
             return <IconMaterialCommunityIcons name={iconname} size={size} color={color} />;
           }
@@ -84,13 +86,15 @@ export const Icon = (props: IIconProps) => {
 
           // Ionicons
           // case 'person' || 'personthin' || 'close' || 'location' || 'eyeshow' || 'eye-notshow' || 'back':
-          if (['person', 'personthin', 'close', 'location', 'eyeshow', 'eye-notshow', 'back'].includes(name)) { 
+        if (['person', 'personthin', 'close', 'location', 'eyeshow', 'eye-notshow', 'back', 'bus-sharp'].includes(name)) { 
             if (name == 'person' || name == 'close') iconname = name
             else if (name == 'personthin') iconname = 'person-circle-outline'
             else if (name == 'location') iconname = 'location-outline'
             else if (name == 'eyeshow') iconname = 'ios-eye-outline'
             else if (name == 'eye-notshow') iconname = 'ios-eye-off-outline'
             else if (name == 'back') iconname = 'arrow-back'
+            else if (name == 'bus-sharp') iconname = 'bus-sharp'
+            
 
             return <IconIonicons name={iconname} size={size} color={color} />;
           }
