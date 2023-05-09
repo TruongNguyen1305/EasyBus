@@ -13,7 +13,8 @@ interface IHeaderProps {
     leftTitle: string,
     leftIconName: string,
     logoShow: boolean,
-    navigation?: any
+    navigation?: any,
+    isProfileScreen?: boolean
 }
 
 export default function Header(props: IHeaderProps) {
@@ -58,15 +59,20 @@ export default function Header(props: IHeaderProps) {
                     />
 
             }
-            <View style={{
-                zIndex: 6, alignItems: 'center', position: 'absolute',
-                justifyContent: 'center', width: 40, height: 40,
-                borderRadius: 40, backgroundColor: Colors.PRIMARY40,
-                top: 36, right: 0,
-                margin: 10
-            }}>
-                <Icon name='person' size={20} color = 'black'/>
-            </View>
+            
+            {props.isProfileScreen ? (
+                <></>
+            ) : (
+                <TouchableOpacity style={{
+                    zIndex: 6, alignItems: 'center', position: 'absolute',
+                    justifyContent: 'center', width: 40, height: 40,
+                    borderRadius: 40, backgroundColor: Colors.PRIMARY40,
+                    top: 36, right: 0,
+                    margin: 10
+                }}>
+                    <Icon name='person' size={20} color='black' />
+                </TouchableOpacity>
+            )}
 
 
             <TouchableOpacity style={{

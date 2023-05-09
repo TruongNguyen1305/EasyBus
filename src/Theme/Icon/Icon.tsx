@@ -62,12 +62,14 @@ export const Icon = (props: IIconProps) => {
         default:
           // FontAwesome
           // case "left" || "right" || 'heart' || 'envelop':
-          if (["left", "right", 'heart', 'envelop', 'location-arrow'].includes(name)) {
+        if (["left", "right", 'down', 'heart', 'envelop', 'location-arrow', 'calendar'].includes(name)) {
             if (name == "left") iconname = "chevron-left"
             else if (name == "right") iconname = "chevron-right"
+            else if (name == "down") iconname = "chevron-down"
             else if (name == "heart") iconname = "heart"
             else if (name == "envelop") iconname = "envelope-o"
             else if (name == "location-arrow") iconname = "location-arrow"
+            else if (name == "calendar") iconname = "calendar"
             return <IconFontAwesome name={iconname} size={size} color={color} />;
           }
           
@@ -88,7 +90,7 @@ export const Icon = (props: IIconProps) => {
 
           // Ionicons
           // case 'person' || 'personthin' || 'close' || 'location' || 'eyeshow' || 'eye-notshow' || 'back':
-        if (['person', 'personthin', 'close', 'location', 'eyeshow', 'eye-notshow', 'back', 'bus-sharp'].includes(name)) { 
+        if (['person', 'personthin', 'close', 'location', 'eyeshow', 'eye-notshow', 'back', 'bus-sharp', 'location-full', 'setting', 'mail','logout'].includes(name)) { 
             if (name == 'person' || name == 'close') iconname = name
             else if (name == 'personthin') iconname = 'person-circle-outline'
             else if (name == 'location') iconname = 'location-outline'
@@ -96,7 +98,10 @@ export const Icon = (props: IIconProps) => {
             else if (name == 'eye-notshow') iconname = 'ios-eye-off-outline'
             else if (name == 'back') iconname = 'arrow-back'
             else if (name == 'bus-sharp') iconname = 'bus-sharp'
-            
+            else if (name == "location-full") iconname = "location"
+            else if (name == "setting") iconname = "settings"
+            else if (name == "mail") iconname = "mail"
+            else if (name == "logout") iconname = "log-out"
 
             return <IconIonicons name={iconname} size={size} color={color} />;
           }
