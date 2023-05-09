@@ -62,23 +62,25 @@ export const Icon = (props: IIconProps) => {
         default:
           // FontAwesome
           // case "left" || "right" || 'heart' || 'envelop':
-          if (["left", "right", 'heart', 'envelop'].includes(name)) {
+          if (["left", "right", 'heart', 'envelop', 'location-arrow'].includes(name)) {
             if (name == "left") iconname = "chevron-left"
             else if (name == "right") iconname = "chevron-right"
             else if (name == "heart") iconname = "heart"
             else if (name == "envelop") iconname = "envelope-o"
+            else if (name == "location-arrow") iconname = "location-arrow"
             return <IconFontAwesome name={iconname} size={size} color={color} />;
           }
           
           // MaterialCommunityIcons
           // case 'busstop' || 'bus' || 'bell' || 'lock':
-          if (['busstop', 'bus', 'bell', 'lock', 'run', 'clock'].includes(name)) { 
+          if (['busstop', 'bus', 'bell', 'lock', 'run', 'clock','pause'].includes(name)) { 
             if (name == 'busstop') iconname = 'bus-stop-uncovered'
             else if (name == 'bus') iconname = 'bus-side'
             else if (name == 'bell') iconname = 'bell-circle'
             else if (name == 'lock') iconname = 'lock-outline'
             else if (name == 'run') iconname = 'run'      
-            else if (name == 'clock') iconname = 'clock-outline'   
+            else if (name == 'clock') iconname = 'clock-outline' 
+            else if (name == 'pause') iconname = 'pause' 
             
             return <IconMaterialCommunityIcons name={iconname} size={size} color={color} />;
           }

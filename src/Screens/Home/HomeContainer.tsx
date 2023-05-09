@@ -1,6 +1,7 @@
 import { Home } from "./Home";
 import {FindRoute} from "./FindRoute";
 import {HintRoutes} from "./HintRoutes";
+import { Guide } from "./Guide";
 import React, { useState, useEffect } from "react";
 import { useLazyGetUserQuery } from "@/Services";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -9,6 +10,7 @@ export type HomeStackParamList = {
   ["Home"]: { data: any; isLoading: boolean },
   ['FindRoute']: {status: string},
   ['HintRoutes']: undefined,
+  ['Guide']: undefined,
   ['FindBus']: undefined,
   ['FindBusStop']: undefined,
 }
@@ -42,6 +44,11 @@ export const HomeContainer = ():JSX.Element => {
       <HomeStack.Screen
         name="HintRoutes"
         component={HintRoutes}
+      />
+
+      <HomeStack.Screen
+        name="Guide"
+        component={Guide}
       />
       
     </HomeStack.Navigator>

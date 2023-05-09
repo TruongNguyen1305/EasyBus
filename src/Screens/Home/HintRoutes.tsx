@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { HomeStackParamList } from "./HomeContainer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Header, { Status } from "@/Components/Header";
@@ -65,14 +65,30 @@ export function HintRoutes({route, navigation}: HintRoutesNavigationProps) {
                  </Text>
 
                  <ScrollView showsVerticalScrollIndicator={false} style={styles.hints} >
-                    <Hint buses={[33, 99]}/>
-                    <Hint buses={[33, 99]} />
-                    <Hint buses={[33, 99]} />
-                    <Hint buses={[33, 99]} />
-                    <Hint buses={[33, 99]} />
-                    <Hint buses={[33, 99]} />
-                    <Hint buses={[33, 99]} />
-                    <Hint buses={[33, 99]} />
+                    <TouchableOpacity onPress={() => navigation.navigate('Guide')}>
+                        <Hint buses={[33, 99]}/>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => navigation.navigate('Guide')}>
+                        <Hint buses={[33, 99]} />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => navigation.navigate('Guide')}>
+                        <Hint buses={[33, 99]} />
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity onPress={() => navigation.navigate('Guide')}>
+                        <Hint buses={[33, 99]} />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => navigation.navigate('Guide')}>
+                        <Hint buses={[33, 99]} />
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity onPress={() => navigation.navigate('Guide')}>
+                        <Hint buses={[33, 99]} />
+                    </TouchableOpacity>
+                    
                  </ScrollView>
 
             </View>
