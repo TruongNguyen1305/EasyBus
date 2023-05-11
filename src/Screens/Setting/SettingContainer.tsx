@@ -2,11 +2,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { Setting } from "./Setting"
 import { Profile } from "./Profile"
 import { EditProfile } from "./EditProfile"
+import { User } from "@/Services"
 
 export type SettingStackParamList = {
     ['Setting']: undefined,
-    ['Profile']: undefined,
-    ['EditProfile']: undefined
+    ['Profile']: {user: User},
+    ['EditProfile']: { user: User }
 }
 
 const SettingStack = createNativeStackNavigator<SettingStackParamList>()

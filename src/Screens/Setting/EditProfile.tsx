@@ -8,6 +8,9 @@ import { Colors, FontSize, FontWeight } from "@/Theme/Variables";
 import { Button, Input, Select } from "native-base";
 import { useState } from "react";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useAppDispatch } from "@/Hooks/redux";
+import { useUpdateProfileMutation } from "@/Services";
+import { UPDATEUSER } from "@/Store/reducers";
 
 type EditProfileScreenNavigationProps = NativeStackScreenProps<
     SettingStackParamList,
@@ -15,30 +18,47 @@ type EditProfileScreenNavigationProps = NativeStackScreenProps<
 >
 
 export function EditProfile({route, navigation}: EditProfileScreenNavigationProps) {
+    const dispatch = useAppDispatch()
+    const [fetch, data] = useUpdateProfileMutation();
+    const {user} = route.params
     const [userInfo, setUserInfo] = useState({
-        firstName: 'Nguyen',
-        lastName: 'A',
-        gender: true,
-        birth: new Date(),
-        phone: '0123456789',
-        email: '123@gmail.com'
+        fullName: user.fullName,
+        gender: user.gender,
+        birth: user.birthdate ? new Date(user.birthdate) : new Date(),
+        phone: user.phone ? user.phone.replace('+84', '0') : undefined,
+        email: user.email
     })
 
     const [show, setShow] = useState(false)
     const [isDataChanged, setIsDataChanged] = useState(false)
 
-    const formatDate = (val: Date) => {
-        let fDate = val.getDate() + '/' + (val.getMonth() + 1) + '/' + val.getFullYear();
+    const formatDate = (date: Date) => {
+        let fDate = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
         return fDate
     }
 
-    const [date, setDate] = useState(formatDate(userInfo.birth))
+    const [date, setDate] = useState(userInfo.birth ? formatDate(userInfo.birth) : 'Chưa cập nhập')
 
     const handleSave = async () => {
+        try {
+            const payload = await fetch({
+                id: user.id,
+                email: userInfo.email,
+                fullName: userInfo.fullName,
+                gender: userInfo.gender,
+                phone: userInfo.phone ? '+84' + userInfo.phone.slice(1) : undefined,
+                birthdate: userInfo.birth
+            }).unwrap()
+            console.log(payload)
+
+            dispatch(UPDATEUSER({user: payload}))
+            setIsDataChanged(false)
+            alert('Thay đổi thành công')
+        } catch (error) {
+            alert('Invalid credentials')
+        }
         //call api
-        console.log(userInfo)
-        setIsDataChanged(false)
-        alert('Thay đổi thành công')
+        // console.log(userInfo)
     }
 
     const handleDataChanged = (key: string, value: any) => {
@@ -50,7 +70,7 @@ export function EditProfile({route, navigation}: EditProfileScreenNavigationProp
     }
 
     const handleConfirm = (selectedValue:any) => {
-        const currentDate = selectedValue || userInfo.birth
+        const currentDate = selectedValue || new Date(date)
         setShow(false)
         setUserInfo(prev => ({
             ...prev,
@@ -75,23 +95,17 @@ export function EditProfile({route, navigation}: EditProfileScreenNavigationProp
                 }}>
                     <Icon name="person" size={30} color='black' />
                 </View>
-                <Text style={{ fontSize: FontSize.HEADLINE4, fontWeight: FontWeight.HEADLINE4, marginTop: 6 }}>Nguyễn Văn A</Text>
+                <Text style={{ fontSize: FontSize.HEADLINE4, fontWeight: FontWeight.HEADLINE4, marginTop: 6 }}>{user.fullName}</Text>
             </View>
 
             <View style={{ marginTop: 100, width: '100%', alignItems: 'center' }}>
                 <View style={styles.profileItem}>
-                    <Text style={styles.label}>Họ</Text>
-                    <Input borderRadius={10} size="sm" value={userInfo.firstName} backgroundColor='white' w='60%'
-                        onChangeText={(val) => handleDataChanged('firstName', val)}
+                    <Text style={styles.label}>Tên</Text>
+                    <Input borderRadius={10} size="sm" value={userInfo.fullName} backgroundColor='white' w='60%'
+                        onChangeText={(val) => handleDataChanged('fullName', val)}
                     />
                 </View>
 
-                <View style={styles.profileItem}>
-                    <Text style={styles.label}>Tên</Text>
-                    <Input borderRadius={10} size="sm" value={userInfo.lastName} backgroundColor='white' w='60%' 
-                        onChangeText={(val) => handleDataChanged('lastName', val)}
-                    />
-                </View>
 
                 <View style={styles.profileItem}>
                     <Text style={styles.label}>Giới tính</Text>
@@ -125,6 +139,7 @@ export function EditProfile({route, navigation}: EditProfileScreenNavigationProp
                     <Text style={styles.label}>Số điện thoại</Text>
                     <Input borderRadius={10} size="sm" value={userInfo.phone} backgroundColor='white' w='60%' 
                         onChangeText={(val) => handleDataChanged('phone', val)}
+                        placeholder={userInfo.phone ? '' : 'Chưa cập nhập'}
                     />
                 </View>
 

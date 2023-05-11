@@ -91,7 +91,7 @@ export const MainNavigator = () => {
             ),
             tabBarLabel: ({ color, focused }) => (
                 <Text style={[styles.label, {color: color}]} >Thông tin</Text>
-            ),
+            )
         }}
       />
     </Tab.Navigator>

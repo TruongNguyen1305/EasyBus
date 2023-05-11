@@ -4,7 +4,7 @@ import { API } from "../base";
 export interface User {
   id: string;
   fullName: string
-  gender?: Boolean;
+  gender?: boolean;
   birthdate?: DateTime;
   phone?: string;
   email: string;
@@ -50,8 +50,29 @@ const userApi = API.injectEndpoints({
         body: credentials,
       }),
     }),
+
+    updateProfile: build.mutation<User, {
+      id: string,
+      email: string,
+      fullName: string,
+      phone?: string,
+      gender?: boolean,
+      birthdate?: Date
+    }>({
+      query: (credentials) => ({
+        url: `users/${credentials.id}`,
+        method: 'PATCH',
+        body: {
+          email: credentials.email,
+          fullName: credentials.fullName,
+          phone: credentials.phone,
+          gender: credentials.gender,
+          birthdate: credentials.birthdate
+        },
+      }),
+    }),
   }),
   overrideExisting: true,
 });
 
-export const { useLazyGetUserQuery, useSigninMutation, useSignupMutation } = userApi;
+export const { useLazyGetUserQuery, useSigninMutation, useSignupMutation, useUpdateProfileMutation } = userApi;

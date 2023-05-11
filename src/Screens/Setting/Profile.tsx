@@ -6,6 +6,7 @@ import { Status } from "@/Components/Header";
 import { Icon } from "@/Theme/Icon/Icon";
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables";
 import { Button } from "native-base";
+import { DateTime } from "i18n-js/typings";
 
 type ProfileScreenNavigationProps = NativeStackScreenProps<
     SettingStackParamList,
@@ -13,6 +14,12 @@ type ProfileScreenNavigationProps = NativeStackScreenProps<
 >
 
 export function Profile({route, navigation}: ProfileScreenNavigationProps) {
+    const {user} = route.params 
+    const formatDate = (date: string) => {
+        let d = new Date(date)
+        let fDate = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
+        return fDate
+    }
     return (
         <View style={styles.container}>
             <Header cover={Status.COVER2} leftTitle="Back" leftIconName="back" logoShow={false} navigation={navigation} isProfileScreen />
@@ -28,38 +35,45 @@ export function Profile({route, navigation}: ProfileScreenNavigationProps) {
                 }}>
                     <Icon name="person" size={30} color='black' />
                 </View>
-                <Text style={{ fontSize: FontSize.HEADLINE4, fontWeight: FontWeight.HEADLINE4, marginTop: 6 }}>Nguyễn Văn A</Text>
+                <Text style={{ fontSize: FontSize.HEADLINE4, fontWeight: FontWeight.HEADLINE4, marginTop: 6 }}>{user.fullName}</Text>
             </View>
 
             <View style={{ marginTop: 100, width: '100%', alignItems: 'center' }}>
                 <View style={styles.profileItem}>
-                    <Text style={styles.label}>Họ</Text>
-                    <Text style={styles.value}>Nguyễn</Text>
-                </View>
-
-                <View style={styles.profileItem}>
                     <Text style={styles.label}>Tên</Text>
-                    <Text style={styles.value}>A</Text>
+                    <Text style={styles.value}>{user.fullName}</Text>
                 </View>
 
                 <View style={styles.profileItem}>
                     <Text style={styles.label}>Giới tính</Text>
-                    <Text style={styles.value}>Nam</Text>
+                    {user.gender ? (
+                        <Text style={styles.value}>{user.gender ? 'Nam' : 'Nữ'}</Text>
+                    ) : (
+                        <Text style={styles.value}>Chưa cập nhập</Text>
+                    )}
                 </View>
 
                 <View style={styles.profileItem}>
                     <Text style={styles.label}>Ngày sinh</Text>
-                    <Text style={styles.value}>01/01/2000</Text>
+                    {user.birthdate ? (
+                        <Text style={styles.value}>{formatDate(user.birthdate.toString())}</Text>
+                    ) : (
+                        <Text style={styles.value}>Chưa cập nhập</Text>
+                    )}
                 </View>
                 
                 <View style={styles.profileItem}>
                     <Text style={styles.label}>Số điện thoại</Text>
-                    <Text style={styles.value}>0123456789</Text>
+                    {user.phone ? (
+                        <Text style={styles.value}>{user.phone.replace('+84', '0')}</Text>
+                    ) : (
+                        <Text style={styles.value}>Chưa cập nhập</Text>
+                    )}
                 </View>
 
                 <View style={styles.profileItem}>
                     <Text style={styles.label}>Email</Text>
-                    <Text style={styles.value}>123@gmail.com</Text>
+                    <Text style={styles.value}>{user.email}</Text>
                 </View>
             </View>
 
@@ -69,7 +83,7 @@ export function Profile({route, navigation}: ProfileScreenNavigationProps) {
                 marginTop: 10,
                 backgroundColor: Colors.PRIMARY40
             }}
-                onPress={()=>navigation.navigate('EditProfile')}
+                onPress={()=>navigation.navigate('EditProfile', {user})}
             >
                 <Text style={{fontSize: FontSize.BUTTON_LARGE, fontWeight: FontWeight.BUTTON_LARGE, color: 'white'}}>
                     Chỉnh sửa thông tin

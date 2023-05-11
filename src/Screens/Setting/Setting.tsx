@@ -5,93 +5,135 @@ import Header from "@/Components/Header";
 import { Status } from "@/Components/Header";
 import { Icon } from "@/Theme/Icon/Icon";
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables";
-import { useAppDispatch } from "@/Hooks/redux";
+import { useAppDispatch, useAppSelector } from "@/Hooks/redux";
 import { LOGOUT } from "@/Store/reducers";
 import { RootStackParamList } from "@/Navigation";
+import { RootScreens } from "..";
+import { CompositeScreenProps } from "@react-navigation/native";
+import { useEffect } from "react";
+import { Button } from "native-base";
+import { User } from "@/Services";
 
 
 type SettingScreenNavigationProps = NativeStackScreenProps<
     SettingStackParamList,
     'Setting'
 >
+
+type RootScreenNavigatorProps = NativeStackScreenProps<
+    RootStackParamList,
+    RootScreens.MAIN
+>
+
+type SettingScreenProps = CompositeScreenProps<
+    SettingScreenNavigationProps,
+    RootScreenNavigatorProps
+>;
  
 
-export function Setting({route, navigation}: SettingScreenNavigationProps) {
+export function Setting({ route, navigation }: SettingScreenProps) {
+    const {user} = useAppSelector(state => state.user)
     const dispatch = useAppDispatch()
+
+
     return (
         <View style={styles.container}>
             <Header cover={Status.COVER2} leftTitle="Thông tin" leftIconName="more" logoShow={false} isProfileScreen/>
 
-            <View style={styles.avatar}>
-                <View style={{
-                    width: 70,
-                    height: 70,
-                    borderRadius: 100,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: Colors.PRIMARY40
-                }}>
-                    <Icon name="person" size={30} color='black'/>
-                </View>
-                <Text style={{fontSize: FontSize.HEADLINE4, fontWeight: FontWeight.HEADLINE4, marginTop: 6}}>Nguyễn Văn A</Text>
-            </View>
-            
-            <View style={{marginTop: 100, width: '100%', alignItems: 'center'}}>
-                <TouchableOpacity style={styles.settingItem}
-                    onPress={()=>navigation.navigate('Profile')}
-                >
-                    <View style={{flexDirection: "row", alignItems: 'center'}}>
-                        <Icon name="person" size={24} color="black"/>
-                        <Text style={styles.settingTitle}>Thông tin cá nhân</Text>
+            {user ? (
+                <>
+                    <View style={styles.avatar}>
+                        <View style={{
+                            width: 70,
+                            height: 70,
+                            borderRadius: 100,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: Colors.PRIMARY40
+                        }}>
+                            <Icon name="person" size={30} color='black' />
+                        </View>
+                        <Text style={{ fontSize: FontSize.HEADLINE4, fontWeight: FontWeight.HEADLINE4, marginTop: 6 }}>{(user as User).fullName}</Text>
                     </View>
-                    <Icon name='right' size={24} color="black"/>
-                </TouchableOpacity>
 
-                <TouchableOpacity style={styles.settingItem}>
-                    <View style={{ flexDirection: "row", alignItems: 'center' }}>
-                        <Icon name="location-full" size={24} color="black" />
-                        <Text style={styles.settingTitle}>Địa điểm đã lưu</Text>
+                    <View style={{ marginTop: 100, width: '100%', alignItems: 'center' }}>
+                        <TouchableOpacity style={styles.settingItem}
+                            onPress={() => navigation.navigate('Profile', {user})}
+                        >
+                            <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                                <Icon name="person" size={24} color="black" />
+                                <Text style={styles.settingTitle}>Thông tin cá nhân</Text>
+                            </View>
+                            <Icon name='right' size={24} color="black" />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.settingItem}>
+                            <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                                <Icon name="location-full" size={24} color="black" />
+                                <Text style={styles.settingTitle}>Địa điểm đã lưu</Text>
+                            </View>
+                            <Icon name='right' size={24} color="black" />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.settingItem}>
+                            <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                                <Icon name="setting" size={24} color="black" />
+                                <Text style={styles.settingTitle}>Cài đặt</Text>
+                            </View>
+                            <Icon name='right' size={24} color="black" />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.settingItem}>
+                            <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                                <Icon name="location-full" size={24} color="black" />
+                                <Text style={styles.settingTitle}>Thay đổi khu vực</Text>
+                            </View>
+                            <Icon name='right' size={24} color="black" />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.settingItem}>
+                            <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                                <Icon name="mail" size={24} color="black" />
+                                <Text style={styles.settingTitle}>Gửi phản hồi</Text>
+                            </View>
+                            <Icon name='right' size={24} color="black" />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.settingItem}
+                            onPress={() => {
+                                dispatch(LOGOUT({}))
+                            }}
+                        >
+                            <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                                <Icon name="logout" size={24} color="black" />
+                                <Text style={styles.settingTitle}>Đăng xuất</Text>
+                            </View>
+                            <Icon name='right' size={24} color="black" />
+                        </TouchableOpacity>
+
                     </View>
-                    <Icon name='right' size={24} color="black" />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.settingItem}>
-                    <View style={{ flexDirection: "row", alignItems: 'center' }}>
-                        <Icon name="setting" size={24} color="black" />
-                        <Text style={styles.settingTitle}>Cài đặt</Text>
-                    </View>
-                    <Icon name='right' size={24} color="black" />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.settingItem}>
-                    <View style={{ flexDirection: "row", alignItems: 'center' }}>
-                        <Icon name="location-full" size={24} color="black" />
-                        <Text style={styles.settingTitle}>Thay đổi khu vực</Text>
-                    </View>
-                    <Icon name='right' size={24} color="black" />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.settingItem}>
-                    <View style={{ flexDirection: "row", alignItems: 'center' }}>
-                        <Icon name="mail" size={24} color="black" />
-                        <Text style={styles.settingTitle}>Gửi phản hồi</Text>
-                    </View>
-                    <Icon name='right' size={24} color="black" />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.settingItem}
-                    onPress={() => {
-                        dispatch(LOGOUT({}))
+                </>
+            ) : (
+                <Button size='lg'
+                    style={{
+                        backgroundColor: Colors.PRIMARY40,
+                        borderRadius: 10,
+                        marginTop: 200
                     }}
+                    onPress={() => navigation.navigate(RootScreens.AUTH)}
                 >
-                    <View style={{ flexDirection: "row", alignItems: 'center' }}>
-                        <Icon name="logout" size={24} color="black" />
-                        <Text style={styles.settingTitle}>Đăng xuất</Text>
-                    </View>
-                    <Icon name='right' size={24} color="black" />
-                </TouchableOpacity>
-
-            </View>
+                    <Text
+                        style = {{
+                            fontSize: FontSize.BUTTON_LARGE,
+                            fontWeight: FontWeight.BUTTON_LARGE,
+                            color: 'white'
+                        }}
+                    >
+                            Đăng nhập để tiếp tục
+                    </Text>
+                
+                </Button>
+            )}
         </View>
     );
 }

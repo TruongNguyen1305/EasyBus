@@ -17,9 +17,12 @@ const slice = createSlice({
         SETISUSED: (state, { payload: { } }) => {
             state.isUsedApp = true
         },
+        UPDATEUSER: (state, { payload: { user} }) => {
+            state.user = user
+        },
     },
 });
 
-export const { LOGIN, LOGOUT, SETISUSED } = slice.actions;
+export const { LOGIN, LOGOUT, SETISUSED, UPDATEUSER } = slice.actions;
 
 export const userReducers = slice.reducer;
