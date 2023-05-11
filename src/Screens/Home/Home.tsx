@@ -5,7 +5,7 @@ import { User } from "@/Services";
 import { Icon } from "@/Theme/Icon/Icon";
 import { HomeStackParamList } from "./HomeContainer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import MapView, {Marker, Polyline} from 'react-native-maps';
+import MapView, {Callout, Marker, Polyline} from 'react-native-maps';
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables";
 import { Divider, Pressable, ScrollView, StatusBar } from 'native-base';
 import Header from "@/Components/Header";
@@ -26,7 +26,6 @@ export interface IHomeProps {
 export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
   const { data, isLoading } = route.params;
   const [nearbusOpen, setNearbusOpen] = useState(false);
-  
   const [mapRegion, setMapRegion] = useState({
     latitude: 10.880035901459214,
     longitude: 106.80625226368548,
@@ -44,13 +43,16 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
             newBusStop.push(item)
           }
         })
-        setDataBusStop([...dataBusStop, ...newBusStop])
+        const prevlengt = dataBusStop.length
+        if (newBusStop.length > 0)
+          setDataBusStop([...dataBusStop, ...newBusStop])
+        console.log(prevlengt, [...dataBusStop, ...newBusStop].length)
+        
       })
       .catch(err => console.log(err)) 
   }, [mapRegion])
 
-  console.log(dataBusStop.length)
-  
+  console.log(mapRegion)
   return (
     <View style={styles.container}>
       <Header cover={Status.COVER1} leftTitle="TP. Hồ Chí Minh" leftIconName="location" logoShow={true} />
@@ -74,6 +76,9 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
         style={styles.map}
         region={mapRegion}
         onRegionChangeComplete={(region, details) => setMapRegion(region)}
+        showsUserLocation={true}
+        mapType="standard"
+        // showsBuildings={false}
       >
         {
           dataBusStop.map((item, index) => 
@@ -83,9 +88,15 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
                 latitude: item.Lat,
                 longitude: item.Lng,
               }}
-              title="Marker Title"
-              description="Marker Description"
-            /> 
+            >
+              <Callout>
+                <View style={{minWidth:200}}>
+                  <Text>{item.Code} - {item.Name}</Text>  
+                  <Text>{item.AddressNo}</Text> 
+                  <Text>{item.Routes}</Text>
+                </View>
+              </Callout>
+            </Marker>
           )
         
         
