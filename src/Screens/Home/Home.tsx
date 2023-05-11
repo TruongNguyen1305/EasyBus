@@ -1,16 +1,20 @@
 import { i18n, LocalizationKey } from "@/Localization";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from "react-native";
 import { User } from "@/Services";
 import { Icon } from "@/Theme/Icon/Icon";
 import { HomeStackParamList } from "./HomeContainer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import MapView from 'react-native-maps';
+import MapView, {Marker, Polyline} from 'react-native-maps';
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables";
 import { Divider, Pressable, ScrollView, StatusBar } from 'native-base';
 import Header from "@/Components/Header";
 import Busstop from "@/Components/Home/Busstop";
 import { Status } from "@/Components/Header";
+
+
+import axios from 'axios'
+
 type HomeScreenNavigationProps = NativeStackScreenProps<
   HomeStackParamList,
   'Home'
@@ -22,12 +26,34 @@ export interface IHomeProps {
 export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
   const { data, isLoading } = route.params;
   const [nearbusOpen, setNearbusOpen] = useState(false);
-  console.log('hehe')
-  console.log(nearbusOpen)
+  
+  const [mapRegion, setMapRegion] = useState({
+    latitude: 10.880035901459214,
+    longitude: 106.80625226368548,
+    latitudeDelta: 0.015,
+    longitudeDelta: 0.0121,
+  });
+  const [dataBusStop, setDataBusStop]  = useState<any[]>([])
+
+  useEffect(() => {
+    axios.get(`http://apicms.ebms.vn/businfo/getstopsinbounds/${mapRegion.longitude}/${mapRegion.latitude}/${mapRegion.longitude + mapRegion.longitudeDelta}/${mapRegion.latitude + mapRegion.latitudeDelta}`)
+      .then(res => {
+        const newBusStop : any[] = []
+        res.data.map((item: any) => {
+          if (!dataBusStop.includes(item)) {
+            newBusStop.push(item)
+          }
+        })
+        setDataBusStop([...dataBusStop, ...newBusStop])
+      })
+      .catch(err => console.log(err)) 
+  }, [mapRegion])
+
+  console.log(dataBusStop.length)
+  
   return (
     <View style={styles.container}>
       <Header cover={Status.COVER1} leftTitle="TP. Hồ Chí Minh" leftIconName="location" logoShow={true} />
-      
       <View style={styles.options}>
         <TouchableOpacity style = {{width: '45%', alignItems:'center', justifyContent: 'center'}} onPress={() => navigation.navigate('FindRoute', {status: 'FindRoute'})}>
             <Icon name='findroute' size={24} color={Colors.PRIMARY40} />
@@ -44,18 +70,55 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
         </TouchableOpacity>
       </View>
       
-      
       <MapView
-        // provider={PROVIDER_GOOGLE} // remove if not using Google Maps
         style={styles.map}
-        region={{
-          latitude: 10.880035901459214,
-          longitude:106.80625226368548,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.0121,
-        }}
+        region={mapRegion}
+        onRegionChangeComplete={(region, details) => setMapRegion(region)}
       >
+        {
+          dataBusStop.map((item, index) => 
+            <Marker
+              key={index}
+              coordinate={          {
+                latitude: item.Lat,
+                longitude: item.Lng,
+              }}
+              title="Marker Title"
+              description="Marker Description"
+            /> 
+          )
+        
+        
+        /* <Marker
+          key={1}
+          coordinate={          {
+            latitude: 37.8025259,
+            longitude: -122.4351431,
+          }}
+          title="Marker Title"
+          description="Marker Description"
+        /> */}
       </MapView>
+  {/* <Polyline
+    coordinates={[
+      {latitude: 37.8025259, longitude: -122.4351431},
+      {latitude: 37.7896386, longitude: -122.421646},
+      {latitude: 37.7665248, longitude: -122.4161628},
+      {latitude: 37.7734153, longitude: -122.4577787},
+      {latitude: 37.7948605, longitude: -122.4596065},
+      {latitude: 37.8025259, longitude: -122.4351431},
+    ]}
+    strokeColor="blue" // fallback for when `strokeColors` is not supported by the map-provider
+    strokeColors={[
+      '#7F0000',
+      '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
+      '#B24112',
+      '#E5845C',
+      '#238C23',
+      '#7F0000',
+    ]}
+    strokeWidth={6}
+  /> */}
       {
         nearbusOpen ?
           <View style={styles.listbusnear}>
@@ -73,7 +136,11 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
                 fontSize: FontSize.BODY_LARGE,
                 fontWeight: FontWeight.BUTTON_NORMAL,
                 top: 1
-              }}>Trạm dừng gần đây</Text>
+              }}>Trạm dừng gần đây 
+              </Text>
+              <Text> haha
+              {mapRegion.latitude + ' ' + mapRegion.longitude}
+              </Text>
               <Pressable onPress={() => setNearbusOpen(!nearbusOpen)}>
                 <Icon name='close' size={20} color='#334155' />
               </Pressable>

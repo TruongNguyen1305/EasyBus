@@ -1,0 +1,27 @@
+Lấy toàn bộ tuyến đường
+http://apicms.ebms.vn/businfo/getallroute
+
+Chỉ đường từ 2 địa điểm trên bản đồ
+http://apicms.ebms.vn/pathfinding/getpathbystop/10.773437850252716,106.70032167421596/10.776633479483133,106.68366730213165/2
+
+Chỉ đường từ 2 trạm
+http://apicms.ebms.vn/pathfinding/getpathbystop/6845/3157/2
+
+Lấy thông tin tuyến đường theo id
+http://apicms.ebms.vn/businfo/getroutebyid/1
+
+
+Lấy thông tin lượt đi và về của tuyến theo id
+http://apicms.ebms.vn/businfo/getvarsbyroute/1
+
+
+Lấy thông tin trạm dừng của tuyến đường. Số ở cuối 1: chặng đi, 2: chặng về
+http://apicms.ebms.vn/businfo/getstopsbyvar/1/1
+
+
+Lấy tọa độ các điểm của tuyến đường. Số ở cuối 1: chặng đi, 2: chặng về
+http://apicms.ebms.vn/businfo/getpathsbyvar/1/1
+
+
+Các trạm dừng trong khu vực:
+http://apicms.ebms.vn/businfo/getstopsinbounds/${lat1}/${long1}/${lat2}/${long2}
