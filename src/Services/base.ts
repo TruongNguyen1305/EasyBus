@@ -17,6 +17,7 @@ const baseQueryWithInterceptor = async (
   if (result.error && result.error.status === 401) {
     // here you can deal with 401 error
   }
+  // console.log(result)
   return result;
 };
 

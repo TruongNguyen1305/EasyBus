@@ -25,15 +25,15 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
             
             <View style={styles.modalContainer}>
                 <View style={styles.modalHeader}>
-                    <Icon name={status === 'FindRoute' ? 'findroute' : 'magnifying'} size={24} color={Colors.PRIMARY40} />
-                    <Text style={styles.title}>{status === 'FindRoute' ? 'Tìm đường' : 'Tra cứu'}</Text>
+                    <Icon name={status === 'FindRoute' ? 'findroute' : 'magnifying' } size={24} color={Colors.PRIMARY40} />
+                    <Text style={styles.title}>{status === 'FindRoute' ? 'Tìm đường' : 'Tra cứu'  }</Text>
                 </View>
 
                 <View style={{marginVertical: 5, width: '100%'}}>
                     <Divider thickness={2}  width='100%' bg={Colors.BLACK30} orientation="horizontal" />
                 </View>
 
-                {status === 'FindRoute' ? (
+                {status !== 'FindRoute' ? (
                     <>
                         <View style={styles.search}>
                             <Input placeholder="Nhập thông tin tuyến, trạm dừng" w='100%' bg={Colors.PRIMARY20} borderRadius={5}
