@@ -5,13 +5,19 @@ import Header from "@/Components/Header";
 import { Status } from "@/Components/Header";
 import { Icon } from "@/Theme/Icon/Icon";
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables";
+import { useAppDispatch } from "@/Hooks/redux";
+import { LOGOUT } from "@/Store/reducers";
+import { RootStackParamList } from "@/Navigation";
+
 
 type SettingScreenNavigationProps = NativeStackScreenProps<
     SettingStackParamList,
     'Setting'
 >
+ 
 
 export function Setting({route, navigation}: SettingScreenNavigationProps) {
+    const dispatch = useAppDispatch()
     return (
         <View style={styles.container}>
             <Header cover={Status.COVER2} leftTitle="Thông tin" leftIconName="more" logoShow={false} isProfileScreen/>
@@ -73,7 +79,11 @@ export function Setting({route, navigation}: SettingScreenNavigationProps) {
                     <Icon name='right' size={24} color="black" />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.settingItem}>
+                <TouchableOpacity style={styles.settingItem}
+                    onPress={() => {
+                        dispatch(LOGOUT({}))
+                    }}
+                >
                     <View style={{ flexDirection: "row", alignItems: 'center' }}>
                         <Icon name="logout" size={24} color="black" />
                         <Text style={styles.settingTitle}>Đăng xuất</Text>

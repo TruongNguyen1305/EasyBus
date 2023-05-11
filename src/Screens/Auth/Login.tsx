@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { Button, Pressable, Text, View } from "native-base";
-import { StyleSheet } from 'react-native'
+import { Alert, StyleSheet } from 'react-native'
 
 import { Input } from "native-base";
 import { Icon as IconNative } from 'native-base';
@@ -13,7 +13,7 @@ import ButtonEB from '@/Components/ButtonEB';
 import { RootScreens } from '..';
 import { RootStackParamList } from '@/Navigation';
 import { CompositeScreenProps } from '@react-navigation/native';
-import { useLazySigninQuery } from '@/Services';
+import { useSigninMutation } from '@/Services';
 import { useAppDispatch, useAppSelector } from '@/Hooks/redux';
 import { LOGIN } from '@/Store/reducers/user';
 
@@ -48,24 +48,20 @@ export const Login = ({ navigation }: LoginScreenProps) => {
         setIsShow(!isShow)
     }
 
-    // const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] =
-    //     useLazySigninQuery();
+    const [fetch, data] = useSigninMutation();
 
     const handleSubmit = async() => {
-        // fetchOne({
-        //     email: info.username,
-        //     password: info.password,
-        // })
-        // while (isFetching) {
-        //     //cc
-        // }
-        // if (error) {
-        //     alert('Invalid credentials')
-        // }
-        // else {
-        //     dispatch(LOGIN(data))
-        //     navigation.navigate(RootScreens.MAIN)
-        // }
+        try {
+            const payload = await fetch({
+                email: info.username,
+                password: info.password,
+            }).unwrap()
+
+            dispatch(LOGIN(payload))
+            navigation.navigate(RootScreens.MAIN)
+        } catch (error) {
+            alert('Invalid credentials')
+        }
     }
 
     console.log(isShow)

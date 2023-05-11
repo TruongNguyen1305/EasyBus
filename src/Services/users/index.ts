@@ -4,11 +4,11 @@ import { API } from "../base";
 export interface User {
   id: string;
   fullName: string
-  gender: Boolean;
-  birthdate: DateTime;
+  gender?: Boolean;
+  birthdate?: DateTime;
   phone?: string;
   email: string;
-  remainTickets: Ticket[];
+  remainTickets?: Ticket[];
   currentActiveTicket?: Ticket;
 }
 
@@ -28,7 +28,7 @@ const userApi = API.injectEndpoints({
       query: (id) => `users/${id}`,
     }),
 
-    signin: build.query<{ user: User, access_token: string}, {
+    signin: build.mutation<{ user: User, access_token: string}, {
       email: string,
       password: string
     }>({
@@ -39,7 +39,7 @@ const userApi = API.injectEndpoints({
       }),
     }),
 
-    signup: build.query<{ user: User, access_token: string }, {
+    signup: build.mutation<{ user: User, access_token: string }, {
       email: string,
       password: string,
       fullName: string,
@@ -54,4 +54,4 @@ const userApi = API.injectEndpoints({
   overrideExisting: true,
 });
 
-export const { useLazyGetUserQuery, useLazySigninQuery, useLazySignupQuery } = userApi;
+export const { useLazyGetUserQuery, useSigninMutation, useSignupMutation } = userApi;

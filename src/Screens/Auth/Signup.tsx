@@ -6,7 +6,7 @@ import { Input, Button, Checkbox} from 'native-base';
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables";
 import { Icon } from '@/Theme/Icon/Icon';
 import ButtonEB from '@/Components/ButtonEB';
-import { useLazySignupQuery } from '@/Services';
+import { useSignupMutation } from '@/Services';
 import { LOGIN } from '@/Store/reducers/user';
 import { useAppDispatch } from '@/Hooks/redux';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -47,19 +47,21 @@ export default function SignUp({ navigation }: SignupScreenProps){
     
     const animation = useRef(null)
 
-    // const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] =
-    //     useLazySignupQuery();
+    const [fetch, data] = useSignupMutation();
 
     const handleSubmit = async() => {
-        // fetchOne({
-        //     email: info.username,
-        //     password: info.password,
-        //     fullName: info.name
-        // })
-        // while (isFetching) {
-        //     //cc
-        // }
-        // console.log(data)
+        try {
+            const payload = await fetch({
+                email: info.username,
+                password: info.password,
+                fullName: info.name
+            }).unwrap()
+
+            dispatch(LOGIN(payload))
+            navigation.navigate(RootScreens.MAIN)
+        } catch (error) {
+            alert('Invalid credentials')
+        }
     }
     
     return (
