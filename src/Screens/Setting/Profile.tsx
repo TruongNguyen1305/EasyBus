@@ -7,6 +7,7 @@ import { Icon } from "@/Theme/Icon/Icon";
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables";
 import { Button } from "native-base";
 import { DateTime } from "i18n-js/typings";
+import { useAppSelector } from "@/Hooks/redux";
 
 type ProfileScreenNavigationProps = NativeStackScreenProps<
     SettingStackParamList,
@@ -14,7 +15,14 @@ type ProfileScreenNavigationProps = NativeStackScreenProps<
 >
 
 export function Profile({route, navigation}: ProfileScreenNavigationProps) {
-    const {user} = route.params 
+    const user = useAppSelector(state => state.user.user) || {
+        id: 'Chưa xác định',
+        fullName: 'Chưa xác định',
+        gender: true,
+        birthdate: new Date(),
+        phone: 'Chưa xác định',
+        email: 'Chưa xác định',
+    } 
     const formatDate = (date: string) => {
         let d = new Date(date)
         let fDate = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();

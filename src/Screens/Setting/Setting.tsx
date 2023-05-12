@@ -58,7 +58,7 @@ export function Setting({ route, navigation }: SettingScreenProps) {
 
                     <View style={{ marginTop: 100, width: '100%', alignItems: 'center' }}>
                         <TouchableOpacity style={styles.settingItem}
-                            onPress={() => navigation.navigate('Profile', {user})}
+                            onPress={() => navigation.navigate('Profile')}
                         >
                             <View style={{ flexDirection: "row", alignItems: 'center' }}>
                                 <Icon name="person" size={24} color="black" />

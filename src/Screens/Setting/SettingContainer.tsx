@@ -6,7 +6,7 @@ import { User } from "@/Services"
 
 export type SettingStackParamList = {
     ['Setting']: undefined,
-    ['Profile']: {user: User},
+    ['Profile']: undefined,
     ['EditProfile']: { user: User }
 }
 

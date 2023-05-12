@@ -11,6 +11,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useAppDispatch } from "@/Hooks/redux";
 import { useUpdateProfileMutation } from "@/Services";
 import { UPDATEUSER } from "@/Store/reducers";
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
 type EditProfileScreenNavigationProps = NativeStackScreenProps<
     SettingStackParamList,
@@ -31,6 +32,7 @@ export function EditProfile({route, navigation}: EditProfileScreenNavigationProp
 
     const [show, setShow] = useState(false)
     const [isDataChanged, setIsDataChanged] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const formatDate = (date: Date) => {
         let fDate = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
@@ -41,6 +43,7 @@ export function EditProfile({route, navigation}: EditProfileScreenNavigationProp
 
     const handleSave = async () => {
         try {
+            setLoading(true)
             const payload = await fetch({
                 id: user.id,
                 email: userInfo.email,
@@ -53,8 +56,10 @@ export function EditProfile({route, navigation}: EditProfileScreenNavigationProp
 
             dispatch(UPDATEUSER({user: payload}))
             setIsDataChanged(false)
+            setLoading(false)
             alert('Thay đổi thành công')
         } catch (error) {
+            setLoading(false)
             alert('Invalid credentials')
         }
         //call api
@@ -84,6 +89,20 @@ export function EditProfile({route, navigation}: EditProfileScreenNavigationProp
         <View style={styles.container}>
             <Header cover={Status.COVER2} leftTitle="Back" leftIconName="back" logoShow={false} navigation={navigation} isProfileScreen />
 
+            <Spinner
+                //visibility of Overlay Loading Spinner
+                visible={loading}
+                //Text with the Spinner
+                textContent={'Loading...'}
+                //Text style of the Spinner Text
+                textStyle={{
+                    fontSize: FontSize.HEADLINE2,
+                    fontWeight: FontWeight.HEADLINE2,
+                    color: 'white'
+                }}
+            />
+
+        
             <View style={styles.avatar}>
                 <View style={{
                     width: 70,

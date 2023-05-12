@@ -24,17 +24,19 @@ export const HomeContainer = ():JSX.Element => {
   const [userId, setUserId] = useState("9");
 
   const {user, isUsedApp} = useAppSelector(state => state.user)
-  console.log(user, isUsedApp)
-  if(!isUsedApp){
-    dispatch(SETISUSED({}))
-  }
+  
+  
 
   const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] =
     useLazyGetUserQuery();
 
   useEffect(() => {
-    fetchOne(userId);
-  }, [fetchOne, userId]);
+    //fetchOne(userId);
+    console.log(user, isUsedApp)
+    if (!isUsedApp) {
+      dispatch(SETISUSED({}))
+    }
+  }, []);
 
   return (
     <HomeStack.Navigator screenOptions={{ headerShown: false }}>
