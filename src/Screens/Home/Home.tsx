@@ -11,6 +11,8 @@ import { Divider, Pressable, ScrollView } from 'native-base';
 import Header from "@/Components/Header";
 import Busstop from "@/Components/Home/Busstop";
 import { Status } from "@/Components/Header";
+import { debounce } from 'lodash';
+import * as Location from 'expo-location';
 
 
 import axios from 'axios'
@@ -25,86 +27,64 @@ export interface IHomeProps {
 }
 export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
   const { data, isLoading } = route.params;
-  const [loading, setLoading] = useState(false)
+  const [openHeader, setOpenHeader] = useState(true)
   const [nearbusOpen, setNearbusOpen] = useState(false);
-  const [busStopInView, setBusStopInView] = useState<any[]>([])
-  
   const [mapRegion, setMapRegion] = useState({
     latitude: 10.880035901459214,
     longitude: 106.80625226368548,
     latitudeDelta: 0.015,
     longitudeDelta: 0.0121,
   });
-  const [dataBusStop, setDataBusStop]  = useState<any[]>([])
+  const [dataBusStop, setDataBusStop] = useState<any[]>([])  
+  const [location, setLocation] = useState(null);
 
-  const getDataBusTop = async () => { 
-    setLoading(true)
+  useEffect(() => {
+    (async () => {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Permission to access location was denied');
+        return;
+      }
+
+      let location : any = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
+
+
+  const getDataBusTop = async () => {
     axios.get(`http://apicms.ebms.vn/businfo/getstopsinbounds/${mapRegion.longitude - mapRegion.longitudeDelta}/${mapRegion.latitude - mapRegion.latitudeDelta}/${mapRegion.longitude + mapRegion.longitudeDelta}/${mapRegion.latitude + mapRegion.latitudeDelta}`)
       .then(res => {
-        // const newBusStop: any[] = []
-        // res.data.map((item: any) => {
-        //   if (!dataBusStop.includes(item)) {
-        //     newBusStop.push(item)
-        //   }
-        // })
-        // const prevlengt = dataBusStop.length
-        // if (newBusStop.length > 0)
-        //   setDataBusStop([...dataBusStop, ...newBusStop])
-        // console.log(prevlengt, [...dataBusStop, ...newBusStop].length)
-        
-        
         setDataBusStop(res.data)
-        setLoading(false)
       })
       .catch(err => console.log(err)) 
-}
+    }
+
   useEffect(() => {
     getDataBusTop()
   }, [])
-
-  
-
-
-
+  console.log(location)
+  // console.log(mapRegion)
   return (
     <View style={styles.container}>
-      <Header cover={Status.COVER1} leftTitle="TP. Hồ Chí Minh" leftIconName="location" logoShow={true} />
-
-      <View style={styles.options}>
-        <TouchableOpacity style = {{width: '45%', alignItems:'center', justifyContent: 'center'}} onPress={() => navigation.navigate('FindRoute', {status: 'FindRoute'})}>
-            <Icon name='findroute' size={24} color={Colors.PRIMARY40} />
-            <Text style={[styles.tbuttonsm, {marginTop: 6}]}>Tìm đường</Text>
-        </TouchableOpacity>
-        
-        <View style = {{height:'100%', alignItems:'center', justifyContent:'center'}}>
-          <Divider bg={Colors.BLACK30} thickness="2" mx="2" orientation="vertical" height={'80%'} />
-        </View>
-
-        <TouchableOpacity style={{ width: '45%', alignItems: 'center', justifyContent: 'center' }} onPress={() => navigation.navigate('FindRoute', { status: 'LookUp' })}>
-          <Icon name = 'magnifying' size={24} color={Colors.PRIMARY40} />
-          <Text style={[styles.tbuttonsm, {marginTop: 6}]}>Tra cứu</Text>
-        </TouchableOpacity>
-
-       
-      </View>
-
-
-      <MapView
+    <MapView
         style={styles.map}
         region={mapRegion}
-        onRegionChangeComplete={(region, details) => { 
-          if(region.latitude.toFixed(6) == mapRegion.latitude.toFixed(6)
-          && region.longitude.toFixed(6) == mapRegion.longitude.toFixed(6) ){
-            return;
-          }
-          // console.log('no bi zo cai nay ne')
-          setMapRegion(region)
-          getDataBusTop()
-          }
-        } 
-        // showsUserLocation={true}
-        // mapType="standard"
-        // showsBuildings={false}
+        // moveOnMarkerPress = {false}
+        onRegionChangeComplete={debounce(
+          (region, details) => { 
+            if((region.latitude.toFixed(6) == mapRegion.latitude.toFixed(6)
+            && region.longitude.toFixed(6) == mapRegion.longitude.toFixed(6))){
+              return;
+            }
+            // console.log('no bi zo cai nay ne')
+              setMapRegion(region)
+              getDataBusTop()
+          }, 300)
+        }
+        showsUserLocation={true}
         customMapStyle={[
           {
             "featureType": "poi.business",
@@ -143,6 +123,12 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
         ]}
       >
         {
+          location &&
+          <Marker
+            coordinate={{latitude: location.latitude, longitude: location.longitude}}
+          />
+        }
+        {
           dataBusStop.map((item, index) => 
             <Marker
               key={index}
@@ -153,50 +139,65 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
               tracksViewChanges={false}
               image={require('@/../assets/image/markicon-bus.png')}
             >
-              <Callout>
-                <View style={{maxWidth:200}}>
-                  <Text style={{fontSize: 13, fontWeight: 700}}>{item.Code} - {item.Name}</Text>  
+              <Callout style={{width: 200}}>
+                  <Text style={{fontSize: 13, fontWeight: '700'}}>{item.Code} - {item.Name}</Text>  
                   <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
-                  <Text style={{fontSize: 12, fontWeight: 600}}>Tuyến xe: {item.Routes}</Text>
-                </View>
+                  <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes}</Text>
               </Callout>
             </Marker>
           )
-        
-        
-        /* <Marker
-          key={1}
-          coordinate={          {
-            latitude: 37.8025259,
-            longitude: -122.4351431,
-          }}
-          title="Marker Title"
-          description="Marker Description"
-        /> */}
+        }
       </MapView>
-  
+      
+              {/* <Callout style={{maxWidth: 200}}>
+                  <Text style={{fontSize: 13, fontWeight: '700'}}>{item.Code} - {item.Name}</Text>  
+                  <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
+                  <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes}</Text>
+              </Callout> */}
+            {/* </Marker> */}
       {
+        openHeader ? (
+          <>
+            <Header cover={Status.COVER1} leftTitle="TP. Hồ Chí Minh" leftIconName="location" logoShow={true} rightIconName="up"
+              onPressRightIcon={() => setOpenHeader(!openHeader)}
+            />
+
+            <View style={styles.options}>
+              <TouchableOpacity style = {{width: '45%', alignItems:'center', justifyContent: 'center'}} onPress={() => navigation.navigate('FindRoute', {status: 'FindRoute'})}>
+                  <Icon name='findroute' size={24} color={Colors.PRIMARY40} />
+                  <Text style={[styles.tbuttonsm, {marginTop: 6}]}>Tìm đường</Text>
+              </TouchableOpacity>
+              
+              <View style = {{height:'100%', alignItems:'center', justifyContent:'center'}}>
+                <Divider bg={Colors.BLACK30} thickness="2" mx="2" orientation="vertical" height={'80%'} />
+              </View>
+
+              <TouchableOpacity style={{ width: '45%', alignItems: 'center', justifyContent: 'center' }} onPress={() => navigation.navigate('FindRoute', {status: 'LookUp'})}>
+          <Icon name = 'magnifying' size={24} color={Colors.PRIMARY40} />
+          <Text style={[styles.tbuttonsm, {marginTop: 6}]}>Tra cứu</Text>
+        </TouchableOpacity>
+
+            </View>
+          </>
+        ) : (
+          <TouchableOpacity style={{
+            zIndex: 6, alignItems: 'center', position: 'absolute',
+            justifyContent: 'center', width: 40, height: 40,
+            borderRadius: 40, backgroundColor: Colors.PRIMARY40,
+            top: 36, right: 0,
+            margin: 10
+          }}
+            onPress={() => {setOpenHeader(!openHeader)}}
+          >
+            {
+              <View style={{top: -2}}>
+                  <Icon name={'down'} size={20} color='black' />
+              </View>
+            }     
+        </TouchableOpacity>
+        )
       }
-      {/* <Polyline
-    coordinates={[
-      {latitude: 37.8025259, longitude: -122.4351431},
-      {latitude: 37.7896386, longitude: -122.421646},
-      {latitude: 37.7665248, longitude: -122.4161628},
-      {latitude: 37.7734153, longitude: -122.4577787},
-      {latitude: 37.7948605, longitude: -122.4596065},
-      {latitude: 37.8025259, longitude: -122.4351431},
-    ]}
-    strokeColor="blue" // fallback for when `strokeColors` is not supported by the map-provider
-    strokeColors={[
-      '#7F0000',
-      '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
-      '#B24112',
-      '#E5845C',
-      '#238C23',
-      '#7F0000',
-    ]}
-    strokeWidth={6}
-  /> */}
+
       {
         nearbusOpen ?
           <View style={styles.listbusnear}>
@@ -269,8 +270,9 @@ const styles = StyleSheet.create({
   },
   map: {
     width: '100%',
-    height: Dimensions.get('window').height - (Dimensions.get('window').width / 3.5 + 36) ,
-    // position: 'relative',
+    height: '100%',
+    position: 'absolute',
+    zIndex: 0
   },
   tbuttonsm: {
     fontSize: FontSize.BUTTON_NORMAL,

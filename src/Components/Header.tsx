@@ -15,6 +15,8 @@ interface IHeaderProps {
     logoShow: boolean,
     navigation?: any,
     isProfileScreen?: boolean
+    rightIconName?: string,
+    onPressRightIcon?: () => void,
 }
 
 export default function Header(props: IHeaderProps) {
@@ -69,12 +71,22 @@ export default function Header(props: IHeaderProps) {
                     borderRadius: 40, backgroundColor: Colors.PRIMARY40,
                     top: 36, right: 0,
                     margin: 10
-                }}>
-                    <Icon name='person' size={20} color='black' />
+                }}
+                        onPress={() => {
+                            if (props.onPressRightIcon) props.onPressRightIcon()
+                        }}
+                    >
+                    {
+                        props.rightIconName ? (
+                            <View style={{top: -2}}>
+                                <Icon name={props.rightIconName || 'person'} size={20} color='black' />
+                            </View>
+                        ) : (
+                            <Icon name='person' size={20} color='black' />
+                        )    
+                    }     
                 </TouchableOpacity>
             )}
-
-
             <TouchableOpacity style={{
                 zIndex: 6, alignItems: 'center', position: 'absolute', flexDirection: 'row',
                 backgroundColor: Colors.PRIMARY40, padding: 4,
