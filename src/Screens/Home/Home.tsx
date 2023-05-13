@@ -72,7 +72,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
     
   const user = useAppSelector(state => state.user.user)
 
-  console.log(user)
+  // console.log(user)
   const getDataBusTop = async () => {
     axios.get(`http://apicms.ebms.vn/businfo/getstopsinbounds/${mapRegion.longitude - mapRegion.longitudeDelta}/${mapRegion.latitude - mapRegion.latitudeDelta}/${mapRegion.longitude + mapRegion.longitudeDelta}/${mapRegion.latitude + mapRegion.latitudeDelta}`)
       .then(res => {
@@ -313,7 +313,9 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
               </TouchableOpacity>
               <TouchableOpacity style = {{width: '40%', alignItems:'center', padding: 10,
                 borderRadius:4, borderWidth:1, borderColor: Colors.BLACK60
-            }}>
+            }}
+                onPress={() => navigation.navigate('FindRoute', { status: 'FindRoute', target: modal.data })}
+            >
                   <Icon name='findroute' size={24} color={Colors.PRIMARY40} />
               </TouchableOpacity>
             </View>

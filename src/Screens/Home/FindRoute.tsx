@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Dimensions, FlatList } from "react-native";
 import { HomeStackParamList } from "./HomeContainer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Header, { Status } from "@/Components/Header";
@@ -10,35 +10,62 @@ import Busstop from "@/Components/Home/Busstop";
 import { TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { debounce } from "lodash";
+import { debounce, set } from "lodash";
 import BusSearchItem from "@/Components/Home/BusSearchItem";
 import { useAppDispatch, useAppSelector } from "@/Hooks/redux";
 import { CLEAR_HISTORY, UPDATE_HISTORY } from "@/Store/reducers";
+import * as Location from 'expo-location';
+
+
 type FindRouteNavigationProps = NativeStackScreenProps<
     HomeStackParamList,
     'FindRoute'
 >
 export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
     const { historySearch } = useAppSelector(state => state.user)
-    // const [fetch, setFetch] = useState(false)
-    // console.log(historySearch, 'ccccc')
     const dispatch = useAppDispatch()
     const [status, setStatus] = useState(route.params.status)
     const [busData, setBusData] = useState<any[]>([])
     const [resultData, setResultData] = useState<any[]>([])
     const [input, setInput] = useState('')
 
+    //Find route part
+    const [location, setLocation] = useState<any>()
+
+    const [startInput, setStartInput] = useState("")
+    const [startData, setStartData] = useState<any>()
+
+    const [targetInput, setTargetInput] = useState(route.params.target ? route.params.target.Name : "")
+    const [targetData, setTargetData] = useState<any>()
+
+    const [isStartInputFocused, setIsStartInputFocused] = useState(false)
+
 
     useEffect(() => {
-        const fetchBusData = async () => {
-            axios.get('http://apicms.ebms.vn/businfo/getallroute')
+        const fetchBusData =  async () => {
+            let endpoint = route.params.status === 'LookUp' ? "getallroute" : "getstopsinbounds/106/10/107/11"
+            axios.get(`http://apicms.ebms.vn/businfo/${endpoint}`)
                 .then(res => setBusData(res.data))
                 .catch(err => console.log(err))
         }
+        const fetchLocation = async () => {
+            const { status } = await Location.getForegroundPermissionsAsync()
+            if (status === Location.PermissionStatus.GRANTED) {
+                let location = await Location.getCurrentPositionAsync({});
+                setLocation(location);
+                setStartInput('Vị trí hiện tại')
+                setStartData({
+                    name: "Vị trí hiện tại",
+                    latitude: location.coords.latitude,
+                    longtitude: location.coords.longitude
+                })
+            }
+        }
         fetchBusData()
+        fetchLocation()
     }, [])
 
-    const handleChangeSearchText = (text: string) => { 
+    const handleChangeSearchText = route.params.status === "LookUp" ? (text: string) => { 
         setInput(text)
         if(text === ""){
             setResultData([])
@@ -59,9 +86,46 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
 
         })
         setResultData(newResult)
+    } : (text: string) => {
+        if(isStartInputFocused){
+            setStartInput(text)
+        }
+        else{
+            setTargetInput(text)
+        }
+        if (text === "") {
+            setResultData([])
+            return
+        }
+        const newResult: any[] = []
+
+        busData && busData.map((item, index) => {
+            if (item.Search.includes(text)) {
+                newResult.unshift(item)
+            }
+            else {
+                const curStr = item.Name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                if (curStr.includes(text) || item.Name.includes(text)) {
+                    newResult.push(item)
+                }
+            }
+
+        })
+        setResultData(newResult)
     }
 
-    console.log(input, resultData)
+    const handleFindRoute = async () => {
+        console.log(startData)
+        console.log(targetData)
+        navigation.navigate('HintRoutes', {
+            startData,
+            targetData
+        })
+    }
+
+    
+
+    // console.log(input, resultData)
     
     return ( 
         <View style={styles.container}> 
@@ -165,37 +229,96 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                         </ScrollView>
                     </>
                 ) : (
-                    <View style={styles.form}>
-                        <Input marginTop={2} size='sm' placeholder="Chọn nơi xuất phát" w='100%' bg={Colors.PRIMARY20} borderRadius={5}
-                            InputLeftElement={
-                                <View style={{ flexDirection: 'row', marginLeft: 8 }}>
-                                    <Text style={styles.inputTitle}>Đi từ</Text>
-                                    <Icon name='target' size={22} color={Colors.PRIMARY40} />
-                                </View>
-                            }
-                        />
-
-                        <Input marginTop={2} size='sm' placeholder="Chọn điểm đến" w='100%' bg={Colors.PRIMARY20} borderRadius={5}
-                            InputLeftElement={
-                                <View style={{ flexDirection: 'row', marginLeft: 8 }}>
-                                    <Text style={styles.inputTitle}>Đến</Text>
-                                    <Icon name='location' size={22} color={Colors.PRIMARY40} />
-                                </View>
-                            }
-                        />
-
-                        <Button style={styles.submitBtn}
-                            onPress={() => navigation.navigate('HintRoutes')}
-                        >
-                            <Text 
-                                style={{color: "white", 
-                                    fontSize: FontSize.BUTTON_NORMAL, 
-                                    fontWeight: FontWeight.BUTTON_NORMAL}}
+                    <>
+                        <View style={styles.form}>
+                            <Input marginTop={2} size='sm' placeholder="Chọn điểm xuất phát" w='100%' bg={Colors.PRIMARY20} borderRadius={5}
+                                InputLeftElement={
+                                    <View style={{ flexDirection: 'row', marginLeft: 8 }}>
+                                        <Text style={styles.inputTitle}>Đi từ</Text>
+                                        <Icon name='target' size={22} color={Colors.PRIMARY40} />
+                                    </View>
+                                }
+                                onFocus={() => {
+                                    setIsStartInputFocused(true)
+                                    setStartInput("")
+                                    setStartData(null)
+                                    setResultData([])
+                                }}
+                                defaultValue={startInput}
+                                onChangeText={debounce(handleChangeSearchText, 500)}
+                            />
+                        
+                            <Input marginTop={2} size='sm' placeholder="Chọn điểm đến" w='100%' bg={Colors.PRIMARY20} borderRadius={5}
+                                InputLeftElement={
+                                    <View style={{ flexDirection: 'row', marginLeft: 8 }}>
+                                        <Text style={styles.inputTitle}>Đến</Text>
+                                        <Icon name='location' size={22} color={Colors.PRIMARY40} />
+                                    </View>
+                                }
+                                onFocus={() => {
+                                    setIsStartInputFocused(false)
+                                    setTargetInput("")
+                                    setTargetData(null)
+                                    setResultData([])
+                                }}
+                                defaultValue={targetInput === "" ? undefined : targetInput}
+                                onChangeText={debounce(handleChangeSearchText, 500)}
+                            />
+                        
+                            <Button style={[styles.submitBtn, { backgroundColor: (startData && targetData) ? Colors.PRIMARY40 : Colors.PRIMARY20}]}
+                                disabled={!startData || !targetData}
+                                onPress={handleFindRoute}
                             >
-                                Tìm đường
-                            </Text>
-                        </Button>
-                    </View>
+                                <Text 
+                                    style={{color: "white", 
+                                        fontSize: FontSize.BUTTON_NORMAL, 
+                                        fontWeight: FontWeight.BUTTON_NORMAL}}
+                                >
+                                    Tìm đường
+                                </Text>
+                            </Button>
+                        </View>
+
+                        {resultData.length > 0 && (
+                                <View style={{ height: 320 }} >
+                                    <FlatList
+                                        data={resultData}
+                                        renderItem={({ item }) => (
+                                            <TouchableOpacity
+                                                style={{ paddingHorizontal: 20 }}
+                                                onPress={() => {
+                                                    if (isStartInputFocused) {
+                                                        setStartData({
+                                                            name: item.Name,
+                                                            latitude: item.Lat,
+                                                            longtitude: item.Lng
+                                                        })
+                                                        setStartInput(item.Name)
+                                                    }
+                                                    else {
+                                                        setTargetData({
+                                                            name: item.Name,
+                                                            latitude: item.Lat,
+                                                            longtitude: item.Lng
+                                                        })
+                                                        setTargetInput(item.Name)
+                                                    }
+                                                    setResultData([])
+                                                }}
+                                            >
+                                                <Busstop name={item.Name} address={item.AddressNo}
+                                                    buslist={item.Routes}
+                                                    street={item.Street} zone={item.Zone}
+                                                />
+                                            </TouchableOpacity>
+                                        )}
+                                        keyExtractor={item => item.StopId}
+                                        maxToRenderPerBatch={3}
+                                        showsVerticalScrollIndicator={false}
+                                    />
+                                </View>
+                        )}
+                    </>
                 )}
             </View>
 
@@ -271,7 +394,6 @@ const styles = StyleSheet.create({
         width: 40
     },
     submitBtn: {
-        backgroundColor: Colors.PRIMARY40,
         marginVertical: 10,
         width: 150
     },

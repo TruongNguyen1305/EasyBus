@@ -37,6 +37,7 @@ export function HintRoutes({route, navigation}: HintRoutesNavigationProps) {
                                     <Icon name='target' size={22} color={Colors.PRIMARY40} />
                                 </View>
                             }
+                            value={route.params.startData.name}
                             onPressIn={() => navigation.goBack()}
                         />
 
@@ -47,6 +48,7 @@ export function HintRoutes({route, navigation}: HintRoutesNavigationProps) {
                                     <Icon name='location' size={22} color={Colors.PRIMARY40} />
                                 </View>
                             }
+                            value={route.params.targetData.name}
                             onPressIn={() => navigation.goBack()}
                         />
                 </View>
