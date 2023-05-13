@@ -10,6 +10,8 @@ export interface User {
   email: string;
   remainTickets?: Ticket[];
   currentActiveTicket?: Ticket;
+  favouriteBus: string[],
+  favouriteStation: string[]
 }
 
 export interface Ticket {
@@ -71,8 +73,26 @@ const userApi = API.injectEndpoints({
         },
       }),
     }),
+
   }),
   overrideExisting: true,
 });
 
-export const { useLazyGetUserQuery, useSigninMutation, useSignupMutation, useUpdateProfileMutation } = userApi;
+const favouriteAPI = API.injectEndpoints({
+  endpoints: (build) => ({
+    getFavourite: build.query<string[], string>({
+      query: (route) => `favourite/${route}`,
+    }),
+
+    updateFavourite: build.mutation<string[], {route: string, id: string}>({
+      query: ({ route, id }) => ({
+        url: `favourite/${route}/${id}`,
+        method: 'POST',
+      })
+    }),
+  }),
+});
+
+
+export const { useLazyGetUserQuery, useSigninMutation, useSignupMutation, useUpdateProfileMutation} = userApi;
+export const { useGetFavouriteQuery, useUpdateFavouriteMutation} = favouriteAPI;

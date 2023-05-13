@@ -40,7 +40,7 @@ export function Setting({ route, navigation }: SettingScreenProps) {
         <View style={styles.container}>
             <Header cover={Status.COVER2} leftTitle="Thông tin" leftIconName="more" logoShow={false} isProfileScreen/>
 
-            {user ? (
+            {user.id != '' ? (
                 <>
                     <View style={styles.avatar}>
                         <View style={{
@@ -54,7 +54,7 @@ export function Setting({ route, navigation }: SettingScreenProps) {
                             <Icon name="person" size={30} color='black' />
                         </View>
                         <Text style={{ fontSize: FontSize.HEADLINE4, fontWeight: FontWeight.HEADLINE4, marginTop: 6 }}>{(user as User).fullName}</Text>
-                    </View>
+                    </View> 
 
                     <View style={{ marginTop: 100, width: '100%', alignItems: 'center' }}>
                         <TouchableOpacity style={styles.settingItem}

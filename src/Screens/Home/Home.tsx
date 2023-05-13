@@ -1,7 +1,7 @@
 import { i18n, LocalizationKey } from "@/Localization";
 import React, {useCallback, useEffect, useState} from "react";
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, FlatList } from "react-native";
-import { User } from "@/Services";
+import { User, useUpdateFavouriteMutation } from "@/Services";
 import { Icon } from "@/Theme/Icon/Icon";
 import { HomeStackParamList } from "./HomeContainer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -13,9 +13,11 @@ import Busstop from "@/Components/Home/Busstop";
 import { Status } from "@/Components/Header";
 import { debounce } from 'lodash';
 import * as Location from 'expo-location';
+import { useAppSelector, useAppDispatch } from "@/Hooks/redux";
 
 
 import axios from 'axios'
+import { CHANGE_FAVOURITE } from "@/Store/reducers/user";
 
 type HomeScreenNavigationProps = NativeStackScreenProps<
   HomeStackParamList,
@@ -27,6 +29,7 @@ export interface IHomeProps {
 }
 export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
   const { data, isLoading } = route.params;
+  const dispatch = useAppDispatch()
   const [openHeader, setOpenHeader] = useState(true)
   const [nearbusOpen, setNearbusOpen] = useState(false);
   const [mapRegion, setMapRegion] = useState({
@@ -36,6 +39,8 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
     longitudeDelta: 0.005,
   });
   const [dataBusStop, setDataBusStop] = useState<any[]>([])  
+
+  const [fetch] = useUpdateFavouriteMutation()
 
   useEffect(() => {
     (async () => {
@@ -47,8 +52,10 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
     })();
   }, []);
 
+    
+  const user = useAppSelector(state => state.user.user)
 
-
+  console.log(user)
   const getDataBusTop = async () => {
     axios.get(`http://apicms.ebms.vn/businfo/getstopsinbounds/${mapRegion.longitude - mapRegion.longitudeDelta}/${mapRegion.latitude - mapRegion.latitudeDelta}/${mapRegion.longitude + mapRegion.longitudeDelta}/${mapRegion.latitude + mapRegion.latitudeDelta}`)
       .then(res => {
@@ -57,18 +64,30 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
       .catch(err => console.log(err)) 
     }
   
+  const handleClickHeart = async (item: any) => {
+    if (user.id != '' && user.favouriteStation != undefined) {
+      if (user.favouriteStation.includes(item.StopId+'')) {
+        const station = await fetch({ route: 'Station', id: item.StopId }).unwrap()
+        const payload = {station, bus: user.favouriteBus}
+        dispatch(CHANGE_FAVOURITE(payload))      
+      }
+      else {
+        const station = await fetch({ route: 'Station', id: item.StopId }).unwrap()
+        const payload = {station, bus: user.favouriteBus}
+        dispatch(CHANGE_FAVOURITE(payload))        
+      }
+    }
+  }
   
-  console.log(`http://apicms.ebms.vn/businfo/getstopsinbounds/${mapRegion.longitude - mapRegion.longitudeDelta}/${mapRegion.latitude - mapRegion.latitudeDelta}/${mapRegion.longitude + mapRegion.longitudeDelta}/${mapRegion.latitude + mapRegion.latitudeDelta}`)
   useEffect(() => {
     getDataBusTop()
   }, [])
-  console.log(mapRegion)
+
   return (
     <View style={styles.container}>
     <MapView
         style={styles.map}
         region={mapRegion}
-        // moveOnMarkerPress = {false}
         mapPadding={{ top: openHeader ? 180 : 90 , right: 0, bottom: 0, left: 0 }}
         onRegionChange={
           useCallback(
@@ -122,7 +141,6 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
           }
         ]}
       >
-
         {
           dataBusStop.map((item, index) => 
             <Marker
@@ -134,22 +152,27 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
               tracksViewChanges={false}
               image={require('@/../assets/image/markicon-bus.png')}
             >
-              <Callout style={{width: 200}}>
-                  <Text style={{fontSize: 13, fontWeight: '700'}}>{item.Code} - {item.Name}</Text>  
+              <Callout style={{ width: 200, flexDirection: 'row' }} onPress={() => handleClickHeart(item)}>
+                <View style={{width: '90%'}}>
+                  <Text style={{fontSize: 13, fontWeight: '700'}}>{item.StopId} - {item.Name}</Text>  
                   <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
                   <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes != '' ? item.Routes : 'Tạm dừng khai thác'}</Text>
+                </View>
+                <TouchableOpacity style={{ width: '90%' }}
+                  onPress={() => console.log('haha')}
+                >
+                  {
+                    user.favouriteStation != undefined && user.favouriteStation.includes(item.StopId+'') ?  
+                      <Icon name='heart' size={20} color={Colors.PRIMARY40} />
+                      :
+                      <Icon name='heart-o' size={20} color='black' />
+                  }
+                </TouchableOpacity>
               </Callout>
             </Marker>
           )
         }
       </MapView>
-      
-              {/* <Callout style={{maxWidth: 200}}>
-                  <Text style={{fontSize: 13, fontWeight: '700'}}>{item.Code} - {item.Name}</Text>  
-                  <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
-                  <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes}</Text>
-              </Callout> */}
-            {/* </Marker> */}
       {
         openHeader ? (
           <>
@@ -296,7 +319,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16, paddingVertical: 8,
     borderRadius: 8, borderWidth: 1, borderColor: '#ccc',
     shadowColor: "#000",
-    shadowOffset: {
+    shadowOffset: {   
     width: 0,
     height: 2,
     },

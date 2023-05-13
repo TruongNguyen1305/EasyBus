@@ -22,6 +22,8 @@ export function Profile({route, navigation}: ProfileScreenNavigationProps) {
         birthdate: new Date(),
         phone: 'Chưa xác định',
         email: 'Chưa xác định',
+        favouriteBus: ['Chưa xác định'],
+        favouriteStation: ['Chưa xác định'],
     } 
     const formatDate = (date: string) => {
         let d = new Date(date)
