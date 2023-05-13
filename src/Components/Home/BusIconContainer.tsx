@@ -15,21 +15,20 @@ const colorOfContainer = (busnum: string)  =>  {
 export default function BusIconContainer(props: IBusIconContainerProps) {
     return (
         <View style={{
-            backgroundColor: colorOfContainer(props.busnum), width: 52, height: 24,
-            flexDirection: 'row', alignItems:'center',
+            backgroundColor: colorOfContainer(props.busnum), width: 42, height: 36,
+            flexDirection: 'column',
+            alignItems: 'center',
             justifyContent: 'flex-start',
-            borderRadius: 20,
-            marginHorizontal: 3,
-            marginTop: 6,
-            paddingLeft: 3
+            borderRadius: 10,
+            marginLeft: 4
         }}>
             <Icon name='bus' size = {20} color = 'white' />
             <Text style={{
-                fontSize: 12,
+                fontSize: 14,
                 fontWeight: FontWeight.BUTTON_SMALL1,
                 color: 'white',
-                marginLeft: 2,
-                top: -1
+                // marginLeft: 2,
+                top: -6
             }}>{props.busnum}</Text>
         </View>
     )
