@@ -1,5 +1,5 @@
 import { i18n, LocalizationKey } from "@/Localization";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, FlatList } from "react-native";
 import { User } from "@/Services";
 import { Icon } from "@/Theme/Icon/Icon";
@@ -32,23 +32,18 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
   const [mapRegion, setMapRegion] = useState({
     latitude: 10.880035901459214,
     longitude: 106.80625226368548,
-    latitudeDelta: 0.015,
-    longitudeDelta: 0.0121,
+    latitudeDelta: 0.005,
+    longitudeDelta: 0.005,
   });
   const [dataBusStop, setDataBusStop] = useState<any[]>([])  
-  const [location, setLocation] = useState(null);
 
   useEffect(() => {
     (async () => {
-      
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         alert('Permission to access location was denied');
         return;
       }
-
-      let location : any = await Location.getCurrentPositionAsync({});
-      setLocation(location);
     })();
   }, []);
 
@@ -65,24 +60,27 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
   useEffect(() => {
     getDataBusTop()
   }, [])
-  console.log(location)
-  // console.log(mapRegion)
+  console.log(mapRegion)
   return (
     <View style={styles.container}>
     <MapView
         style={styles.map}
         region={mapRegion}
         // moveOnMarkerPress = {false}
-        onRegionChangeComplete={debounce(
-          (region, details) => { 
-            if((region.latitude.toFixed(6) == mapRegion.latitude.toFixed(6)
-            && region.longitude.toFixed(6) == mapRegion.longitude.toFixed(6))){
-              return;
-            }
-            // console.log('no bi zo cai nay ne')
-              setMapRegion(region)
-              getDataBusTop()
-          }, 300)
+        mapPadding={{ top: 200, right: 0, bottom: 0, left: 0 }}
+        onRegionChange={
+          useCallback(
+            debounce(
+            (region, details) => { 
+              if((region.latitude.toFixed(6) == mapRegion.latitude.toFixed(6)
+              && region.longitude.toFixed(6) == mapRegion.longitude.toFixed(6))){
+                return;
+              }
+              // console.log('no bi zo cai nay ne')
+                setMapRegion(region)
+                getDataBusTop()
+            }, 1000, {trailing: true, leading: false}), []
+          )
         }
         showsUserLocation={true}
         customMapStyle={[
@@ -122,12 +120,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
           }
         ]}
       >
-        {
-          location &&
-          <Marker
-            coordinate={{latitude: location.latitude, longitude: location.longitude}}
-          />
-        }
+
         {
           dataBusStop.map((item, index) => 
             <Marker
@@ -197,7 +190,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
         </TouchableOpacity>
         )
       }
-
+{/* 
       {
         nearbusOpen ?
           <View style={styles.listbusnear}>
@@ -242,12 +235,12 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
           </View>  
           :
           <>
-            <TouchableOpacity style={styles.nearbusBTN} onPress={() => setNearbusOpen(!nearbusOpen)}>
+            <Pressable style={styles.nearbusBTN} onPress={() => setNearbusOpen(!nearbusOpen)}>
               <Icon name='map' size={24} color='black' />
               <Text style={[styles.tbuttonsm, { marginLeft: 8 }]}>Trạm dừng gần đây</Text> 
-            </TouchableOpacity>
+            </Pressable>
           </>
-      }
+      } */}
 
     </View>
   )
