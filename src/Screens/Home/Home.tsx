@@ -162,24 +162,46 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
       >
         {
           dataBusStop.map((item, index) => {
-            if (user.favouriteBus && user.favouriteStation.includes(item.StopId + '')) return (
-              <Marker
-              key={index}
-              coordinate={{
-                latitude: item.Lat,
-                longitude: item.Lng,
-              }}
-              tracksViewChanges={false}
-              image={require('@/../assets/image/markicon-bus_liked.png')}
-            >
-              <Callout style={{ width: 200, flexDirection: 'column' }} onPress={() => setModal({isOpen: true, data: item})}>
-                  <Text style={{fontSize: 13, fontWeight: '700'}}>{item.StopId} - {item.Name}</Text>  
-                  <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
-                  <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes != '' ? item.Routes : 'Tạm dừng khai thác'}</Text>
-              </Callout>
-            </Marker>
-            )
-            else return (
+            if (user != null && user.id != '') {
+              if (user.id != '' && user.favouriteStation != null && user.favouriteStation.includes(item.StopId + '')) { 
+                return (
+                  <Marker
+                  key={index}
+                  coordinate={{
+                    latitude: item.Lat,
+                    longitude: item.Lng,
+                  }}
+                  tracksViewChanges={false}
+                  image={require('@/../assets/image/markicon-bus_liked.png')}
+                >
+                  <Callout style={{ width: 200, flexDirection: 'column' }} onPress={() => setModal({isOpen: true, data: item})}>
+                      <Text style={{fontSize: 13, fontWeight: '700'}}>{item.StopId} - {item.Name}</Text>  
+                      <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
+                      <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes != '' ? item.Routes : 'Tạm dừng khai thác'}</Text>
+                  </Callout>
+                </Marker>
+                )
+                
+              } 
+              else return (
+                <Marker
+                key={index}
+                coordinate={{
+                  latitude: item.Lat,
+                  longitude: item.Lng,
+                }}
+                tracksViewChanges={false}
+                image={require('@/../assets/image/markicon-bus.png')}
+              >
+                <Callout style={{ width: 200, flexDirection: 'column' }} onPress={() => setModal({isOpen: true, data: item})}>
+                    <Text style={{fontSize: 13, fontWeight: '700'}}>{item.StopId} - {item.Name}</Text>  
+                    <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
+                    <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes != '' ? item.Routes : 'Tạm dừng khai thác'}</Text>
+                </Callout>
+              </Marker>
+              )
+            }
+            return (
               <Marker
               key={index}
               coordinate={{
@@ -195,8 +217,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
                   <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes != '' ? item.Routes : 'Tạm dừng khai thác'}</Text>
               </Callout>
             </Marker>
-            )
-
+            )            
           }
             
             
@@ -274,7 +295,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
               onPress={() => handleClickHeart(modal.data.StopId)}
               >
                 {
-                  user.favouriteStation.includes(modal.data.StopId + '') ? 
+                  user!=null && user.favouriteStation.includes(modal.data.StopId + '') ? 
                     <View>
                       <View style={{top: 10}}>
                         <Icon name='heart' size={20} color={Colors.PRIMARY40} />
