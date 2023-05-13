@@ -7,17 +7,18 @@ import { HomeStackParamList } from "./HomeContainer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import MapView, {Callout, Marker, Polyline} from 'react-native-maps';
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables";
-import { Divider, Pressable, ScrollView } from 'native-base';
+import { Divider, Pressable, ScrollView, Modal} from 'native-base';
 import Header from "@/Components/Header";
 import Busstop from "@/Components/Home/Busstop";
 import { Status } from "@/Components/Header";
-import { debounce } from 'lodash';
+import { debounce, set } from 'lodash';
 import * as Location from 'expo-location';
 import { useAppSelector, useAppDispatch } from "@/Hooks/redux";
 
 
 import axios from 'axios'
 import { CHANGE_FAVOURITE } from "@/Store/reducers/user";
+import BusIconContainer from "@/Components/Home/BusIconContainer";
 
 type HomeScreenNavigationProps = NativeStackScreenProps<
   HomeStackParamList,
@@ -27,11 +28,18 @@ export interface IHomeProps {
   data: User | undefined;
   isLoading: boolean;
 }
+
+const initialStation = {
+  StopId: '',
+  Name: '',
+  Street: '',
+  Zone: '',
+  Routes: '',
+  AddressNo: '',
+}
 export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
   const { data, isLoading } = route.params;
   const dispatch = useAppDispatch()
-  const [openHeader, setOpenHeader] = useState(true)
-  const [nearbusOpen, setNearbusOpen] = useState(false);
   const [mapRegion, setMapRegion] = useState({
     latitude: 10.880035901459214,
     longitude: 106.80625226368548,
@@ -39,8 +47,17 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
     longitudeDelta: 0.005,
   });
   const [dataBusStop, setDataBusStop] = useState<any[]>([])  
+  
+  
+  const [openHeader, setOpenHeader] = useState(true)
+  const [nearbusOpen, setNearbusOpen] = useState(false);
+  const [modal, setModal] = useState({
+    isOpen: false,
+    data: initialStation
+  })
 
   const [fetch] = useUpdateFavouriteMutation()
+
 
   useEffect(() => {
     (async () => {
@@ -77,11 +94,13 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
         dispatch(CHANGE_FAVOURITE(payload))        
       }
     }
+    setModal({isOpen: true, data: item})
   }
   
   useEffect(() => {
     getDataBusTop()
   }, [])
+
 
   return (
     <View style={styles.container}>
@@ -152,22 +171,10 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
               tracksViewChanges={false}
               image={require('@/../assets/image/markicon-bus.png')}
             >
-              <Callout style={{ width: 200, flexDirection: 'row' }} onPress={() => handleClickHeart(item)}>
-                <View style={{width: '90%'}}>
+              <Callout style={{ width: 200, flexDirection: 'column' }} onPress={() => handleClickHeart(item)}>
                   <Text style={{fontSize: 13, fontWeight: '700'}}>{item.StopId} - {item.Name}</Text>  
                   <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
                   <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes != '' ? item.Routes : 'Tạm dừng khai thác'}</Text>
-                </View>
-                <TouchableOpacity style={{ width: '90%' }}
-                  onPress={() => console.log('haha')}
-                >
-                  {
-                    user.favouriteStation != undefined && user.favouriteStation.includes(item.StopId+'') ?  
-                      <Icon name='heart' size={20} color={Colors.PRIMARY40} />
-                      :
-                      <Icon name='heart-o' size={20} color='black' />
-                  }
-                </TouchableOpacity>
               </Callout>
             </Marker>
           )
@@ -215,7 +222,60 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
         </TouchableOpacity>
         )
       }
+      <Modal isOpen={modal.isOpen} onClose={() => setModal({ isOpen: false, data: initialStation })}
+        avoidKeyboard justifyContent="flex-end"
+        bottom="4" size="lg">
+        <Modal.Content>
+          <Modal.CloseButton />
+          
+          <Modal.Header w={'90%'}>{modal.data.StopId + ' - ' + modal.data.Name}</Modal.Header>
+          
+          <Modal.Body>
+            <ScrollView  horizontal={true} style = {{flexDirection:'row'}}>
+              {
+                modal.data.Routes != '' ? modal.data.Routes.split(', ').map((item, index) =>
+                  <View key={index}>
+                    <BusIconContainer busnum={item} />
+                  </View>
+                )
+                  : 
+                  <Text style={{color: Colors.PRIMARY40, fontWeight: '500'}}>Trạm dừng khai thác</Text>
+              }
+            </ScrollView>
+            <Text style = {{fontSize: 13, fontWeight:'500'}}>
+              {modal.data.AddressNo}, {modal.data.Street}, {modal.data.Zone}
+            </Text>
+            <View style={{ flexDirection: 'row', justifyContent:'space-around', marginTop: 10}}>
+              <TouchableOpacity style = {{width: '40%', alignItems:'center',
+                borderRadius:4, borderWidth:1, borderColor:Colors.BLACK60
+            }}>
+                {
+                  user.favouriteStation.includes(modal.data.StopId + '') ? 
+                    <View>
+                      <View style={{top: 10}}>
+                        <Icon name='heart' size={20} color={Colors.PRIMARY40} />
+                      </View>
+                      <View style={{top: -10}}>
+                        <Icon name='heart-o' size={21} color={'#262626'} />
+                      </View>
+                    </View>
+                    :
+                    <View style = {{top: 10}}>
+                      <Icon name='heart-o' size={20} color='black' />
+                    </View>
 
+                }
+              </TouchableOpacity>
+              <TouchableOpacity style = {{width: '40%', alignItems:'center', padding: 10,
+                borderRadius:4, borderWidth:1, borderColor: Colors.BLACK60
+            }}>
+                  <Icon name='findroute' size={24} color={Colors.PRIMARY40} />
+              </TouchableOpacity>
+            </View>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
+      
       {
         nearbusOpen ?
           <View style={styles.listbusnear}>
