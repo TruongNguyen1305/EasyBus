@@ -94,7 +94,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
         dispatch(CHANGE_FAVOURITE(payload))        
       }
     }
-    setModal({isOpen: true, data: item})
+    
   }
   
   useEffect(() => {
@@ -161,8 +161,48 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
         ]}
       >
         {
-          dataBusStop.map((item, index) => 
-            <Marker
+          dataBusStop.map((item, index) => {
+            if (user != null && user.id != '') {
+              if (user.id != '' && user.favouriteStation != null && user.favouriteStation.includes(item.StopId + '')) { 
+                return (
+                  <Marker
+                  key={index}
+                  coordinate={{
+                    latitude: item.Lat,
+                    longitude: item.Lng,
+                  }}
+                  tracksViewChanges={false}
+                  image={require('@/../assets/image/markicon-bus_liked.png')}
+                >
+                  <Callout style={{ width: 200, flexDirection: 'column' }} onPress={() => setModal({isOpen: true, data: item})}>
+                      <Text style={{fontSize: 13, fontWeight: '700'}}>{item.StopId} - {item.Name}</Text>  
+                      <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
+                      <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes != '' ? item.Routes : 'Tạm dừng khai thác'}</Text>
+                  </Callout>
+                </Marker>
+                )
+                
+              } 
+              else return (
+                <Marker
+                key={index}
+                coordinate={{
+                  latitude: item.Lat,
+                  longitude: item.Lng,
+                }}
+                tracksViewChanges={false}
+                image={require('@/../assets/image/markicon-bus.png')}
+              >
+                <Callout style={{ width: 200, flexDirection: 'column' }} onPress={() => setModal({isOpen: true, data: item})}>
+                    <Text style={{fontSize: 13, fontWeight: '700'}}>{item.StopId} - {item.Name}</Text>  
+                    <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
+                    <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes != '' ? item.Routes : 'Tạm dừng khai thác'}</Text>
+                </Callout>
+              </Marker>
+              )
+            }
+            return (
+              <Marker
               key={index}
               coordinate={{
                 latitude: item.Lat,
@@ -171,12 +211,16 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
               tracksViewChanges={false}
               image={require('@/../assets/image/markicon-bus.png')}
             >
-              <Callout style={{ width: 200, flexDirection: 'column' }} onPress={() => handleClickHeart(item)}>
+              <Callout style={{ width: 200, flexDirection: 'column' }} onPress={() => setModal({isOpen: true, data: item})}>
                   <Text style={{fontSize: 13, fontWeight: '700'}}>{item.StopId} - {item.Name}</Text>  
                   <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
                   <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes != '' ? item.Routes : 'Tạm dừng khai thác'}</Text>
               </Callout>
             </Marker>
+            )            
+          }
+            
+            
           )
         }
       </MapView>
@@ -201,7 +245,6 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
           <Icon name = 'magnifying' size={24} color={Colors.PRIMARY40} />
           <Text style={[styles.tbuttonsm, {marginTop: 6}]}>Tra cứu</Text>
         </TouchableOpacity>
-
             </View>
           </>
         ) : (
@@ -248,9 +291,11 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
             <View style={{ flexDirection: 'row', justifyContent:'space-around', marginTop: 10}}>
               <TouchableOpacity style = {{width: '40%', alignItems:'center',
                 borderRadius:4, borderWidth:1, borderColor:Colors.BLACK60
-            }}>
+              }}
+              onPress={() => handleClickHeart(modal.data.StopId)}
+              >
                 {
-                  user.favouriteStation.includes(modal.data.StopId + '') ? 
+                  user!=null && user.favouriteStation.includes(modal.data.StopId + '') ? 
                     <View>
                       <View style={{top: 10}}>
                         <Icon name='heart' size={20} color={Colors.PRIMARY40} />
