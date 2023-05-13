@@ -8,17 +8,55 @@ import { FontSize, FontWeight, Colors } from "@/Theme/Variables";
 import { Button, Divider, Input, ScrollView } from "native-base";
 import Busstop from "@/Components/Home/Busstop";
 import { TouchableOpacity } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { debounce } from "lodash";
 
 type FindRouteNavigationProps = NativeStackScreenProps<
     HomeStackParamList,
     'FindRoute'
 >
 
+
+
 export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
     const [status, setStatus] = useState(route.params.status)
-    console.log(status)
+    const [busData, setBusData] = useState<any[]>([])
+    const [resultData, setResultData] = useState<any[]>([])
+    const [input, setInput] = useState('')
 
+
+    useEffect(() => {
+        const fetchBusData = async () => {
+            axios.get('http://apicms.ebms.vn/businfo/getallroute')
+                .then(res => setBusData(res.data))
+                .catch(err => console.log(err))
+        }
+        fetchBusData()
+    }, [])
+
+    const handleChangeSearchText = (text: string) => { 
+        setInput(text)
+        const newResult: any[] = []
+        
+        busData && busData.map((item, index) => {
+            if (item.RouteNo.includes(text)) {
+                newResult.unshift(item)
+            }
+            else {
+                const curStr = item.RouteName.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                if (curStr.includes(text) || item.RouteName.includes(text)) {
+                    newResult.push(item)
+                }
+            }
+
+        })
+
+        setResultData(newResult)
+    }
+
+    console.log(input, resultData)
+    
     return ( 
         <View style={styles.container}> 
             <Header cover={Status.COVER1} leftTitle="Back" leftIconName="back" logoShow navigation={navigation}/>
@@ -38,6 +76,7 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                         <View style={styles.search}>
                             <Input placeholder="Nhập thông tin tuyến, trạm dừng" w='100%' bg={Colors.PRIMARY20} borderRadius={5}
                                 InputLeftElement={<View style={{ marginLeft: 8 }}><Icon name='magnifying' size={22} color="white" /></View>}
+                                onChangeText={debounce(handleChangeSearchText, 500)}
                             />
 
                             <Text style={{
@@ -55,28 +94,9 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                             style={styles.routesContainer}
                             showsVerticalScrollIndicator={false}
                         >
-                            <TouchableOpacity onPress={() => {
-                                setStatus('LookUp')
-                            }}>
-                                <Busstop buslist={[50, 99, 19]} />
-                            </TouchableOpacity>
-
-                            <TouchableOpacity>
-                                <Busstop buslist={[50, 99, 19]} />
-                            </TouchableOpacity>
-
-                            <TouchableOpacity>
-                                <Busstop buslist={[50, 99, 19]} />
-                            </TouchableOpacity>
-
-                            <TouchableOpacity>
-                                <Busstop buslist={[50, 99, 19]} />
-                            </TouchableOpacity>
-
-                            <TouchableOpacity>
-                                <Busstop buslist={[50, 99, 19]} />
-                            </TouchableOpacity>
-
+                            {resultData.map((item, index) => (
+                                <Text>{item.RouteNo} {item.RouteName}</Text>
+                            ))}
                         </ScrollView>
                     </>
                 ) : (

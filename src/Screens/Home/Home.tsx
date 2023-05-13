@@ -56,7 +56,9 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
       })
       .catch(err => console.log(err)) 
     }
-
+  
+  
+  console.log(`http://apicms.ebms.vn/businfo/getstopsinbounds/${mapRegion.longitude - mapRegion.longitudeDelta}/${mapRegion.latitude - mapRegion.latitudeDelta}/${mapRegion.longitude + mapRegion.longitudeDelta}/${mapRegion.latitude + mapRegion.latitudeDelta}`)
   useEffect(() => {
     getDataBusTop()
   }, [])
@@ -67,7 +69,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
         style={styles.map}
         region={mapRegion}
         // moveOnMarkerPress = {false}
-        mapPadding={{ top: 200, right: 0, bottom: 0, left: 0 }}
+        mapPadding={{ top: openHeader ? 180 : 90 , right: 0, bottom: 0, left: 0 }}
         onRegionChange={
           useCallback(
             debounce(
@@ -135,7 +137,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
               <Callout style={{width: 200}}>
                   <Text style={{fontSize: 13, fontWeight: '700'}}>{item.Code} - {item.Name}</Text>  
                   <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
-                  <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes}</Text>
+                  <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes != '' ? item.Routes : 'Tạm dừng khai thác'}</Text>
               </Callout>
             </Marker>
           )
@@ -190,7 +192,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
         </TouchableOpacity>
         )
       }
-{/* 
+
       {
         nearbusOpen ?
           <View style={styles.listbusnear}>
@@ -240,7 +242,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
               <Text style={[styles.tbuttonsm, { marginLeft: 8 }]}>Trạm dừng gần đây</Text> 
             </Pressable>
           </>
-      } */}
+      }
 
     </View>
   )
@@ -289,7 +291,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   nearbusBTN: {
-    zIndex: 5, bottom: 20, position: 'absolute', flexDirection: 'row', alignItems: 'center', alignSelf: 'center',
+    zIndex: 5, bottom: 16, position: 'absolute', flexDirection: 'row', alignItems: 'center', alignSelf: 'center',
     backgroundColor: 'white',
     paddingHorizontal: 16, paddingVertical: 8,
     borderRadius: 8, borderWidth: 1, borderColor: '#ccc',
