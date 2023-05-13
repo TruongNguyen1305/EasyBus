@@ -8,6 +8,8 @@ import { RootScreens } from "..";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/Navigation";
 import { Slider } from "@/Components";
+import { useAppSelector } from "@/Hooks/redux";
+import {useEffect} from 'react'
 const data = [
     {
         title: "EasyBus - Đi xe buýt chưa bao giờ dễ dàng đến thế!",
@@ -47,7 +49,13 @@ type OnboardingScreenNavigatorProps = NativeStackScreenProps<
 export const Onboarding = ({navigation} : OnboardingScreenNavigatorProps) => {
     const [obIndex, setObIndex] = useState(0)
     const [intro, setIntro] = useState()
-
+    const {isUsedApp} = useAppSelector(state => state.user)
+    
+    useEffect(() => {
+        if(isUsedApp){
+            navigation.navigate(RootScreens.MAIN)
+        }
+    }, [])
 
     const animation = useRef(null);
 

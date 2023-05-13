@@ -62,35 +62,46 @@ export const Icon = (props: IIconProps) => {
         default:
           // FontAwesome
           // case "left" || "right" || 'heart' || 'envelop':
-          if (["left", "right", 'heart', 'envelop'].includes(name)) {
+        if (["left", "right", 'down', 'up', 'heart', 'envelop', 'location-arrow', 'calendar'].includes(name)) {
             if (name == "left") iconname = "chevron-left"
             else if (name == "right") iconname = "chevron-right"
+            else if (name == "down") iconname = "chevron-down"
+            else if (name == "up") iconname = "chevron-up"
             else if (name == "heart") iconname = "heart"
             else if (name == "envelop") iconname = "envelope-o"
+            else if (name == "location-arrow") iconname = "location-arrow"
+            else if (name == "calendar") iconname = "calendar"
             return <IconFontAwesome name={iconname} size={size} color={color} />;
           }
           
           // MaterialCommunityIcons
           // case 'busstop' || 'bus' || 'bell' || 'lock':
-          if (['busstop', 'bus', 'bell', 'lock'].includes(name)) { 
+          if (['busstop', 'bus', 'bell', 'lock', 'run', 'clock','pause'].includes(name)) { 
             if (name == 'busstop') iconname = 'bus-stop-uncovered'
             else if (name == 'bus') iconname = 'bus-side'
             else if (name == 'bell') iconname = 'bell-circle'
-            else if (name == 'lock') iconname = 'lock-outline'      
+            else if (name == 'lock') iconname = 'lock-outline'
+            else if (name == 'run') iconname = 'run'      
+            else if (name == 'clock') iconname = 'clock-outline' 
+            else if (name == 'pause') iconname = 'pause' 
             
             return <IconMaterialCommunityIcons name={iconname} size={size} color={color} />;
           }
 
-
           // Ionicons
           // case 'person' || 'personthin' || 'close' || 'location' || 'eyeshow' || 'eye-notshow' || 'back':
-          if (['person', 'personthin', 'close', 'location', 'eyeshow', 'eye-notshow', 'back'].includes(name)) { 
+        if (['person', 'personthin', 'close', 'location', 'eyeshow', 'eye-notshow', 'back', 'bus-sharp', 'location-full', 'setting', 'mail','logout'].includes(name)) { 
             if (name == 'person' || name == 'close') iconname = name
             else if (name == 'personthin') iconname = 'person-circle-outline'
             else if (name == 'location') iconname = 'location-outline'
             else if (name == 'eyeshow') iconname = 'ios-eye-outline'
             else if (name == 'eye-notshow') iconname = 'ios-eye-off-outline'
             else if (name == 'back') iconname = 'arrow-back'
+            else if (name == 'bus-sharp') iconname = 'bus-sharp'
+            else if (name == "location-full") iconname = "location"
+            else if (name == "setting") iconname = "settings"
+            else if (name == "mail") iconname = "mail"
+            else if (name == "logout") iconname = "log-out"
 
             return <IconIonicons name={iconname} size={size} color={color} />;
           }

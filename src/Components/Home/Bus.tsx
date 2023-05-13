@@ -5,7 +5,7 @@ import BusIconContainer from "./BusIconContainer"
 import { Divider } from "native-base"
 
 interface IBusProps {
-    busnum: number;
+    busnum: string;
 }
 
 export default function Bus(props: IBusProps) {
@@ -13,7 +13,7 @@ export default function Bus(props: IBusProps) {
         <>
         <View style={{flexDirection:'row'}}>
             <View style={{width:'20%'}}>
-                <BusIconContainer busnum={10} />
+                <BusIconContainer busnum={props.busnum} />
             </View>
 
             <View style={{width: '70%'}}>
@@ -53,17 +53,6 @@ export default function Bus(props: IBusProps) {
                             <Text>3.000đ</Text>
                         </View>   
                 </View>
-                    
-
-
-
-
-
-
-
-
-
-        
             </View>
             <View style={{width:'10%'}}>
                 <Icon name='heart' size = {22} color = {Colors.PRIMARY40} />

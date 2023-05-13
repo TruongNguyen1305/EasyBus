@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {StyleSheet, View, Text} from "react-native"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeContainer } from "@/Screens/Home";
 import NotificationContainer from "@/Screens/Notification/NotifcationContainer";
 import FavouriteContainer from "@/Screens/Favourite/FavouriteContainer";
+import SettingContainer from "@/Screens/Setting/SettingContainer";
 import { Icon } from "@/Theme/Icon/Icon";
 import { Colors, FontSize } from "@/Theme/Variables";
 
@@ -81,7 +82,7 @@ export const MainNavigator = () => {
       />
       <Tab.Screen
         name="More"
-        component={HomeContainer}
+        component={SettingContainer}
         options={{
             tabBarIcon: ({ color, focused }) => (
                 <View style={styles.tabbar}>
@@ -90,7 +91,7 @@ export const MainNavigator = () => {
             ),
             tabBarLabel: ({ color, focused }) => (
                 <Text style={[styles.label, {color: color}]} >Thông tin</Text>
-            ),
+            )
         }}
       />
     </Tab.Navigator>

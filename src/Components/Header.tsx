@@ -1,6 +1,6 @@
 import { Icon } from "@/Theme/Icon/Icon"
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables"
-import { View, Image, Dimensions, Text } from "react-native"
+import { View, Image, Dimensions, Text, TouchableOpacity } from "react-native"
 
 
 export enum Status {
@@ -13,6 +13,10 @@ interface IHeaderProps {
     leftTitle: string,
     leftIconName: string,
     logoShow: boolean,
+    navigation?: any,
+    isProfileScreen?: boolean
+    rightIconName?: string,
+    onPressRightIcon?: () => void,
 }
 
 export default function Header(props: IHeaderProps) {
@@ -57,29 +61,50 @@ export default function Header(props: IHeaderProps) {
                     />
 
             }
-            <View style={{
-                zIndex: 6, alignItems: 'center', position: 'absolute',
-                justifyContent: 'center', width: 40, height: 40,
-                borderRadius: 40, backgroundColor: Colors.PRIMARY40,
-                top: 36, right: 0,
-                margin: 10
-            }}>
-                <Icon name='person' size={20} color = 'black'/>
-            </View>
-
-
-            <View style={{
+            
+            {props.isProfileScreen ? (
+                <></>
+            ) : (
+                <TouchableOpacity style={{
+                    zIndex: 6, alignItems: 'center', position: 'absolute',
+                    justifyContent: 'center', width: 40, height: 40,
+                    borderRadius: 40, backgroundColor: Colors.PRIMARY40,
+                    top: 36, right: 0,
+                    margin: 10
+                }}
+                        onPress={() => {
+                            if (props.onPressRightIcon) props.onPressRightIcon()
+                        }}
+                    >
+                    {
+                        props.rightIconName ? (
+                            <View style={{top: -2}}>
+                                <Icon name={props.rightIconName || 'person'} size={20} color='black' />
+                            </View>
+                        ) : (
+                            <Icon name='person' size={20} color='black' />
+                        )    
+                    }     
+                </TouchableOpacity>
+            )}
+            <TouchableOpacity style={{
                 zIndex: 6, alignItems: 'center', position: 'absolute', flexDirection: 'row',
                 backgroundColor: Colors.PRIMARY40, padding: 4,
-                top: 36, margin: 10, borderRadius: 7
-            }} >
-                <Icon name={props.leftIconName} size={14} color = 'black' />
+                top: 36, margin: 10, borderRadius: 7,
+                
+            }} 
+                onPress={() => {
+                    if (props.navigation)
+                        props.navigation.goBack()
+                }}
+            >
+                <Icon name={props.leftIconName} size={props.navigation ? 18 : 14} color = 'black' />
                 <Text style={{
-                    fontSize: FontSize.BODY_SMALL2,
-                    fontWeight: FontWeight.BODY_SMALL2,
+                    fontSize: props.navigation ? FontSize.BUTTON_NORMAL : FontSize.BODY_SMALL2,
+                    fontWeight: props.navigation ? FontWeight.BUTTON_SMALL : FontWeight.BODY_SMALL2,
                     marginLeft: 4
                 }}>{props.leftTitle}</Text>
-            </View>
+            </TouchableOpacity>
         </View>
     )
 }

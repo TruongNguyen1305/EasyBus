@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { Button, Pressable, Text, View } from "native-base";
-import { StyleSheet } from 'react-native'
+import { Alert, StyleSheet } from 'react-native'
 
 import { Input } from "native-base";
 import { Icon as IconNative } from 'native-base';
@@ -13,6 +13,9 @@ import ButtonEB from '@/Components/ButtonEB';
 import { RootScreens } from '..';
 import { RootStackParamList } from '@/Navigation';
 import { CompositeScreenProps } from '@react-navigation/native';
+import { useSigninMutation } from '@/Services';
+import { useAppDispatch, useAppSelector } from '@/Hooks/redux';
+import { LOGIN } from '@/Store/reducers/user';
 
 type AuthScreenNavigatorProps = NativeStackScreenProps<
     AuthStackParamList,
@@ -31,7 +34,8 @@ type LoginScreenProps = CompositeScreenProps<
 
 
 export const Login = ({ navigation }: LoginScreenProps) => {
-    const [data, setData] = useState({
+    const dispatch = useAppDispatch()
+    const [info, setInfo] = useState({
         username: '',
         password: '',
     })
@@ -42,6 +46,22 @@ export const Login = ({ navigation }: LoginScreenProps) => {
 
     const handleClickShow = () => {
         setIsShow(!isShow)
+    }
+
+    const [fetch, data] = useSigninMutation();
+
+    const handleSubmit = async() => {
+        try {
+            const payload = await fetch({
+                email: info.username,
+                password: info.password,
+            }).unwrap()
+
+            dispatch(LOGIN(payload))
+            navigation.navigate(RootScreens.MAIN)
+        } catch (error) {
+            alert('Invalid credentials')
+        }
     }
 
     console.log(isShow)
@@ -64,8 +84,8 @@ export const Login = ({ navigation }: LoginScreenProps) => {
                 <Input mx="3" placeholder="Địa chỉ email" w="100%" size="lg" padding={4} marginBottom={4}
                     borderRadius={10} borderWidth={0} backgroundColor={'#F8F8F8'}
                     leftElement={<View style={{ marginLeft: 16, marginRight: 3 }}><Icon name='envelop' size={24} color={Colors.BLACK60} /></View>}
-                    value={data.username}
-                    onChangeText={(val) => setData({ ...data, username: val })}
+                    value={info.username}
+                    onChangeText={(val) => setInfo({ ...info, username: val })}
                 />
                 <Input mx="3" placeholder="Mật khẩu" w="100%" size="lg" padding={4} marginBottom={2}
                     borderRadius={10} borderWidth={0} backgroundColor={'#F8F8F8'}
@@ -81,9 +101,9 @@ export const Login = ({ navigation }: LoginScreenProps) => {
                                 }
                             </Pressable>
                         </View>}
-                    value={data.password}
+                    value={info.password}
                     type={isShow ? 'text' : 'password'}
-                    onChangeText={(val) => setData({ ...data, password: val })}
+                    onChangeText={(val) => setInfo({ ...info, password: val })}
                 />
                 <View style={{marginLeft: 20}}>
                     <Pressable>
@@ -97,7 +117,7 @@ export const Login = ({ navigation }: LoginScreenProps) => {
                 </View>
             </View>
 
-            <ButtonEB title='Đăng nhập' onPress={() => navigation.navigate(RootScreens.MAIN)}/>
+            <ButtonEB title='Đăng nhập' onPress={handleSubmit}/>
 
             <Text style={{
                 textAlign: 'center',

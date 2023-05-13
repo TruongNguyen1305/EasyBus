@@ -6,9 +6,33 @@ import { Input, Button, Checkbox} from 'native-base';
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables";
 import { Icon } from '@/Theme/Icon/Icon';
 import ButtonEB from '@/Components/ButtonEB';
+import { useSignupMutation } from '@/Services';
+import { LOGIN } from '@/Store/reducers/user';
+import { useAppDispatch } from '@/Hooks/redux';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { AuthStackParamList } from '@/Navigation/Auth';
+import { RootStackParamList } from '@/Navigation';
+import { RootScreens } from '..';
+import { CompositeScreenProps } from '@react-navigation/native';
 
-export default function SignUp(){
-    const [data, setData] = useState({
+type AuthScreenNavigatorProps = NativeStackScreenProps<
+    AuthStackParamList,
+    'Signup'
+>;
+
+type RootScreenNavigatorProps = NativeStackScreenProps<
+    RootStackParamList,
+    RootScreens.AUTH
+>
+
+type SignupScreenProps = CompositeScreenProps<
+    AuthScreenNavigatorProps,
+    RootScreenNavigatorProps
+>;
+
+export default function SignUp({ navigation }: SignupScreenProps){
+    const dispatch = useAppDispatch()
+    const [info, setInfo] = useState({
         name: '',
         username: '',
         password: '',
@@ -22,6 +46,23 @@ export default function SignUp(){
     })
     
     const animation = useRef(null)
+
+    const [fetch, data] = useSignupMutation();
+
+    const handleSubmit = async() => {
+        try {
+            const payload = await fetch({
+                email: info.username,
+                password: info.password,
+                fullName: info.name
+            }).unwrap()
+
+            dispatch(LOGIN(payload))
+            navigation.navigate(RootScreens.MAIN)
+        } catch (error) {
+            alert('Invalid credentials')
+        }
+    }
     
     return (
         <View style = {styles.container}>
@@ -45,14 +86,14 @@ export default function SignUp(){
                 <Input mx="3" placeholder="Tên" w="100%" size="lg" padding={4} marginBottom={4}
                     borderRadius={10} borderWidth={0} backgroundColor={'#F8F8F8'}
                     leftElement={<View style={{ marginLeft: 16, marginRight: -3 }}><Icon name='personthin' size={28} color={Colors.BLACK60} /></View>}
-                    value={data.name}
-                    onChangeText={(val) => setData({ ...data, name: val })}
+                    value={info.name}
+                    onChangeText={(val) => setInfo(info => ({ ...info, name: val }))}
                 />
                 <Input mx="3" placeholder="Địa chỉ email" w="100%" size="lg" padding={4} marginBottom={4}
                     borderRadius={10} borderWidth={0} backgroundColor={'#F8F8F8'}
                     leftElement={<View style={{ marginLeft: 16, marginRight: 3 }}><Icon name='envelop' size={24} color={Colors.BLACK60} /></View>}
-                    value={data.username}
-                    onChangeText={(val) => setData({ ...data, username: val })}
+                    value={info.username}
+                    onChangeText={(val) => setInfo(info => ({ ...info, username: val }))}
                 />
                 
                 <Input mx="3" placeholder="Mật khẩu" w="100%" size="lg" padding={4} marginBottom={4}
@@ -70,9 +111,9 @@ export default function SignUp(){
                             </Pressable>
                             
                         </View>}
-                    value={data.password}
+                    value={info.password}
                     type = {isShow.pass1 ? 'text' : 'password'}
-                    onChangeText={(val) => setData({ ...data, password: val })}
+                    onChangeText={(val) => setInfo(info => ({ ...info, password: val }))}
                 />
                 
                 <Input mx="3" placeholder="Xác nhận mật khẩu" w="100%" size="lg" padding={4} marginBottom={2}
@@ -90,19 +131,19 @@ export default function SignUp(){
                             </Pressable>
                         </View>
                     }
-                    value={data.confirmPassword}
+                    value={info.confirmPassword}
                     type={isShow.pass2 ? 'text' : 'password'}
-                    onChangeText={(val) => setData({ ...data, confirmPassword: val })}
+                    onChangeText={(val) => setInfo(info => ({ ...info, confirmPassword: val }))}
                 />
 
                 <View style={{ flexDirection: 'row', alignItems:'flex-start'}}>
                     <Checkbox value="danger" colorScheme="green"
                         style={{ marginTop: 4, marginRight: 8, marginLeft: 12 }}
                         accessibilityLabel="Đồng ý với điều khoản sử dụng"
-                        isChecked={data.isCheckVerify}
-                        onChange={(val) => setData({ ...data, isCheckVerify: val })}
+                        isChecked={info.isCheckVerify}
+                        onChange={(val) => setInfo(info => ({ ...info, isCheckVerify: val }))}
                     />
-                    <Pressable onPress={() => setData({ ...data, isCheckVerify: !data.isCheckVerify })}>
+                    <Pressable onPress={() => setInfo(info => ({ ...info, isCheckVerify: !info.isCheckVerify }))}>
                         <Text>
                             Bằng việc tiếp tục, bạn đã chấp nhận Điều khoản sử dụng của EasyBus
                         </Text>
@@ -110,7 +151,7 @@ export default function SignUp(){
                 </View>
             </View>
 
-            <ButtonEB title='Đăng ký' onPress={() => alert(data.name + data.password + data.username)}/>
+            <ButtonEB title='Đăng ký' onPress={handleSubmit}/>
                     
             <Text style={{
                 textAlign: 'center',
