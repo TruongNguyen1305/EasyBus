@@ -7,7 +7,7 @@ import { HomeStackParamList } from "./HomeContainer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import MapView, {Callout, Marker, Polyline} from 'react-native-maps';
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables";
-import { Divider, Pressable, ScrollView, Modal} from 'native-base';
+import { Divider, Pressable, ScrollView, Modal, Spinner} from 'native-base';
 import Header from "@/Components/Header";
 import Busstop from "@/Components/Home/Busstop";
 import { Status } from "@/Components/Header";
@@ -48,13 +48,14 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
   });
   const [dataBusStop, setDataBusStop] = useState<any[]>([])  
   
-  
   const [openHeader, setOpenHeader] = useState(true)
   const [nearbusOpen, setNearbusOpen] = useState(false);
   const [modal, setModal] = useState({
     isOpen: false,
     data: initialStation
   })
+  const [loadingBusStation, setLoadingBusStation] = useState(false)
+
 
   const [fetch] = useUpdateFavouriteMutation()
 
@@ -73,10 +74,19 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
   const user = useAppSelector(state => state.user.user)
 
   console.log(user)
-  const getDataBusTop = async () => {
-    axios.get(`http://apicms.ebms.vn/businfo/getstopsinbounds/${mapRegion.longitude - mapRegion.longitudeDelta}/${mapRegion.latitude - mapRegion.latitudeDelta}/${mapRegion.longitude + mapRegion.longitudeDelta}/${mapRegion.latitude + mapRegion.latitudeDelta}`)
+  const getDataBusTop = async (latitude: number, longitude:number, latitudeDelta: number, longitudeDelta: number) => {
+    console.log('đang tìm trạm mới')
+    console.log( latitudeDelta, longitudeDelta)
+    if (latitudeDelta > 0.03 || longitudeDelta > 0.03) { 
+      console.log('t ko thèm tìm')
+      return
+    }
+    setLoadingBusStation(true)
+    axios.get(`http://apicms.ebms.vn/businfo/getstopsinbounds/${longitude - longitudeDelta}/${latitude - latitudeDelta}/${longitude + longitudeDelta}/${latitude + latitudeDelta}`)
       .then(res => {
         setDataBusStop(res.data)
+        console.log(res.data.length)
+        setLoadingBusStation(false)
       })
       .catch(err => console.log(err)) 
     }
@@ -98,7 +108,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
   }
   
   useEffect(() => {
-    getDataBusTop()
+    getDataBusTop(mapRegion.latitude, mapRegion.longitude, mapRegion.latitudeDelta, mapRegion.longitudeDelta)
   }, [])
 
 
@@ -118,7 +128,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
               }
               // console.log('no bi zo cai nay ne')
                 setMapRegion(region)
-                getDataBusTop()
+                getDataBusTop(region.latitude, region.longitude, region.latitudeDelta, region.longitudeDelta)
             }, 1000, {trailing: true, leading: false}), []
           )
         }
@@ -162,7 +172,6 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
       >
         {
           dataBusStop.map((item, index) => {
-            if (user != null && user.id != '') {
               if (user.id != '' && user.favouriteStation != null && user.favouriteStation.includes(item.StopId + '')) { 
                 return (
                   <Marker
@@ -181,7 +190,6 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
                   </Callout>
                 </Marker>
                 )
-                
               } 
               else return (
                 <Marker
@@ -201,26 +209,6 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
               </Marker>
               )
             }
-            return (
-              <Marker
-              key={index}
-              coordinate={{
-                latitude: item.Lat,
-                longitude: item.Lng,
-              }}
-              tracksViewChanges={false}
-              image={require('@/../assets/image/markicon-bus.png')}
-            >
-              <Callout style={{ width: 200, flexDirection: 'column' }} onPress={() => setModal({isOpen: true, data: item})}>
-                  <Text style={{fontSize: 13, fontWeight: '700'}}>{item.StopId} - {item.Name}</Text>  
-                  <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
-                  <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes != '' ? item.Routes : 'Tạm dừng khai thác'}</Text>
-              </Callout>
-            </Marker>
-            )            
-          }
-            
-            
           )
         }
       </MapView>
@@ -321,6 +309,13 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
         </Modal.Content>
       </Modal>
       
+      {
+        loadingBusStation && 
+          <View style={{ zIndex: 10, top: 40, width: '100%' }}>
+            <Spinner size="lg" color="indigo.500" />
+          </View>
+      }
+
       {
         nearbusOpen ?
           <View style={styles.listbusnear}>
