@@ -32,9 +32,9 @@ type LoginScreenProps = CompositeScreenProps<
     RootScreenNavigatorProps
 >;
 
-
 export const Login = ({ navigation }: LoginScreenProps) => {
     const dispatch = useAppDispatch()
+    
     const [info, setInfo] = useState({
         username: '',
         password: '',

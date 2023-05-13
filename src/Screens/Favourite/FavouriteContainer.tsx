@@ -8,6 +8,8 @@ import { FontSize } from "@/Theme/Variables"
 import { FontWeight } from "@/Theme/Variables"
 import Busstop from "@/Components/Home/Busstop"
 import Bus from "@/Components/Home/Bus"
+import { useAppDispatch, useAppSelector } from "@/Hooks/redux";
+
 
 enum Screen {
     BUSSTATION = 'BUSSTATION',
@@ -16,13 +18,24 @@ enum Screen {
 
 export default function FavouriteContainer() {
     const [screen, setScreen] = useState(Screen.BUSSTATION)
+    
+    const user = useAppSelector(state => state.user.user) || {
+        id: undefined,
+        fullName: undefined,
+        gender: true,
+        birthdate: new Date(),
+        phone: undefined,
+        email: undefined,
+        favouriteBus: [undefined],
+        favouriteStation: [undefined],
+    } 
+    user && console.log(user.favouriteBus, user.favouriteStation)
 
     return (
         <View>
             <View style = {{position:'relative'}}>
                 <Header cover={Status.COVER2} leftTitle='Yêu thích' leftIconName='collection' logoShow={false} />
             </View>
-
 
             <View style={{
                 flexDirection: 'row',
@@ -87,14 +100,15 @@ export default function FavouriteContainer() {
                     }}
                         showsVerticalScrollIndicator = {false}
                     >
+                        <Text>{user.favouriteStation || 'None'}</Text>
+                        {/* <Busstop buslist={[1,2,3]} />
                         <Busstop buslist={[1,2,3]} />
                         <Busstop buslist={[1,2,3]} />
                         <Busstop buslist={[1,2,3]} />
                         <Busstop buslist={[1,2,3]} />
                         <Busstop buslist={[1,2,3]} />
                         <Busstop buslist={[1,2,3]} />
-                        <Busstop buslist={[1,2,3]} />
-                        <Busstop buslist={[1,2,3]} />
+                        <Busstop buslist={[1,2,3]} /> */}
                     </ScrollView>
                 :
                     <ScrollView style={{
@@ -104,14 +118,16 @@ export default function FavouriteContainer() {
                     }}
                         showsVerticalScrollIndicator = {false}
                     >
+                        <Text>{user.favouriteBus || 'None'}</Text>
+                        
+                        {/* <Bus busnum={50} />
                         <Bus busnum={50} />
                         <Bus busnum={50} />
                         <Bus busnum={50} />
                         <Bus busnum={50} />
                         <Bus busnum={50} />
                         <Bus busnum={50} />
-                        <Bus busnum={50} />
-                        <Bus busnum={50} />
+                        <Bus busnum={50} /> */}
                     </ScrollView>    
                     
             }
