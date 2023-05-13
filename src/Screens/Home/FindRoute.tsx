@@ -5,20 +5,17 @@ import Header, { Status } from "@/Components/Header";
 import MapView from "react-native-maps";
 import { Icon } from "@/Theme/Icon/Icon";
 import { FontSize, FontWeight, Colors } from "@/Theme/Variables";
-import { Button, Divider, Input, ScrollView } from "native-base";
+import { Button, Divider, Input, Pressable, ScrollView } from "native-base";
 import Busstop from "@/Components/Home/Busstop";
 import { TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { debounce } from "lodash";
-
+import BusSearchItem from "@/Components/Home/BusSearchItem";
 type FindRouteNavigationProps = NativeStackScreenProps<
     HomeStackParamList,
     'FindRoute'
 >
-
-
-
 export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
     const [status, setStatus] = useState(route.params.status)
     const [busData, setBusData] = useState<any[]>([])
@@ -51,7 +48,6 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
             }
 
         })
-
         setResultData(newResult)
     }
 
@@ -89,13 +85,25 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                                 Lịch sử tìm kiếm
                             </Text>
                         </View>
-
+                        
                         <ScrollView
                             style={styles.routesContainer}
                             showsVerticalScrollIndicator={false}
+                            marginBottom={3}
                         >
                             {resultData.map((item, index) => (
-                                <Text>{item.RouteNo} {item.RouteName}</Text>
+                                <TouchableOpacity key={index} style={{
+                                    justifyContent: 'center',
+                                    marginVertical: 8,
+                                    marginBottom: index == resultData.length - 1 ? 10 : 8,
+                                }}
+                                 onPress={() => console.log(item.RouteId)}
+                                >
+                                    <BusSearchItem busName={item.RouteName} busNo={item.RouteNo} />
+                                    {
+                                    index != resultData.length - 1 && <Divider marginTop={4} />
+                                    }
+                                </TouchableOpacity>
                             ))}
                         </ScrollView>
                     </>
@@ -191,7 +199,7 @@ const styles = StyleSheet.create({
     },
     routesContainer: {
         marginTop: 10,
-        height: 300,
+        maxHeight: 300,
         paddingHorizontal: 15,
         paddingTop: 10
     },
