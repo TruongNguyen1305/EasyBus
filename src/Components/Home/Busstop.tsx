@@ -15,7 +15,7 @@ interface IBusstopProps {
 
 export default function Busstop(props: IBusstopProps) {
     const buslist = props.buslist.split(', ')
-    console.log(buslist)
+    // console.log(buslist)
     return (
         <>
         <View style={{flexDirection:'row'}}>

@@ -104,8 +104,9 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                 newResult.unshift(item)
             }
             else {
-                const curStr = item.Name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                if (curStr.includes(text) || item.Name.includes(text)) {
+                const curStr = (item.Name + " " + item.Street + " " + item.Zone).normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                                                                                                    .replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase();
+                if (curStr.includes(text.toLowerCase())) {
                     newResult.push(item)
                 }
             }
@@ -309,6 +310,9 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                                                 <Busstop name={item.Name} address={item.AddressNo}
                                                     buslist={item.Routes}
                                                     street={item.Street} zone={item.Zone}
+                                                    onPressHeart={() => {
+                                                        console.log('cc')
+                                                    }}
                                                 />
                                             </TouchableOpacity>
                                         )}

@@ -16,6 +16,7 @@ import { CompositeScreenProps } from '@react-navigation/native';
 import { useSigninMutation } from '@/Services';
 import { useAppDispatch, useAppSelector } from '@/Hooks/redux';
 import { LOGIN } from '@/Store/reducers/user';
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
 type AuthScreenNavigatorProps = NativeStackScreenProps<
     AuthStackParamList,
@@ -41,6 +42,7 @@ export const Login = ({ navigation }: LoginScreenProps) => {
     })
     
     const [isShow, setIsShow] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const animation = useRef(null)
 
@@ -52,19 +54,21 @@ export const Login = ({ navigation }: LoginScreenProps) => {
 
     const handleSubmit = async() => {
         try {
+            setLoading(true)
             const payload = await fetch({
                 email: info.username,
                 password: info.password,
             }).unwrap()
 
             dispatch(LOGIN(payload))
+            setLoading(false)
             navigation.navigate(RootScreens.MAIN)
         } catch (error) {
+            setLoading(false)
             alert('Invalid credentials')
         }
     }
-
-    console.log(isShow)
+    
     return (
         <View style = {styles.container}>
             <View style={styles.containnerLottie}>
@@ -79,6 +83,19 @@ export const Login = ({ navigation }: LoginScreenProps) => {
             <Text style={[styles.tHeadline1, { color: Colors.PRIMARY40 }]}>Xin chào</Text>
             <Text style={[styles.tHeadline2, { color: Colors.BLACK60, margin: 10 }]}
             >Hãy đăng nhập để tiếp tục !</Text>
+
+            <Spinner
+                //visibility of Overlay Loading Spinner
+                visible={loading}
+                //Text with the Spinner
+                textContent={'Loading...'}
+                //Text style of the Spinner Text
+                textStyle={{
+                    fontSize: FontSize.HEADLINE2,
+                    fontWeight: FontWeight.HEADLINE2,
+                    color: 'white'
+                }}
+            />
         
             <View>
                 <Input mx="3" placeholder="Địa chỉ email" w="100%" size="lg" padding={4} marginBottom={4}
