@@ -5,52 +5,66 @@ import BusIconContainer from "./BusIconContainer"
 import { Divider } from "native-base"
 
 interface IBusProps {
-    busnum: string;
+    RouteNo: string;
+    RouteName: string;
+    OperationTime: string;
+    TimeOfTrip: string;
+    Distance: number;
+    Headway: string;
+    Tickets: string[];
 }
 
 export default function Bus(props: IBusProps) {
+    console.log(props.Tickets)
     return (
         <>
         <View style={{flexDirection:'row'}}>
             <View style={{width:'20%'}}>
-                <BusIconContainer busnum={props.busnum} />
+                <BusIconContainer busnum={props.RouteNo} />
             </View>
 
             <View style={{width: '70%'}}>
                 <Text style={{
                     fontSize: FontSize.BUTTON_NORMAL, fontWeight: FontWeight.BUTTON_SMALL
-                }}>Đại học Bách Khoa - Cơ sở 2</Text>
+                }}>{props.RouteName}</Text>
                     
 
                 <Text style={{
                     fontSize: FontSize.BUTTON_SMALL, fontWeight: FontWeight.BUTTON_SMALL
                 }}>
                     Thời gian hoạt động: 
-                    <Text style = {{fontWeight: FontWeight.BODY_SMALL1}}> 04:00 - 19:00</Text>
+                    <Text style = {{fontWeight: FontWeight.BODY_SMALL1}}> {props.OperationTime}</Text>
                 </Text>
                     
                 <Text style={{
                     fontSize: FontSize.BUTTON_SMALL, fontWeight: FontWeight.BUTTON_SMALL
                 }}>
                     Thời gian hành trình: 
-                    <Text style = {{fontWeight: FontWeight.BODY_SMALL1}}> 50 phút</Text>
+                    <Text style = {{fontWeight: FontWeight.BODY_SMALL1}}> {props.TimeOfTrip}</Text>
+                </Text>
+                    
+                <Text style={{
+                    fontSize: FontSize.BUTTON_SMALL, fontWeight: FontWeight.BUTTON_SMALL
+                }}>
+                    Giãn cách chuyến: 
+                    <Text style = {{fontWeight: FontWeight.BODY_SMALL1}}> {props.Headway}</Text>
                 </Text>
                 
                     
                 <View style = {{flexDirection:'row', justifyContent:'space-between', marginTop: 4}}>
-                        <View>
+                        <View style={{alignItems:'center'}}>
                             <Text>Vé lượt</Text>
-                            <Text>3.000đ</Text>
+                            <Text style={{fontSize:12, fontWeight:'600'}}>{props.Tickets[0]}</Text>
                         </View>   
                         <Divider orientation="vertical"/>
-                        <View>
-                            <Text>Vé lượt</Text>
-                            <Text>3.000đ</Text>
+                        <View style={{alignItems:'center'}}>
+                            <Text>Vé HSSV</Text>
+                            <Text style={{fontSize:12, fontWeight:'600'}}>{props.Tickets[1]}</Text>
                         </View>   
                         <Divider orientation="vertical"/>
-                        <View>
-                            <Text>Vé lượt</Text>
-                            <Text>3.000đ</Text>
+                        <View style={{alignItems:'center'}}>
+                            <Text>Vé tập</Text>
+                            <Text style={{fontSize:12, fontWeight:'600'}}>{props.Tickets[2]}</Text>
                         </View>   
                 </View>
             </View>

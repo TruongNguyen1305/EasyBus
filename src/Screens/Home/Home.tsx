@@ -73,7 +73,6 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
     
   const user = useAppSelector(state => state.user.user)
 
-  console.log(user)
   const getDataBusTop = async (latitude: number, longitude:number, latitudeDelta: number, longitudeDelta: number) => {
     console.log('đang tìm trạm mới')
     console.log( latitudeDelta, longitudeDelta)
@@ -92,19 +91,13 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
     }
   
   const handleClickHeart = async (item: any) => {
-    if (user.id != '' && user.favouriteStation != undefined) {
-      if (user.favouriteStation.includes(item.StopId+'')) {
-        const station = await fetch({ route: 'Station', id: item.StopId }).unwrap()
-        const payload = {station, bus: user.favouriteBus}
-        dispatch(CHANGE_FAVOURITE(payload))      
-      }
-      else {
-        const station = await fetch({ route: 'Station', id: item.StopId }).unwrap()
-        const payload = {station, bus: user.favouriteBus}
-        dispatch(CHANGE_FAVOURITE(payload))        
-      }
+    if (user.id != '' ) {
+      const station = await fetch({ route: 'station', id: item+''}).unwrap()
+      const payload = { station, bus: user.favouriteBus }
+      console.log(payload)
+      
+      dispatch(CHANGE_FAVOURITE(payload))        
     }
-    
   }
   
   useEffect(() => {
@@ -352,6 +345,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
                       <Busstop name={item.Name} address={item.AddressNo}
                         buslist={item.Routes}
                         street={item.Street} zone={item.Zone}
+                        onPressHeart={() => console.log('haha')}
                       />
                     </TouchableOpacity>
                   )}
