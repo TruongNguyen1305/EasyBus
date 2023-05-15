@@ -1,14 +1,16 @@
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Dimensions, Alert } from "react-native";
 import { HomeStackParamList } from "./HomeContainer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Header, { Status } from "@/Components/Header";
 import MapView from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "native-base";
 import { Icon } from "@/Theme/Icon/Icon";
 import { FontSize, FontWeight, Colors } from "@/Theme/Variables";
 import { StartMarker, TargetMarker } from "@/Theme/Marker/Marker";
+import * as Location from 'expo-location'
+
 
 type GuideNavigationProps = NativeStackScreenProps<
     HomeStackParamList,
@@ -17,6 +19,7 @@ type GuideNavigationProps = NativeStackScreenProps<
 
 export function Guide({ route, navigation }: GuideNavigationProps) {
     const [isFinding, setIsFinding] = useState(false)
+    const [location, setLocation] = useState<Location.LocationObject>()
     const start = {
         latitude: 10.880035901459214,
         longitude: 106.80625226368548
@@ -27,7 +30,34 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
         longitude: 106.807
     }
         
- 
+    useEffect(() => {
+        const fetchLocation = async () => {
+            const { status } = await Location.getForegroundPermissionsAsync()
+            if (status === Location.PermissionStatus.GRANTED) {
+                let location = await Location.getCurrentPositionAsync({});
+                setLocation(location);
+            }
+            else{
+                Alert.alert(
+                    'Alert',
+                    'Permission to access location was denied',
+                    [
+                        {
+                            text: 'Close',
+                            onPress: () => navigation.goBack(),
+                            style: 'cancel',
+                        },
+                    ],
+                    {
+                        cancelable: true,
+                        onDismiss: () => navigation.goBack()
+                    },)
+            }
+        }
+        fetchLocation()
+    }, [])
+
+    console.log(location)
 
     return (
         <View style={styles.container}>

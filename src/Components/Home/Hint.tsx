@@ -4,7 +4,9 @@ import BusIconContainer from "./BusIconContainer";
 import { Icon } from "@/Theme/Icon/Icon";
 
 interface IHintProps {
-    buses: number[]
+    buses: string[],
+    distances: string[],
+    minutes: string
 }
 
 
@@ -39,10 +41,10 @@ export function Hint(props: IHintProps) {
                     alignItems: 'center'
                 }}>
                     <View style={styles.price}>
-                        <Text style={{color: Colors.SECONDARY100}}>13k đ</Text>
+                        <Text style={{color: Colors.SECONDARY100}}>{5*props.buses.length}k đ</Text>
                     </View>
                     <View style={{marginLeft: 10}}> 
-                        <Text style={{color: Colors.PRIMARY100, fontSize: FontSize.HEADLINE4, fontWeight: FontWeight.HEADLINE4}}>86</Text>
+                        <Text style={{color: Colors.PRIMARY100, fontSize: FontSize.HEADLINE4, fontWeight: FontWeight.HEADLINE4}}>{props.minutes}</Text>
                         <Text style={{ color: Colors.PRIMARY80, fontSize: FontSize.SUBTITLES_SMALL, fontWeight: FontWeight.SUBTITLES_SMALL }}>phút</Text>
                     </View>
                 </View>
@@ -54,7 +56,7 @@ export function Hint(props: IHintProps) {
                         alignItems:"center"
                     }}>
                         <Icon name="run" color={Colors.BLACK60} size={20}/>
-                        <Text style={{ color: Colors.BLACK60, fontSize: FontSize.SUBTITLES_SMALL, fontWeight: FontWeight.SUBTITLES_SMALL }}>380m</Text>
+                        <Text style={{ color: Colors.BLACK60, fontSize: FontSize.SUBTITLES_SMALL, fontWeight: FontWeight.SUBTITLES_SMALL }}>{props.distances[0]} km</Text>
                     </View>
                     <View style={{
                         flexDirection: 'row',
@@ -62,7 +64,7 @@ export function Hint(props: IHintProps) {
                         marginLeft: 10
                     }}>
                         <Icon name="bus-sharp" color={Colors.BLACK60} size={20} />
-                        <Text style={{ color: Colors.BLACK60, fontSize: FontSize.SUBTITLES_SMALL, fontWeight: FontWeight.SUBTITLES_SMALL }}>28.7 km</Text>
+                        <Text style={{ color: Colors.BLACK60, fontSize: FontSize.SUBTITLES_SMALL, fontWeight: FontWeight.SUBTITLES_SMALL }}>{props.distances[1]} km</Text>
                     </View>
                 </View>
                 <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
@@ -99,7 +101,8 @@ const styles = StyleSheet.create({
         width: 8,
         height: 8,
         backgroundColor: Colors.BLACK60,
-        borderRadius: 100
+        borderRadius: 100,
+        marginLeft: 3
     },
     price: {
         borderRadius: 15,

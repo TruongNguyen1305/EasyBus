@@ -12,7 +12,7 @@ export type HomeStackParamList = {
   ["Home"]: { data: any; isLoading: boolean },
   ['FindRoute']: {status: string, target?: any},
   ['HintRoutes']: {startData: any, targetData: any},
-  ['Guide']: undefined,
+  ['Guide']: {data: any},
   ['FindBus']: undefined,
   ['FindBusStop']: undefined,
 }
