@@ -42,7 +42,7 @@ export function HintRoutes({route, navigation}: HintRoutesNavigationProps) {
         const fetchHintData = async () => {
             setLoading(true)
             try {
-                const {data} = await axios.get(`http://apicms.ebms.vn/pathfinding/getpathbystop/${startData.latitude},${startData.longtitude}/${targetData.latitude},${targetData.longtitude}/2`)
+                const {data} = await axios.get(`http://apicms.ebms.vn/pathfinding/getpathbystop/${startData.latitude},${startData.longitude}/${targetData.latitude},${targetData.longitude}/2`)
                 setHintData(data)
                 setLoading(false)
             } catch (error) {
@@ -113,7 +113,7 @@ export function HintRoutes({route, navigation}: HintRoutesNavigationProps) {
                     hintData.length > 0 ? (
                         <ScrollView showsVerticalScrollIndicator={false} style={styles.hints} >
                             {hintData.map((item, idx) => (
-                                <TouchableOpacity onPress={() => navigation.navigate('Guide', {data: item})} key={idx}>
+                                <TouchableOpacity onPress={() => navigation.navigate('Guide', {data: item, startData: route.params.startData, targetData: route.params.targetData})} key={idx}>
                                     <Hint buses={getBusses(item.Title)} distances={getDistances(item.Desc)} minutes={getMinutes(item.detail)}/>
                                 </TouchableOpacity>
                             ))}

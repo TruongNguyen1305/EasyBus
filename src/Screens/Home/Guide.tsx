@@ -2,14 +2,15 @@ import { View, Text, StyleSheet, Dimensions, Alert } from "react-native";
 import { HomeStackParamList } from "./HomeContainer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Header, { Status } from "@/Components/Header";
-import MapView from "react-native-maps";
-import MapViewDirections from "react-native-maps-directions";
-import { useEffect, useState } from "react";
+import MapView, { Callout, Marker, Polyline, UserLocationChangeEvent } from "react-native-maps";
+import { useState } from "react";
 import { Button } from "native-base";
 import { Icon } from "@/Theme/Icon/Icon";
 import { FontSize, FontWeight, Colors } from "@/Theme/Variables";
 import { StartMarker, TargetMarker } from "@/Theme/Marker/Marker";
-import * as Location from 'expo-location'
+import { debounce } from "lodash";
+import { background } from "native-base/lib/typescript/theme/styled-system";
+import { Float } from "react-native/Libraries/Types/CodegenTypes";
 
 
 type GuideNavigationProps = NativeStackScreenProps<
@@ -17,47 +18,73 @@ type GuideNavigationProps = NativeStackScreenProps<
     'Guide'
 >
 
+type Coordinate = {
+    latitude: Float,
+    longitude: Float
+}
+
+const calculateDistance = (coordinate1: Coordinate, coordinate2: Coordinate) => {
+    const R = 6371; // Đường kính Trái Đất (đơn vị: km)
+
+    const degToRad = (deg: Float) => deg * (Math.PI / 180);
+
+    const dLat = degToRad(coordinate2.latitude - coordinate1.latitude);
+    const dLon = degToRad(coordinate2.longitude - coordinate1.longitude);
+
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(degToRad(coordinate1.latitude)) * Math.cos(degToRad(coordinate2.latitude)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    const distance = R * c * 1000; // Đổi sang mét
+
+    return distance;
+}
+
 export function Guide({ route, navigation }: GuideNavigationProps) {
     const [isFinding, setIsFinding] = useState(false)
-    const [location, setLocation] = useState<Location.LocationObject>()
-    const start = {
-        latitude: 10.880035901459214,
-        longitude: 106.80625226368548
+    const [mapRegion, setMapRegion] = useState({
+        latitude: route.params.startData.latitude,
+        longitude: route.params.startData.longitude,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.005,
+    })
+
+    const allInstructions = route.params.data.detail
+
+    const [currentInstruction, setCurrentInstruction] = useState<any>(allInstructions[0])
+    const [currentInstructionIndex, setCurrentInstructionIndex] = useState<number>(0)
+
+    const allCoordinates: any[] = []
+
+    for (let coordinates of Object.values<any>(route.params.data.coordRoute)){
+        for(let coordinate of coordinates){
+            allCoordinates.push({
+                latitude: coordinate.Latitude,
+                longitude: coordinate.Longitude
+            })
+        }
     }
 
-    const target = {
-        latitude: 10.880035901459214,
-        longitude: 106.807
+
+    const handleUserMove = (e: UserLocationChangeEvent) => {
+        //console.log(e.nativeEvent.coordinate)
+        // if (!e.nativeEvent.coordinate){
+        //     return
+        // }
+        // const currentPostion = {
+        //     latitude: e.nativeEvent.coordinate.latitude,
+        //     longitude: e.nativeEvent.coordinate.longitude,
+        // }
+        // let newInstruction = currentInstruction
+        // const lengthToGetIn = calculateDistance(currentPostion, {
+        //     latitude: newInstruction.GetInLat,
+        //     longitude: newInstruction.GetInLng
+        // })
+        // console.log(lengthToGetIn)
     }
         
-    useEffect(() => {
-        const fetchLocation = async () => {
-            const { status } = await Location.getForegroundPermissionsAsync()
-            if (status === Location.PermissionStatus.GRANTED) {
-                let location = await Location.getCurrentPositionAsync({});
-                setLocation(location);
-            }
-            else{
-                Alert.alert(
-                    'Alert',
-                    'Permission to access location was denied',
-                    [
-                        {
-                            text: 'Close',
-                            onPress: () => navigation.goBack(),
-                            style: 'cancel',
-                        },
-                    ],
-                    {
-                        cancelable: true,
-                        onDismiss: () => navigation.goBack()
-                    },)
-            }
-        }
-        fetchLocation()
-    }, [])
-
-    console.log(location)
 
     return (
         <View style={styles.container}>
@@ -79,31 +106,126 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
             <MapView
                 // provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                 style={styles.map}
-                region={{
-                    latitude: 10.880035901459214,
-                    longitude: 106.80625226368548,
-                    latitudeDelta: 0.015,
-                    longitudeDelta: 0.0121,
-                }}
+                region={mapRegion}
+                onRegionChange={
+                    debounce(
+                        (region, details) => {
+                            if ((region.latitude.toFixed(6) == mapRegion.latitude.toFixed(6)
+                                && region.longitude.toFixed(6) == mapRegion.longitude.toFixed(6))) {
+                                return;
+                            }
+                            setMapRegion(region)
+                        }, 1000, { trailing: true, leading: false })
+                }
+                showsUserLocation={true}
+                onUserLocationChange={handleUserMove}
+                customMapStyle={[
+                    {
+                        "featureType": "poi.business",
+                        "stylers": [
+                            {
+                                "visibility": "off"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "transit.station",
+                        "stylers": [
+                            {
+                                "visibility": "off"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "transit.station",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {
+                                "visibility": "off"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "transit.station",
+                        "elementType": "geometry.fill",
+                        "stylers": [
+                            {
+                                "color": "#dfd2ae"
+                            }
+                        ]
+                    }
+                ]}
             >
-                <StartMarker
-                    latitude={start.latitude}
-                    longitude={start.longitude}
-                />
-
-                <TargetMarker 
-                    latitude={target.latitude}
-                    longitude={target.longitude}
-                />
-
-                {/* <MapViewDirections
-                    origin={start}
-                    destination={target}
-                    apikey={GOOGLE_MAPS_APIKEY}
-                    strokeWidth={3}
-                    strokeColor="hotpink"
-                /> */}
+                {route.params.data.stops.map((stop: any, index: number) => {
+                    if(index === 0){
+                        return (
+                            <StartMarker
+                                key={index}
+                                latitude={stop.Lat}
+                                longitude={stop.Lng}
+                            />
+                        )
+                    }
+                    else if (index === route.params.data.stops.length - 1){
+                        return (
+                            <TargetMarker
+                                key={index}
+                                latitude={stop.Lat}
+                                longitude={stop.Lng}
+                            />
+                        )
+                    }
+                    else 
+                        return (
+                            <Marker
+                                key={index}
+                                coordinate={{
+                                    latitude: stop.Lat,
+                                    longitude: stop.Lng,
+                                }}
+                                tracksViewChanges={false}
+                                image={require('@/../assets/image/markicon-bus_liked.png')}
+                            >
+                                <Callout
+                                    style={{justifyContent: 'center', alignItems: 'center'}}
+                                >
+                                    <Text style={{fontSize: FontSize.BUTTON_SMALL, fontWeight: FontWeight.BUTTON_SMALL}}>{stop.Name}</Text>
+                                </Callout>
+                            </Marker>
+                        )
+                })}
+                {isFinding && (
+                    <Polyline
+                        coordinates={allCoordinates}
+                        strokeColor={Colors.SECONDARY100}
+                        //strokeColors={['#7F0000']}
+                        strokeWidth={6}
+                    />
+                )}
             </MapView>
+
+            {isFinding && (
+                <View style={styles.modal}>
+                    <Text style={{ fontSize: FontSize.BODY_LARGE, fontWeight: FontWeight.BODY_LARGE }}>Hướng dẫn cách đi</Text>
+                    <View
+                        style={{ marginTop: 10 }}
+                    >
+                        {currentInstruction.RouteNo ? (
+                            <Text>Đi xe: {currentInstruction.RouteNo}</Text>
+                        ) : (
+                            <Text>Đi bộ</Text>
+                        )}
+                        <View style={{flexDirection: 'row', marginTop: 5}}>
+                            <Text>Từ: </Text>
+                            <Text style={{ color: Colors.SECONDARY100, fontSize: FontSize.BUTTON_NORMAL, fontWeight: FontWeight.BUTTON_NORMAL }}>{currentInstruction.GetIn}</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                            <Text>Đến: </Text>
+                            <Text style={{ color: Colors.SECONDARY100, fontSize: FontSize.BUTTON_NORMAL, fontWeight: FontWeight.BUTTON_NORMAL }}>{currentInstruction.GetOff}</Text>
+                        </View>
+                    </View>
+                </View>
+            )}
         </View>
     );
 }
@@ -125,7 +247,27 @@ const styles = StyleSheet.create({
         zIndex: 10,
         position: 'absolute',
         left: 15,
-        top: Dimensions.get('window').width / 3.5 + 64,
+        top: Dimensions.get('window').width / 3.5 + 80,
         borderRadius: 20,
+    },
+    modal: {
+        zIndex: 10,
+        position: 'absolute',
+        alignSelf: 'center',
+        bottom: 50,
+        backgroundColor: 'white', 
+
+        paddingHorizontal: 20,
+        paddingTop: 10,
+        paddingBottom: 20,
+        borderRadius: 5,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 2,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     }
 })

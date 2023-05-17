@@ -57,7 +57,7 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                 setStartData({
                     name: "Vị trí hiện tại",
                     latitude: location.coords.latitude,
-                    longtitude: location.coords.longitude
+                    longitude: location.coords.longitude
                 })
             }
         }
@@ -292,7 +292,7 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                                                         setStartData({
                                                             name: item.Name,
                                                             latitude: item.Lat,
-                                                            longtitude: item.Lng
+                                                            longitude: item.Lng
                                                         })
                                                         setStartInput(item.Name)
                                                     }
@@ -300,7 +300,7 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                                                         setTargetData({
                                                             name: item.Name,
                                                             latitude: item.Lat,
-                                                            longtitude: item.Lng
+                                                            longitude: item.Lng
                                                         })
                                                         setTargetInput(item.Name)
                                                     }
