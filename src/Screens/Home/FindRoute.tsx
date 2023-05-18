@@ -72,13 +72,16 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
             return
         }
         const newResult: any[] = []
+
+        text = text.trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase()
         
         busData && busData.map((item, index) => {
             if (item.RouteNo.includes(text)) {
                 newResult.unshift(item)
             }
             else {
-                const curStr = item.RouteName.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                const curStr = item.RouteName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase();
                 if (curStr.includes(text) || item.RouteName.includes(text)) {
                     newResult.push(item)
                 }
@@ -97,6 +100,8 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
             setResultData([])
             return
         }
+        text = text.trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase()
         const newResult: any[] = []
 
         busData && busData.map((item, index) => {

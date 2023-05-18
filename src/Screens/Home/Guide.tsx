@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet, Dimensions, Alert } from "react-native";
+import { View, Text, StyleSheet, Dimensions, FlatList, Animated, TouchableOpacity, Pressable } from "react-native";
 import { HomeStackParamList } from "./HomeContainer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Header, { Status } from "@/Components/Header";
 import MapView, { Callout, Marker, Polyline, UserLocationChangeEvent } from "react-native-maps";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "native-base";
 import { Icon } from "@/Theme/Icon/Icon";
 import { FontSize, FontWeight, Colors } from "@/Theme/Variables";
@@ -11,6 +11,7 @@ import { StartMarker, TargetMarker } from "@/Theme/Marker/Marker";
 import { debounce } from "lodash";
 import { background } from "native-base/lib/typescript/theme/styled-system";
 import { Float } from "react-native/Libraries/Types/CodegenTypes";
+import { Platform } from "react-native";
 
 
 type GuideNavigationProps = NativeStackScreenProps<
@@ -22,6 +23,11 @@ type Coordinate = {
     latitude: Float,
     longitude: Float
 }
+const {width, height} = Dimensions.get('window')
+
+const SIZE = Platform.OS === 'ios' ? width*0.72 : width*0.74
+
+const EMPTY_ITEM_SIZE = (width - SIZE) / 2
 
 const calculateDistance = (coordinate1: Coordinate, coordinate2: Coordinate) => {
     const R = 6371; // Đường kính Trái Đất (đơn vị: km)
@@ -43,6 +49,7 @@ const calculateDistance = (coordinate1: Coordinate, coordinate2: Coordinate) => 
 }
 
 export function Guide({ route, navigation }: GuideNavigationProps) {
+    const scrollX = useRef(new Animated.Value(0)).current
     const [isFinding, setIsFinding] = useState(false)
     const [mapRegion, setMapRegion] = useState({
         latitude: route.params.startData.latitude,
@@ -51,10 +58,7 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
         longitudeDelta: 0.005,
     })
 
-    const allInstructions = route.params.data.detail
-
-    const [currentInstruction, setCurrentInstruction] = useState<any>(allInstructions[0])
-    const [currentInstructionIndex, setCurrentInstructionIndex] = useState<number>(0)
+    const allInstructions = [{ key: 'leftSpacer' }, ...route.params.data.detail, {key: 'rightSparcer'}]
 
     const allCoordinates: any[] = []
 
@@ -204,26 +208,86 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
                 )}
             </MapView>
 
+
             {isFinding && (
-                <View style={styles.modal}>
-                    <Text style={{ fontSize: FontSize.BODY_LARGE, fontWeight: FontWeight.BODY_LARGE }}>Hướng dẫn cách đi</Text>
-                    <View
-                        style={{ marginTop: 10 }}
-                    >
-                        {currentInstruction.RouteNo ? (
-                            <Text>Đi xe: {currentInstruction.RouteNo}</Text>
-                        ) : (
-                            <Text>Đi bộ</Text>
+                <View style={{
+                    zIndex: 10,
+                    position: 'absolute',
+                    alignSelf: 'center',
+                    bottom: 10,
+                    height: 250
+                }}>
+                    <Animated.FlatList 
+                        data={allInstructions}
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{
+                            alignItems: 'center',
+                        }}
+                        horizontal
+                        snapToInterval={SIZE + 20}
+                        decelerationRate={Platform.OS === 'ios' ? 0 : 0.98}
+                        bounces={false}
+                        keyExtractor={(item: any, index: number) => index.toString()}
+                        onScroll={Animated.event(
+                            [{nativeEvent: {contentOffset: {x: scrollX}}}],
+                            {useNativeDriver: true}
                         )}
-                        <View style={{flexDirection: 'row', marginTop: 5}}>
-                            <Text>Từ: </Text>
-                            <Text style={{ color: Colors.SECONDARY100, fontSize: FontSize.BUTTON_NORMAL, fontWeight: FontWeight.BUTTON_NORMAL }}>{currentInstruction.GetIn}</Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                            <Text>Đến: </Text>
-                            <Text style={{ color: Colors.SECONDARY100, fontSize: FontSize.BUTTON_NORMAL, fontWeight: FontWeight.BUTTON_NORMAL }}>{currentInstruction.GetOff}</Text>
-                        </View>
-                    </View>
+                        scrollEventThrottle={16}
+                        renderItem={({item, index}) => {
+                            if (item.key){
+                                return <View style={{ width: EMPTY_ITEM_SIZE }} />;
+                            }
+
+                            const inputRange = [
+                                (index - 2) * (SIZE + 20),
+                                (index - 1) * (SIZE + 20),
+                                index * (SIZE + 20),
+                            ]
+                            console.log(inputRange)
+
+                            const translateY = scrollX.interpolate({
+                                inputRange,
+                                outputRange: [0, -50, 0],
+                                extrapolate: 'clamp',
+                            })
+                            return (
+                                <Pressable
+                                    onPress={() => {
+                                        setMapRegion({
+                                            latitude: item.GetInLat,
+                                            longitude: item.GetInLng,
+                                            latitudeDelta: 0.005,
+                                            longitudeDelta: 0.005,
+                                        })
+                                    }}
+                                >
+                                    <Animated.View style={[styles.modal, {
+                                        transform: [{ translateY }],
+                                        marginRight: index < allInstructions.length - 2 ? 20 : 0
+                                    }]}>
+                                        <Text style={{ fontSize: FontSize.BODY_LARGE, fontWeight: FontWeight.BODY_LARGE }}>Hướng dẫn cách đi</Text>
+                                        <View
+                                            style={{ marginTop: 10 , width: '90%'}}
+                                        >
+                                            {item.RouteNo ? (
+                                                <Text>Đi xe: {item.RouteNo}</Text>
+                                            ) : (
+                                                <Text>Đi bộ</Text>
+                                            )}
+                                            <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                                                <Text>Từ: </Text>
+                                                <Text style={{ color: Colors.SECONDARY100, fontSize: FontSize.BUTTON_NORMAL, fontWeight: FontWeight.BUTTON_NORMAL }}>{item.GetIn}</Text>
+                                            </View>
+                                            <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                                                <Text>Đến: </Text>
+                                                <Text style={{ color: Colors.SECONDARY100, fontSize: FontSize.BUTTON_NORMAL, fontWeight: FontWeight.BUTTON_NORMAL }}>{item.GetOff}</Text>
+                                            </View>
+                                        </View>
+                                    </Animated.View>
+                                </Pressable>
+                            )
+                        }}
+                    />
                 </View>
             )}
         </View>
@@ -251,16 +315,11 @@ const styles = StyleSheet.create({
         borderRadius: 20,
     },
     modal: {
-        zIndex: 10,
-        position: 'absolute',
-        alignSelf: 'center',
-        bottom: 50,
         backgroundColor: 'white', 
-
         paddingHorizontal: 20,
         paddingTop: 10,
         paddingBottom: 20,
-        borderRadius: 5,
+        borderRadius: 10,
         shadowColor: "#000",
         shadowOffset: {
             width: 2,
@@ -269,5 +328,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
+        minHeight: 150,
+        width: SIZE,
     }
 })
