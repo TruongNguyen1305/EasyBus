@@ -57,7 +57,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
 
   const [loading, setLoading] = useState({
     nearStation: false,
-    likeStation: true,
+    likeStation: false,
   })
 
   const [fetch] = useUpdateFavouriteMutation()
@@ -101,7 +101,6 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
       
       dispatch(CHANGE_FAVOURITE(payload))        
       setLoading({...loading, likeStation: false})
-      
     }
   }
   

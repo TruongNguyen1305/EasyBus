@@ -13,6 +13,8 @@ import { CHANGE_FAVOURITE } from "@/Store/reducers"
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { RootScreens } from ".."
 import { RootStackParamList } from "@/Navigation"
+import Spinner from "react-native-loading-spinner-overlay/lib";
+
 
 enum Screen {
     STATION = 'STATION',
@@ -24,7 +26,7 @@ type RootScreenNavigatorProps = NativeStackScreenProps<
     RootScreens.MAIN
 >
 
-export default function FavouriteContainer({ route, navigation } : RootScreenNavigatorProps) {
+export default function FavouriteContxainer({ route, navigation } : RootScreenNavigatorProps) {
     const user = useAppSelector(state => state.user.user)
     const dispatch = useAppDispatch()
     const [fetch] = useUpdateFavouriteMutation()
@@ -35,37 +37,35 @@ export default function FavouriteContainer({ route, navigation } : RootScreenNav
 
     const [loading, setLoading] = useState({
         bus: true,
-        station: true
-
+        station: true,
+        clickLike: false,
     })
-    console.log("USER", user)
+    console.log("USER",  user)
+    
     useEffect(() => {
-        console.log(user.id)
         if (user.id == '') {
             navigation.replace(RootScreens.AUTH)
         }
-        fetchDataStation(true)
-        fetchDataBus(true)
+        if (loading.station) fetchDataStation(true)
+        else fetchDataStation()
 
     }, [user])
 
     const handleClickHeartStation = async (StopId: string) => {
         if (user.id != '') {
+            loading.clickLike = true
             const station = await fetch({ route: 'station', id: StopId + '' }).unwrap()
             const payload = { station, bus: user.favouriteBus }
-            console.log(payload)
-            
             dispatch(CHANGE_FAVOURITE(payload))
+            loading.clickLike = false
         }
-        fetchDataStation()
     }
         
     const handleClickHeartBus = async (BusID: string) => {
         if (user.id != '') {
             const station = await fetch({ route: 'bus', id: BusID + '' }).unwrap()
             const payload = { bus, station: user.favouriteBus }
-            console.log(payload)
-
+            // console.log(payload)
             dispatch(CHANGE_FAVOURITE(payload))
         }
         fetchDataBus()
@@ -83,6 +83,7 @@ export default function FavouriteContainer({ route, navigation } : RootScreenNav
             }
         }
         setBus(busData)
+        console.log("fetch data bus")
         if (firstTime) setLoading({ ...loading, bus: false })
     }
 
@@ -103,6 +104,20 @@ export default function FavouriteContainer({ route, navigation } : RootScreenNav
 
     return (
         <View>
+
+            <Spinner
+                //visibility of Overlay Loading Spinner
+                visible={loading.clickLike}
+                //Text with the Spinner
+                // textContent={'Loading...'}
+                //Text style of the Spinner Text
+                textStyle={{
+                    fontSize: FontSize.HEADLINE2,
+                    fontWeight: FontWeight.HEADLINE2,
+                    color: 'white'
+                }}
+            />
+
             <View style = {{position:'relative'}}>
                 <Header cover={Status.COVER2} leftTitle='Yêu thích' leftIconName='collection' logoShow={false} />
             </View>
@@ -240,9 +255,7 @@ export default function FavouriteContainer({ route, navigation } : RootScreenNav
 
 
 const getFareTickets = (myString: string) => {
-    console.log(myString)
     const myArrString = myString.split('<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp- ');
-    console.log(myArrString)
     if (myArrString.length == 4) {
         return [myArrString[1].slice(17), myArrString[2].slice(22),  myArrString[3].slice(8)]
     }
@@ -251,3 +264,6 @@ const getFareTickets = (myString: string) => {
     }
     return []
 }
+
+
+
