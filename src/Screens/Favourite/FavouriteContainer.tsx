@@ -1,6 +1,6 @@
 import Header, { Status } from "@/Components/Header"
 import { View, Text, Dimensions, TouchableOpacity, ScrollView } from "react-native"
-import { Divider } from "native-base"
+import { Divider, Skeleton, VStack } from "native-base"
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables"
 import { Icon } from "@/Theme/Icon/Icon"
 import { useEffect, useState } from "react"
@@ -33,15 +33,20 @@ export default function FavouriteContainer({ route, navigation } : RootScreenNav
     const [station, setStation] = useState<any[]>([])
     const [bus, setBus] = useState<any[]>([])
 
+    const [loading, setLoading] = useState({
+        bus: true,
+        station: true
+
+    })
     console.log("USER", user)
     useEffect(() => {
         console.log(user.id)
         if (user.id == '') {
             navigation.replace(RootScreens.AUTH)
         }
+        fetchDataStation(true)
+        fetchDataBus(true)
 
-        fetchDataStation()
-        fetchDataBus()
     }, [user])
 
     const handleClickHeartStation = async (StopId: string) => {
@@ -66,9 +71,8 @@ export default function FavouriteContainer({ route, navigation } : RootScreenNav
         fetchDataBus()
     }        
 
-    const fetchDataBus = async () => {
+    const fetchDataBus = async (firstTime = false) => {
         const busData : any [] = []
-        
         for (const item of user.favouriteBus) {
             try {
                 const bus = await axios.get(`http://apicms.ebms.vn/businfo/getroutebyid/${item}`)
@@ -79,10 +83,10 @@ export default function FavouriteContainer({ route, navigation } : RootScreenNav
             }
         }
         setBus(busData)
+        if (firstTime) setLoading({ ...loading, bus: false })
     }
 
-    console.log(bus)
-    const fetchDataStation = () => {
+    const fetchDataStation = (firstTime = false) => {
         axios.get('http://apicms.ebms.vn/businfo/getstopsinbounds/106/10/107/11')
         .then(res => {
             const InfoBusStation: any[] = []
@@ -92,12 +96,10 @@ export default function FavouriteContainer({ route, navigation } : RootScreenNav
                 }
             })
             setStation(InfoBusStation)
+            if (firstTime) setLoading({ ...loading, station: false })
         })
-        .catch(err => console.log(err))
+            .catch(err => console.log(err))
     }
-
-
-
 
     return (
         <View>
@@ -166,16 +168,46 @@ export default function FavouriteContainer({ route, navigation } : RootScreenNav
                     }}
                     showsVerticalScrollIndicator = {false}
                     >
+                        
                         {
+                            loading.station ? 
+                                Array(4).fill(0).map((item, index) => (
+                                        <VStack w="100%" maxW="400" borderWidth="1" space={2} overflow="hidden" rounded="md" _dark={{
+                                            borderColor: "coolGray.500"
+                                        }} _light={{
+                                            borderColor: "coolGray.200"
+                                        }}
+                                        mb={3}
+                                        key={index}
+                                        >
+                                            <Skeleton h="6" />
+                                            <View style={{flexDirection:'row'}}>
+                                                <Skeleton.Text px="4" my={2} w={'80%'} lines={1} ml={4} marginTop={0} />
+                                                <View>
+                                                <Skeleton size="7" w={7} rounded="full" ml={4}  />
+
+                                                </View>
+                                            </View>
+                                            
+                                            <Skeleton rounded="full" w={"88%"} mt={-2} mb={2} h="8" pl={9} pr={6} startColor="primary.100" />
+                                        </VStack>
+                                )
+                            )
+                            :
                             user.id != '' && station.map((item, index) => (
-                            <View key={index}>
-                                <Busstop name={item.Name} address={item.AddressNo}
-                                    buslist={item.Routes} street={item.Street} zone={item.Zone}
-                                    onPressHeart={() => handleClickHeartStation(item.StopId+'')}    
-                                />                           
-                            </View>
+                                <View key={index}>
+                                    <Busstop name={item.Name} address={item.AddressNo}
+                                        buslist={item.Routes} street={item.Street} zone={item.Zone}
+                                        onPressHeart={() => handleClickHeartStation(item.StopId+'')}    
+                                    />                           
+                                </View>
                             ))
+                    
                         }
+                        
+                        
+
+                         
                     </ScrollView>
                 :
                     <ScrollView style={{
