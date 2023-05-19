@@ -1,16 +1,31 @@
 import React, {useEffect} from "react";
 import {StyleSheet, View, Text} from "react-native"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { HomeContainer } from "@/Screens/Home";
+import { Icon } from "@/Theme/Icon/Icon";
+import { Colors } from "@/Theme/Variables";
+import { useAppSelector } from "@/Hooks/redux";
+
+
+import { HomeContainer } from "@/Screens/Home/HomeContainer";
 import NotificationContainer from "@/Screens/Notification/NotifcationContainer";
 import FavouriteContainer from "@/Screens/Favourite/FavouriteContainer";
 import SettingContainer from "@/Screens/Setting/SettingContainer";
-import { Icon } from "@/Theme/Icon/Icon";
-import { Colors, FontSize } from "@/Theme/Variables";
+import { PaymentContainer } from "@/Screens/Payment/PaymentContainer";
+
+
+
+
+
+
+
+
+
+
 
 const Tab = createBottomTabNavigator();
 // @refresh reset
 export const MainNavigator = () => {
+    const user = useAppSelector(state => state.user.user)
   return (
     <Tab.Navigator
         screenOptions={{
@@ -38,7 +53,7 @@ export const MainNavigator = () => {
       />
       <Tab.Screen
         name="Payment"
-        component={HomeContainer}
+        component={PaymentContainer}
         options={{
             tabBarIcon: ({ color, focused }) => (
                 <View style={styles.tabbar}>

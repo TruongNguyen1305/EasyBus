@@ -22,7 +22,6 @@ export default function Busstop(props: IBusstopProps) {
             <View style={{width:'10%'}}>
                 <Icon name='busstop' size = {24} color = 'black' />
             </View>
-
             <View style={{
                 width: '90%'
             }}>
@@ -59,7 +58,6 @@ export default function Busstop(props: IBusstopProps) {
         </View>
             <Divider bg={Colors.BLACK30} thickness="1" mx="1"
                 orientation="horizontal" marginY={3}
-                marginX={10}
             />
         </>
     )
