@@ -3,15 +3,17 @@ import { HomeStackParamList } from "./HomeContainer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Header, { Status } from "@/Components/Header";
 import MapView, { Callout, Marker, Polyline, UserLocationChangeEvent } from "react-native-maps";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "native-base";
 import { Icon } from "@/Theme/Icon/Icon";
 import { FontSize, FontWeight, Colors } from "@/Theme/Variables";
 import { StartMarker, TargetMarker } from "@/Theme/Marker/Marker";
 import { debounce } from "lodash";
-import { background } from "native-base/lib/typescript/theme/styled-system";
 import { Float } from "react-native/Libraries/Types/CodegenTypes";
 import { Platform } from "react-native";
+import * as Location from 'expo-location'
+import Spinner from "react-native-loading-spinner-overlay/lib";
+import { useIsFocused } from "@react-navigation/native";
 
 
 type GuideNavigationProps = NativeStackScreenProps<
@@ -49,8 +51,13 @@ const calculateDistance = (coordinate1: Coordinate, coordinate2: Coordinate) => 
 }
 
 export function Guide({ route, navigation }: GuideNavigationProps) {
-    const scrollX = useRef(new Animated.Value(0)).current
+    let scrollX = useRef(new Animated.Value(0)).current
+    const flatListRef = useRef<any>(null)
+    const [loading, setLoading] = useState(false)
     const [isFinding, setIsFinding] = useState(false)
+    const isFocused = useIsFocused()
+
+
     const [mapRegion, setMapRegion] = useState({
         latitude: route.params.startData.latitude,
         longitude: route.params.startData.longitude,
@@ -71,28 +78,68 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
         }
     }
 
-
-    const handleUserMove = (e: UserLocationChangeEvent) => {
-        //console.log(e.nativeEvent.coordinate)
-        // if (!e.nativeEvent.coordinate){
-        //     return
-        // }
-        // const currentPostion = {
-        //     latitude: e.nativeEvent.coordinate.latitude,
-        //     longitude: e.nativeEvent.coordinate.longitude,
-        // }
-        // let newInstruction = currentInstruction
-        // const lengthToGetIn = calculateDistance(currentPostion, {
-        //     latitude: newInstruction.GetInLat,
-        //     longitude: newInstruction.GetInLng
-        // })
-        // console.log(lengthToGetIn)
-    }
+    const handleChangeLocation = (location: Location.LocationObject) => {
+        for(let i in allInstructions){
+            let instruction = allInstructions[i]
+            if (!instruction.GetOff)
+                continue
+            let distance = calculateDistance({
+                latitude: instruction.GetOffLat,
+                longitude: instruction.GetOffLng
+            }, {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude
+            })
+            if(distance < 5){
+                flatListRef.current.scrollToIndex({ index: i, viewPosition: 0.65 })
+                return 
+            }
+        }
         
+    }
 
+
+    useEffect(() => {
+        let watcher: any
+
+        const checkLocationChange = async () => {
+            watcher = await Location.watchPositionAsync({
+                accuracy: Location.Accuracy.BestForNavigation,
+                distanceInterval: 5,
+                timeInterval: 5000
+            }, (location) => {
+                if(!isFinding) {
+                    return
+                }
+                handleChangeLocation(location)
+            })
+        }
+
+        checkLocationChange()
+
+        return () => {
+            watcher.remove()
+            console.log(watcher)
+        }
+
+    }, [isFocused])
+        
     return (
         <View style={styles.container}>
             <Header cover={Status.COVER1} leftTitle="Back" leftIconName="back" logoShow navigation={navigation} />
+
+            <Spinner
+                //visibility of Overlay Loading Spinner
+                visible={loading}
+                //Text with the Spinner
+                textContent={'Loading...'}
+                //Text style of the Spinner Text
+                textStyle={{
+                    fontSize: FontSize.HEADLINE2,
+                    fontWeight: FontWeight.HEADLINE2,
+                    color: 'white'
+                }}
+            />
 
             <Button
                 backgroundColor={isFinding ? Colors.RED60 : Colors.PRIMARY60}
@@ -100,7 +147,20 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
                 leftIcon={
                     isFinding ? <Icon name="pause" size={20} color="white" /> : <Icon name="location-arrow" size={20} color="white" />
                 }
-                onPress={() => setIsFinding(prev => !prev)}
+                onPress={async () => {
+                    setLoading(true)
+                    if(!isFinding){
+                        const location: Location.LocationObject = await Location.getCurrentPositionAsync()
+                        setMapRegion({
+                            latitude: location.coords.latitude,
+                            longitude: location.coords.longitude,
+                            latitudeDelta: 0.005,
+                            longitudeDelta: 0.005,
+                        })
+                    }
+                    setIsFinding(prev => !prev)
+                    setLoading(false)
+                }}
             >
                 <Text style={{fontSize: FontSize.BUTTON_SMALL, fontWeight: FontWeight.BUTTON_SMALL, color: 'white'}}>
                     {isFinding ? "Dừng dẫn đường" : "Bắt đầu dẫn đường"}
@@ -122,7 +182,6 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
                         }, 1000, { trailing: true, leading: false })
                 }
                 showsUserLocation={true}
-                onUserLocationChange={handleUserMove}
                 customMapStyle={[
                     {
                         "featureType": "poi.business",
@@ -218,6 +277,7 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
                     height: 250
                 }}>
                     <Animated.FlatList 
+                        ref={flatListRef}
                         data={allInstructions}
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={{
@@ -243,7 +303,6 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
                                 (index - 1) * (SIZE + 20),
                                 index * (SIZE + 20),
                             ]
-                            console.log(inputRange)
 
                             const translateY = scrollX.interpolate({
                                 inputRange,
