@@ -54,11 +54,13 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
     isOpen: false,
     data: initialStation
   })
-  const [loadingBusStation, setLoadingBusStation] = useState(false)
 
+  const [loading, setLoading] = useState({
+    nearStation: false,
+    likeStation: true,
+  })
 
   const [fetch] = useUpdateFavouriteMutation()
-
 
   useEffect(() => {
     (async () => {
@@ -80,23 +82,26 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
       console.log('t ko thèm tìm')
       return
     }
-    setLoadingBusStation(true)
+    setLoading({...loading, nearStation: true})
     axios.get(`http://apicms.ebms.vn/businfo/getstopsinbounds/${longitude - longitudeDelta}/${latitude - latitudeDelta}/${longitude + longitudeDelta}/${latitude + latitudeDelta}`)
       .then(res => {
         setDataBusStop(res.data)
         console.log(res.data.length)
-        setLoadingBusStation(false)
+        setLoading({...loading, nearStation: false})
       })
       .catch(err => console.log(err)) 
     }
   
   const handleClickHeart = async (item: any) => {
-    if (user.id != '' ) {
+    if (user.id != '') {
+      setLoading({...loading, likeStation: true})
       const station = await fetch({ route: 'station', id: item+''}).unwrap()
       const payload = { station, bus: user.favouriteBus }
       console.log(payload)
       
       dispatch(CHANGE_FAVOURITE(payload))        
+      setLoading({...loading, likeStation: false})
+      
     }
   }
   
@@ -126,7 +131,9 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
           )
         }
         showsUserLocation={true}
-        customMapStyle={[
+        customMapStyle={
+          styleMap || 
+          [
           {
             "featureType": "poi.business",
             "stylers": [
@@ -276,7 +283,11 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
               onPress={() => handleClickHeart(modal.data.StopId)}
               >
                 {
-                  user!=null && user.favouriteStation.includes(modal.data.StopId + '') ? 
+                  loading.likeStation ? 
+                    <View style={{top: 10}}>
+                      <Spinner size="sm" color={Colors.PRIMARY40} />
+                    </View> :
+                    user != null && user.favouriteStation.includes(modal.data.StopId + '') ? 
                     <View>
                       <View style={{top: 10}}>
                         <Icon name='heart' size={20} color={Colors.PRIMARY40} />
@@ -305,7 +316,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
       </Modal>
       
       {
-        loadingBusStation && 
+        loading.nearStation && 
           <View style={{ zIndex: 10, top: 40, width: '100%' }}>
             <Spinner size="lg" color="indigo.500" />
           </View>
@@ -433,3 +444,246 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: Colors.BLACK30
   }
 });
+
+
+
+const styleMap = [
+  {
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#ebe3cd"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#523735"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#f5f1e6"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#c9b2a6"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.land_parcel",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#dcd2be"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.land_parcel",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#ae9e90"
+      }
+    ]
+  },
+  {
+    "featureType": "landscape.natural",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#dfd2ae"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#dfd2ae"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#93817c"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.business",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#a5b076"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "labels.text",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#447530"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#f5f1e6"
+      }
+    ]
+  },
+  {
+    "featureType": "road.arterial",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#fdfcf8"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#f8c967"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#e9bc62"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway.controlled_access",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#e98d58"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway.controlled_access",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#db8555"
+      }
+    ]
+  },
+  {
+    "featureType": "road.local",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#806b63"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.line",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#dfd2ae"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.line",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#8f7d77"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.line",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#ebe3cd"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.station",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#dfd2ae"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.station.bus",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#b9d3c2"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#92998d"
+      }
+    ]
+  }
+]
