@@ -48,9 +48,7 @@ const slice = createSlice({
             state.user.favouriteStation = station
         },
         UPDATE_HISTORY: (state, { payload: { search } }) => {
-            if(state.historySearch.includes(search)){
-                state.historySearch = state.historySearch.filter(s => s !== search)
-            }
+            state.historySearch = state.historySearch.filter(s => s.RouteId !== search.RouteId)
             state.historySearch = [search, ...state.historySearch]
         },
         CLEAR_HISTORY: (state, { payload: { } }) => {

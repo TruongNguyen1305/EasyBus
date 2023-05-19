@@ -5,15 +5,56 @@ import Header, { Status } from "@/Components/Header";
 import { Icon } from "@/Theme/Icon/Icon";
 import { FontSize, FontWeight, Colors } from "@/Theme/Variables";
 import { Divider, Input, ScrollView } from "native-base";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Hint } from "@/Components/Home/Hint";
+import { Spinner } from "native-base";
+import axios from "axios";
 
 type HintRoutesNavigationProps = NativeStackScreenProps<
     HomeStackParamList,
     'HintRoutes'
 >
 
+export const getBusses = (title: string) => {
+    if (title.includes('Đi các tuyến'))
+        return title.slice(14).split(", ")
+    return title.slice(10).split(", ")
+}
+
+const getDistances = (desc: string) => {
+    return [
+        desc.slice(desc.indexOf('bộ') + 4, desc.indexOf('km') - 1),
+        desc.slice(desc.indexOf('buýt') + 6, desc.lastIndexOf('km') - 1)
+    ]
+}
+
+const getMinutes = (data: any[])=> {
+    return (data.reduce((acc, cur) => {
+        return acc + (cur.Length - 0)
+    }, 0) / 60).toFixed(1)
+}
+
 export function HintRoutes({route, navigation}: HintRoutesNavigationProps) {
+    const [hintData, setHintData] = useState<any[]>([])
+    const {startData, targetData} = route.params
+    const [loading, setLoading] = useState(false)
+    useEffect(() => {
+        const fetchHintData = async () => {
+            setLoading(true)
+            try {
+                const {data} = await axios.get(`http://apicms.ebms.vn/pathfinding/getpathbystop/${startData.latitude},${startData.longitude}/${targetData.latitude},${targetData.longitude}/2`)
+                setHintData(data)
+                setLoading(false)
+            } catch (error) {
+                setLoading(false)
+                alert('Connection error')
+            }
+        }
+        fetchHintData()
+    }, [])
+
+    //console.log(hintData.length)
+
     return (
         <View style={styles.container}>
             <Header cover={Status.COVER1} leftTitle="Back" leftIconName="back" logoShow navigation={navigation} />
@@ -37,6 +78,7 @@ export function HintRoutes({route, navigation}: HintRoutesNavigationProps) {
                                     <Icon name='target' size={22} color={Colors.PRIMARY40} />
                                 </View>
                             }
+                            value={route.params.startData.name}
                             onPressIn={() => navigation.goBack()}
                         />
 
@@ -47,6 +89,7 @@ export function HintRoutes({route, navigation}: HintRoutesNavigationProps) {
                                     <Icon name='location' size={22} color={Colors.PRIMARY40} />
                                 </View>
                             }
+                            value={route.params.targetData.name}
                             onPressIn={() => navigation.goBack()}
                         />
                 </View>
@@ -64,32 +107,31 @@ export function HintRoutes({route, navigation}: HintRoutesNavigationProps) {
                     Gợi ý các cách di chuyển
                  </Text>
 
-                 <ScrollView showsVerticalScrollIndicator={false} style={styles.hints} >
-                    <TouchableOpacity onPress={() => navigation.navigate('Guide')}>
-                        <Hint buses={[33, 99]}/>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => navigation.navigate('Guide')}>
-                        <Hint buses={[33, 99]} />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => navigation.navigate('Guide')}>
-                        <Hint buses={[33, 99]} />
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity onPress={() => navigation.navigate('Guide')}>
-                        <Hint buses={[33, 99]} />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => navigation.navigate('Guide')}>
-                        <Hint buses={[33, 99]} />
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity onPress={() => navigation.navigate('Guide')}>
-                        <Hint buses={[33, 99]} />
-                    </TouchableOpacity>
-                    
-                 </ScrollView>
+                {loading ? (
+                    <Spinner size='lg' color="emerald.500" accessibilityLabel="Loading"/>
+                 ) : (
+                    hintData.length > 0 ? (
+                        <ScrollView showsVerticalScrollIndicator={false} style={styles.hints} >
+                            {hintData.map((item, idx) => (
+                                <TouchableOpacity onPress={() => navigation.navigate('Guide', {data: item, startData: route.params.startData, targetData: route.params.targetData})} key={idx}>
+                                    <Hint buses={getBusses(item.Title)} distances={getDistances(item.Desc)} minutes={getMinutes(item.detail)}/>
+                                </TouchableOpacity>
+                            ))}
+                        </ScrollView>
+                    ) : (
+                        <Text
+                            style={{
+                                fontSize: FontSize.BODY_LARGE, 
+                                fontWeight: FontWeight.BODY_LARGE, 
+                                color: Colors.BLACK60,
+                                alignSelf: 'center',
+                                marginTop: 20
+                            }}
+                        >
+                            Không tìm thấy cách di chuyển
+                        </Text>
+                    )  
+                 )}
 
             </View>
             

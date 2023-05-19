@@ -10,9 +10,9 @@ import { SETISUSED } from "@/Store/reducers";
 
 export type HomeStackParamList = {
   ["Home"]: { data: any; isLoading: boolean },
-  ['FindRoute']: {status: string},
-  ['HintRoutes']: undefined,
-  ['Guide']: undefined,
+  ['FindRoute']: {status: string, target?: any},
+  ['HintRoutes']: {startData: any, targetData: any},
+  ['Guide']: { data: any, startData: any, targetData: any },
   ['FindBus']: undefined,
   ['FindBusStop']: undefined,
 }
@@ -30,7 +30,7 @@ export const HomeContainer = ():JSX.Element => {
 
   useEffect(() => {
     //fetchOne(userId);
-    console.log(user, isUsedApp)
+    //console.log(user, isUsedApp)
     if (!isUsedApp) {
       dispatch(SETISUSED({}))
     }

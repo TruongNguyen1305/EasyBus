@@ -14,6 +14,7 @@ import { AuthStackParamList } from '@/Navigation/Auth';
 import { RootStackParamList } from '@/Navigation';
 import { RootScreens } from '..';
 import { CompositeScreenProps } from '@react-navigation/native';
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
 type AuthScreenNavigatorProps = NativeStackScreenProps<
     AuthStackParamList,
@@ -44,6 +45,8 @@ export default function SignUp({ navigation }: SignupScreenProps){
         pass1: false,
         pass2: false,
     })
+
+    const [loading, setLoading] = useState(false)
     
     const animation = useRef(null)
 
@@ -51,6 +54,7 @@ export default function SignUp({ navigation }: SignupScreenProps){
 
     const handleSubmit = async() => {
         try {
+            setLoading(true)
             const payload = await fetch({
                 email: info.username,
                 password: info.password,
@@ -58,8 +62,10 @@ export default function SignUp({ navigation }: SignupScreenProps){
             }).unwrap()
 
             dispatch(LOGIN(payload))
+            setLoading(false)
             navigation.navigate(RootScreens.MAIN)
         } catch (error) {
+            setLoading(false)
             alert('Invalid credentials')
         }
     }
@@ -82,6 +88,20 @@ export default function SignUp({ navigation }: SignupScreenProps){
                     source={require('@/../assets/Lottie/test.json')}
                 />
             </View>
+
+            <Spinner
+                //visibility of Overlay Loading Spinner
+                visible={loading}
+                //Text with the Spinner
+                textContent={'Loading...'}
+                //Text style of the Spinner Text
+                textStyle={{
+                    fontSize: FontSize.HEADLINE2,
+                    fontWeight: FontWeight.HEADLINE2,
+                    color: 'white'
+                }}
+            />
+
             <View style={{ alignItems:'center', justifyContent:'center', marginBottom: 24}}>
                 <Input mx="3" placeholder="Tên" w="100%" size="lg" padding={4} marginBottom={4}
                     borderRadius={10} borderWidth={0} backgroundColor={'#F8F8F8'}

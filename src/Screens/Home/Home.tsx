@@ -304,7 +304,9 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
               </TouchableOpacity>
               <TouchableOpacity style = {{width: '40%', alignItems:'center', padding: 10,
                 borderRadius:4, borderWidth:1, borderColor: Colors.BLACK60
-            }}>
+            }}
+                onPress={() => navigation.navigate('FindRoute', { status: 'FindRoute', target: modal.data })}
+            >
                   <Icon name='findroute' size={24} color={Colors.PRIMARY40} />
               </TouchableOpacity>
             </View>
