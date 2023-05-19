@@ -62,12 +62,14 @@ export const Icon = (props: IIconProps) => {
         default:
           // FontAwesome
           // case "left" || "right" || 'heart' || 'envelop':
-        if (["left", "right", 'down', 'up', 'heart', 'envelop', 'location-arrow', 'calendar'].includes(name)) {
+        if (["left", "right", 'down', 'up', 'heart', 'heart-o', 'envelop', 'location-arrow', 'calendar'].includes(name)) {
             if (name == "left") iconname = "chevron-left"
             else if (name == "right") iconname = "chevron-right"
             else if (name == "down") iconname = "chevron-down"
             else if (name == "up") iconname = "chevron-up"
             else if (name == "heart") iconname = "heart"
+            else if (name == "heart-o") iconname = "heart-o"
+
             else if (name == "envelop") iconname = "envelope-o"
             else if (name == "location-arrow") iconname = "location-arrow"
             else if (name == "calendar") iconname = "calendar"

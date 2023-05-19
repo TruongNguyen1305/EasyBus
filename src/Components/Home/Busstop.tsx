@@ -1,4 +1,4 @@
-import { View, Text } from "react-native"
+import { View, Text, TouchableOpacity } from "react-native"
 import { Icon } from "@/Theme/Icon/Icon"
 import { FontSize, FontWeight, Colors } from "@/Theme/Variables"
 import BusIconContainer from "./BusIconContainer"
@@ -9,18 +9,19 @@ interface IBusstopProps {
     address: string;
     buslist: string;
     street: string;
-    zone: string
+    zone: string;
+    onPressHeart: () => void;
 }
 
 export default function Busstop(props: IBusstopProps) {
     const buslist = props.buslist.split(', ')
+    console.log(buslist)
     return (
         <>
         <View style={{flexDirection:'row'}}>
             <View style={{width:'10%'}}>
                 <Icon name='busstop' size = {24} color = 'black' />
             </View>
-
             <View style={{
                 width: '90%'
             }}>
@@ -36,17 +37,20 @@ export default function Busstop(props: IBusstopProps) {
                             {props.address}, {props.street}, {props.zone}
                         </Text>
                     </View>
-                        <View style={{width:'10%', margin: 4}}>
+                        <TouchableOpacity style={{ width: '10%', margin: 4 }}
+                            onPress={props.onPressHeart}
+                        >
                             <Icon name='heart' size = {22} color = {Colors.PRIMARY40} />
-                        </View>     
+                        </TouchableOpacity>     
                 </View>
                     
 
                 <View style={{ flexDirection: 'row', marginTop: 4, flexWrap:'wrap'}}>
                     {
-                        buslist.map((busnum, index) => (
+                        buslist[0] != "" ? buslist.map((busnum, index) => (
                             <BusIconContainer key={index} busnum={busnum} />
-                        ))       
+                        )) :
+                        <Text style={{color: Colors.RED30, fontWeight: '600'}}>Trạm dừng khai thác</Text>
                     }
                 </View>
             </View>
@@ -54,7 +58,6 @@ export default function Busstop(props: IBusstopProps) {
         </View>
             <Divider bg={Colors.BLACK30} thickness="1" mx="1"
                 orientation="horizontal" marginY={3}
-                marginX={10}
             />
         </>
     )

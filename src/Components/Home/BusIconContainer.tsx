@@ -20,7 +20,8 @@ export default function BusIconContainer(props: IBusIconContainerProps) {
             alignItems: 'center',
             justifyContent: 'flex-start',
             borderRadius: 10,
-            marginLeft: 4
+            marginLeft: 4,
+            marginBottom: 5
         }}>
             <Icon name='bus' size = {20} color = 'white' />
             <Text style={{

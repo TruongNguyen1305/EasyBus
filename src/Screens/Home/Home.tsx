@@ -1,21 +1,24 @@
 import { i18n, LocalizationKey } from "@/Localization";
 import React, {useCallback, useEffect, useState} from "react";
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, FlatList } from "react-native";
-import { User } from "@/Services";
+import { User, useUpdateFavouriteMutation } from "@/Services";
 import { Icon } from "@/Theme/Icon/Icon";
 import { HomeStackParamList } from "./HomeContainer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import MapView, {Callout, Marker, Polyline} from 'react-native-maps';
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables";
-import { Divider, Pressable, ScrollView } from 'native-base';
+import { Divider, Pressable, ScrollView, Modal, Spinner} from 'native-base';
 import Header from "@/Components/Header";
 import Busstop from "@/Components/Home/Busstop";
 import { Status } from "@/Components/Header";
-import { debounce } from 'lodash';
+import { debounce, set } from 'lodash';
 import * as Location from 'expo-location';
+import { useAppSelector, useAppDispatch } from "@/Hooks/redux";
 
 
 import axios from 'axios'
+import { CHANGE_FAVOURITE } from "@/Store/reducers/user";
+import BusIconContainer from "@/Components/Home/BusIconContainer";
 
 type HomeScreenNavigationProps = NativeStackScreenProps<
   HomeStackParamList,
@@ -25,10 +28,18 @@ export interface IHomeProps {
   data: User | undefined;
   isLoading: boolean;
 }
+
+const initialStation = {
+  StopId: '',
+  Name: '',
+  Street: '',
+  Zone: '',
+  Routes: '',
+  AddressNo: '',
+}
 export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
   const { data, isLoading } = route.params;
-  const [openHeader, setOpenHeader] = useState(true)
-  const [nearbusOpen, setNearbusOpen] = useState(false);
+  const dispatch = useAppDispatch()
   const [mapRegion, setMapRegion] = useState({
     latitude: 10.880035901459214,
     longitude: 106.80625226368548,
@@ -36,6 +47,18 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
     longitudeDelta: 0.005,
   });
   const [dataBusStop, setDataBusStop] = useState<any[]>([])  
+  
+  const [openHeader, setOpenHeader] = useState(true)
+  const [nearbusOpen, setNearbusOpen] = useState(false);
+  const [modal, setModal] = useState({
+    isOpen: false,
+    data: initialStation
+  })
+  const [loadingBusStation, setLoadingBusStation] = useState(false)
+
+
+  const [fetch] = useUpdateFavouriteMutation()
+
 
   useEffect(() => {
     (async () => {
@@ -47,28 +70,46 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
     })();
   }, []);
 
+    
+  const user = useAppSelector(state => state.user.user)
 
-
-  const getDataBusTop = async () => {
-    axios.get(`http://apicms.ebms.vn/businfo/getstopsinbounds/${mapRegion.longitude - mapRegion.longitudeDelta}/${mapRegion.latitude - mapRegion.latitudeDelta}/${mapRegion.longitude + mapRegion.longitudeDelta}/${mapRegion.latitude + mapRegion.latitudeDelta}`)
+  const getDataBusTop = async (latitude: number, longitude:number, latitudeDelta: number, longitudeDelta: number) => {
+    console.log('đang tìm trạm mới')
+    console.log( latitudeDelta, longitudeDelta)
+    if (latitudeDelta > 0.03 || longitudeDelta > 0.03) { 
+      console.log('t ko thèm tìm')
+      return
+    }
+    setLoadingBusStation(true)
+    axios.get(`http://apicms.ebms.vn/businfo/getstopsinbounds/${longitude - longitudeDelta}/${latitude - latitudeDelta}/${longitude + longitudeDelta}/${latitude + latitudeDelta}`)
       .then(res => {
         setDataBusStop(res.data)
+        console.log(res.data.length)
+        setLoadingBusStation(false)
       })
       .catch(err => console.log(err)) 
     }
   
+  const handleClickHeart = async (item: any) => {
+    if (user.id != '' ) {
+      const station = await fetch({ route: 'station', id: item+''}).unwrap()
+      const payload = { station, bus: user.favouriteBus }
+      console.log(payload)
+      
+      dispatch(CHANGE_FAVOURITE(payload))        
+    }
+  }
   
-  console.log(`http://apicms.ebms.vn/businfo/getstopsinbounds/${mapRegion.longitude - mapRegion.longitudeDelta}/${mapRegion.latitude - mapRegion.latitudeDelta}/${mapRegion.longitude + mapRegion.longitudeDelta}/${mapRegion.latitude + mapRegion.latitudeDelta}`)
   useEffect(() => {
-    getDataBusTop()
+    getDataBusTop(mapRegion.latitude, mapRegion.longitude, mapRegion.latitudeDelta, mapRegion.longitudeDelta)
   }, [])
-  console.log(mapRegion)
+
+
   return (
     <View style={styles.container}>
     <MapView
         style={styles.map}
         region={mapRegion}
-        // moveOnMarkerPress = {false}
         mapPadding={{ top: openHeader ? 180 : 90 , right: 0, bottom: 0, left: 0 }}
         onRegionChange={
           useCallback(
@@ -80,12 +121,14 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
               }
               // console.log('no bi zo cai nay ne')
                 setMapRegion(region)
-                getDataBusTop()
+                getDataBusTop(region.latitude, region.longitude, region.latitudeDelta, region.longitudeDelta)
             }, 1000, {trailing: true, leading: false}), []
           )
         }
         showsUserLocation={true}
-        customMapStyle={[
+        customMapStyle={
+          styleMap || 
+          [
           {
             "featureType": "poi.business",
             "stylers": [
@@ -122,34 +165,48 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
           }
         ]}
       >
-
         {
-          dataBusStop.map((item, index) => 
-            <Marker
-              key={index}
-              coordinate={{
-                latitude: item.Lat,
-                longitude: item.Lng,
-              }}
-              tracksViewChanges={false}
-              image={require('@/../assets/image/markicon-bus.png')}
-            >
-              <Callout style={{width: 200}}>
-                  <Text style={{fontSize: 13, fontWeight: '700'}}>{item.Code} - {item.Name}</Text>  
-                  <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
-                  <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes != '' ? item.Routes : 'Tạm dừng khai thác'}</Text>
-              </Callout>
-            </Marker>
+          dataBusStop.map((item, index) => {
+              if (user.id != '' && user.favouriteStation != null && user.favouriteStation.includes(item.StopId + '')) { 
+                return (
+                  <Marker
+                  key={index}
+                  coordinate={{
+                    latitude: item.Lat,
+                    longitude: item.Lng,
+                  }}
+                  tracksViewChanges={false}
+                  image={require('@/../assets/image/markicon-bus_liked.png')}
+                >
+                  <Callout style={{ width: 200, flexDirection: 'column' }} onPress={() => setModal({isOpen: true, data: item})}>
+                      <Text style={{fontSize: 13, fontWeight: '700'}}>{item.StopId} - {item.Name}</Text>  
+                      <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
+                      <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes != '' ? item.Routes : 'Tạm dừng khai thác'}</Text>
+                  </Callout>
+                </Marker>
+                )
+              } 
+              else return (
+                <Marker
+                key={index}
+                coordinate={{
+                  latitude: item.Lat,
+                  longitude: item.Lng,
+                }}
+                tracksViewChanges={false}
+                image={require('@/../assets/image/markicon-bus.png')}
+              >
+                <Callout style={{ width: 200, flexDirection: 'column' }} onPress={() => setModal({isOpen: true, data: item})}>
+                    <Text style={{fontSize: 13, fontWeight: '700'}}>{item.StopId} - {item.Name}</Text>  
+                    <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
+                    <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes != '' ? item.Routes : 'Tạm dừng khai thác'}</Text>
+                </Callout>
+              </Marker>
+              )
+            }
           )
         }
       </MapView>
-      
-              {/* <Callout style={{maxWidth: 200}}>
-                  <Text style={{fontSize: 13, fontWeight: '700'}}>{item.Code} - {item.Name}</Text>  
-                  <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
-                  <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes}</Text>
-              </Callout> */}
-            {/* </Marker> */}
       {
         openHeader ? (
           <>
@@ -171,7 +228,6 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
           <Icon name = 'magnifying' size={24} color={Colors.PRIMARY40} />
           <Text style={[styles.tbuttonsm, {marginTop: 6}]}>Tra cứu</Text>
         </TouchableOpacity>
-
             </View>
           </>
         ) : (
@@ -191,6 +247,68 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
             }     
         </TouchableOpacity>
         )
+      }
+      <Modal isOpen={modal.isOpen} onClose={() => setModal({ isOpen: false, data: initialStation })}
+        avoidKeyboard justifyContent="flex-end"
+        bottom="4" size="lg">
+        <Modal.Content>
+          <Modal.CloseButton />
+          
+          <Modal.Header w={'90%'}>{modal.data.StopId + ' - ' + modal.data.Name}</Modal.Header>
+          
+          <Modal.Body>
+            <ScrollView  horizontal={true} style = {{flexDirection:'row'}}>
+              {
+                modal.data.Routes != '' ? modal.data.Routes.split(', ').map((item, index) =>
+                  <View key={index}>
+                    <BusIconContainer busnum={item} />
+                  </View>
+                )
+                  : 
+                  <Text style={{color: Colors.PRIMARY40, fontWeight: '500'}}>Trạm dừng khai thác</Text>
+              }
+            </ScrollView>
+            <Text style = {{fontSize: 13, fontWeight:'500'}}>
+              {modal.data.AddressNo}, {modal.data.Street}, {modal.data.Zone}
+            </Text>
+            <View style={{ flexDirection: 'row', justifyContent:'space-around', marginTop: 10}}>
+              <TouchableOpacity style = {{width: '40%', alignItems:'center',
+                borderRadius:4, borderWidth:1, borderColor:Colors.BLACK60
+              }}
+              onPress={() => handleClickHeart(modal.data.StopId)}
+              >
+                {
+                  user!=null && user.favouriteStation.includes(modal.data.StopId + '') ? 
+                    <View>
+                      <View style={{top: 10}}>
+                        <Icon name='heart' size={20} color={Colors.PRIMARY40} />
+                      </View>
+                      <View style={{top: -10}}>
+                        <Icon name='heart-o' size={21} color={'#262626'} />
+                      </View>
+                    </View>
+                    :
+                    <View style = {{top: 10}}>
+                      <Icon name='heart-o' size={20} color='black' />
+                    </View>
+
+                }
+              </TouchableOpacity>
+              <TouchableOpacity style = {{width: '40%', alignItems:'center', padding: 10,
+                borderRadius:4, borderWidth:1, borderColor: Colors.BLACK60
+            }}>
+                  <Icon name='findroute' size={24} color={Colors.PRIMARY40} />
+              </TouchableOpacity>
+            </View>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
+      
+      {
+        loadingBusStation && 
+          <View style={{ zIndex: 10, top: 40, width: '100%' }}>
+            <Spinner size="lg" color="indigo.500" />
+          </View>
       }
 
       {
@@ -227,6 +345,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
                       <Busstop name={item.Name} address={item.AddressNo}
                         buslist={item.Routes}
                         street={item.Street} zone={item.Zone}
+                        onPressHeart={() => console.log('haha')}
                       />
                     </TouchableOpacity>
                   )}
@@ -296,7 +415,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16, paddingVertical: 8,
     borderRadius: 8, borderWidth: 1, borderColor: '#ccc',
     shadowColor: "#000",
-    shadowOffset: {
+    shadowOffset: {   
     width: 0,
     height: 2,
     },
@@ -314,3 +433,246 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: Colors.BLACK30
   }
 });
+
+
+
+const styleMap = [
+  {
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#ebe3cd"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#523735"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#f5f1e6"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#c9b2a6"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.land_parcel",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#dcd2be"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.land_parcel",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#ae9e90"
+      }
+    ]
+  },
+  {
+    "featureType": "landscape.natural",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#dfd2ae"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#dfd2ae"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#93817c"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.business",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#a5b076"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "labels.text",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#447530"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#f5f1e6"
+      }
+    ]
+  },
+  {
+    "featureType": "road.arterial",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#fdfcf8"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#f8c967"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#e9bc62"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway.controlled_access",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#e98d58"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway.controlled_access",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#db8555"
+      }
+    ]
+  },
+  {
+    "featureType": "road.local",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#806b63"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.line",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#dfd2ae"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.line",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#8f7d77"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.line",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#ebe3cd"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.station",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#dfd2ae"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.station.bus",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#b9d3c2"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#92998d"
+      }
+    ]
+  }
+]

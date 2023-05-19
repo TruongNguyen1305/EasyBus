@@ -12,11 +12,17 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { debounce } from "lodash";
 import BusSearchItem from "@/Components/Home/BusSearchItem";
+import { useAppDispatch, useAppSelector } from "@/Hooks/redux";
+import { CLEAR_HISTORY, UPDATE_HISTORY } from "@/Store/reducers";
 type FindRouteNavigationProps = NativeStackScreenProps<
     HomeStackParamList,
     'FindRoute'
 >
 export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
+    const { historySearch } = useAppSelector(state => state.user)
+    // const [fetch, setFetch] = useState(false)
+    // console.log(historySearch, 'ccccc')
+    const dispatch = useAppDispatch()
     const [status, setStatus] = useState(route.params.status)
     const [busData, setBusData] = useState<any[]>([])
     const [resultData, setResultData] = useState<any[]>([])
@@ -34,6 +40,10 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
 
     const handleChangeSearchText = (text: string) => { 
         setInput(text)
+        if(text === ""){
+            setResultData([])
+            return
+        }
         const newResult: any[] = []
         
         busData && busData.map((item, index) => {
@@ -75,15 +85,39 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                                 onChangeText={debounce(handleChangeSearchText, 500)}
                             />
 
-                            <Text style={{
-                                marginTop: 10,
-                                fontSize: FontSize.BODY_SMALL2,
-                                fontWeight: FontWeight.BODY_SMALL2,
-                                color: Colors.BLACK60,
-                                textAlign: 'center'
-                            }}>
-                                Lịch sử tìm kiếm
-                            </Text>
+                            <View>
+                                <Text style={{
+                                    marginTop: 10,
+                                    fontSize: FontSize.BODY_SMALL2,
+                                    fontWeight: FontWeight.BODY_SMALL2,
+                                    color: Colors.BLACK60,
+                                    textAlign: 'center'
+                                }}>
+                                    {input !== "" ? 'Kết quả tìm kiếm' : 'Lịch sử tìm kiếm'}
+                                </Text>
+                                {input === "" && (
+                                    <TouchableOpacity style={{
+                                        alignSelf: 'flex-end',
+                                        backgroundColor: Colors.SECONDARY20,
+                                        paddingHorizontal: 10,
+                                        paddingVertical: 5,
+                                        borderRadius: 10
+                                    }}
+                                        onPress={() => {
+                                            dispatch(CLEAR_HISTORY({}))
+                                        }}
+                                    >
+                                        <Text style={{
+                                            color: Colors.BLACK60,
+                                            fontSize: FontSize.BUTTON_SMALL,
+                                            fontWeight: FontWeight.BUTTON_SMALL,
+                                        }}
+                                        >
+                                            Xóa lịch sử
+                                        </Text>
+                                    </TouchableOpacity>
+                                )}
+                            </View>
                         </View>
                         
                         <ScrollView
@@ -91,20 +125,43 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                             showsVerticalScrollIndicator={false}
                             marginBottom={3}
                         >
-                            {resultData.map((item, index) => (
-                                <TouchableOpacity key={index} style={{
-                                    justifyContent: 'center',
-                                    marginVertical: 8,
-                                    marginBottom: index == resultData.length - 1 ? 10 : 8,
-                                }}
-                                 onPress={() => console.log(item.RouteId)}
-                                >
-                                    <BusSearchItem busName={item.RouteName} busNo={item.RouteNo} />
-                                    {
-                                    index != resultData.length - 1 && <Divider marginTop={4} />
-                                    }
-                                </TouchableOpacity>
-                            ))}
+                            {input === "" ?
+                                 historySearch && historySearch.map((item, index) => (
+                                    <TouchableOpacity key={index} style={{
+                                        justifyContent: 'center',
+                                        marginVertical: 8,
+                                        marginBottom: index == historySearch.length - 1 ? 10 : 8,
+                                    }}
+                                        onPress={() => {
+                                            dispatch(UPDATE_HISTORY({search: item}))
+                                            console.log(item.RouteId)
+                                        }}
+                                    >
+                                        <BusSearchItem busName={item.RouteName} busNo={item.RouteNo} />
+                                        {
+                                            index != historySearch.length - 1 && <Divider marginTop={4} />
+                                        }
+                                    </TouchableOpacity>
+                                ))
+                            : 
+                                resultData.map((item, index) => (
+                                    <TouchableOpacity key={index} style={{
+                                        justifyContent: 'center',
+                                        marginVertical: 8,
+                                        marginBottom: index == resultData.length - 1 ? 10 : 8,
+                                    }}
+                                        onPress={() => {
+                                            dispatch(UPDATE_HISTORY({ search: item }))
+                                            console.log(item.RouteId)
+                                        }}
+                                    >
+                                        <BusSearchItem busName={item.RouteName} busNo={item.RouteNo} />
+                                        {
+                                            index != resultData.length - 1 && <Divider marginTop={4} />
+                                        }
+                                    </TouchableOpacity>
+                                ))
+                            }
                         </ScrollView>
                     </>
                 ) : (
