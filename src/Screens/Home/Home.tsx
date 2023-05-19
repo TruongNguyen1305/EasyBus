@@ -54,11 +54,13 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
     isOpen: false,
     data: initialStation
   })
-  const [loadingBusStation, setLoadingBusStation] = useState(false)
 
+  const [loading, setLoading] = useState({
+    nearStation: false,
+    likeStation: true,
+  })
 
   const [fetch] = useUpdateFavouriteMutation()
-
 
   useEffect(() => {
     (async () => {
@@ -80,23 +82,26 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
       console.log('t ko thèm tìm')
       return
     }
-    setLoadingBusStation(true)
+    setLoading({...loading, nearStation: true})
     axios.get(`http://apicms.ebms.vn/businfo/getstopsinbounds/${longitude - longitudeDelta}/${latitude - latitudeDelta}/${longitude + longitudeDelta}/${latitude + latitudeDelta}`)
       .then(res => {
         setDataBusStop(res.data)
         console.log(res.data.length)
-        setLoadingBusStation(false)
+        setLoading({...loading, nearStation: false})
       })
       .catch(err => console.log(err)) 
     }
   
   const handleClickHeart = async (item: any) => {
-    if (user.id != '' ) {
+    if (user.id != '') {
+      setLoading({...loading, likeStation: true})
       const station = await fetch({ route: 'station', id: item+''}).unwrap()
       const payload = { station, bus: user.favouriteBus }
       console.log(payload)
       
       dispatch(CHANGE_FAVOURITE(payload))        
+      setLoading({...loading, likeStation: false})
+      
     }
   }
   
@@ -278,7 +283,11 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
               onPress={() => handleClickHeart(modal.data.StopId)}
               >
                 {
-                  user!=null && user.favouriteStation.includes(modal.data.StopId + '') ? 
+                  loading.likeStation ? 
+                    <View style={{top: 10}}>
+                      <Spinner size="sm" color={Colors.PRIMARY40} />
+                    </View> :
+                    user != null && user.favouriteStation.includes(modal.data.StopId + '') ? 
                     <View>
                       <View style={{top: 10}}>
                         <Icon name='heart' size={20} color={Colors.PRIMARY40} />
@@ -305,7 +314,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
       </Modal>
       
       {
-        loadingBusStation && 
+        loading.nearStation && 
           <View style={{ zIndex: 10, top: 40, width: '100%' }}>
             <Spinner size="lg" color="indigo.500" />
           </View>
