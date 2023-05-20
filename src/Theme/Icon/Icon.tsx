@@ -78,7 +78,7 @@ export const Icon = (props: IIconProps) => {
           
           // MaterialCommunityIcons
           // case 'busstop' || 'bus' || 'bell' || 'lock':
-          if (['busstop', 'bus', 'bell', 'lock', 'run', 'clock','pause'].includes(name)) { 
+        if (['busstop', 'bus', 'bell', 'lock', 'run', 'clock', 'pause', 'plus', 'minus'].includes(name)) { 
             if (name == 'busstop') iconname = 'bus-stop-uncovered'
             else if (name == 'bus') iconname = 'bus-side'
             else if (name == 'bell') iconname = 'bell-circle'
@@ -86,7 +86,8 @@ export const Icon = (props: IIconProps) => {
             else if (name == 'run') iconname = 'run'      
             else if (name == 'clock') iconname = 'clock-outline' 
             else if (name == 'pause') iconname = 'pause' 
-            
+            else if (name == 'plus') iconname = 'plus' 
+            else if (name == 'minus') iconname = 'minus' 
             return <IconMaterialCommunityIcons name={iconname} size={size} color={color} />;
           }
 
