@@ -101,7 +101,6 @@ export function EditProfile({route, navigation}: EditProfileScreenNavigationProp
                     color: 'white'
                 }}
             />
-
         
             <View style={styles.avatar}>
                 <View style={{

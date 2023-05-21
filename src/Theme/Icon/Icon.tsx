@@ -383,8 +383,8 @@ const IconMap = (props: ISvgProps) => (
 const VectorIntro = (props: ISvgProps) => (
   <View style={{position:'absolute'}}>
     <Svg
-      width={560}
-      height={320}
+      width={props.size*5.6}
+      height={props.size*3.2}
       viewBox="0 0 1681 960"
       fill="red"
     >
