@@ -48,13 +48,14 @@ type OnboardingScreenNavigatorProps = NativeStackScreenProps<
 
 export const Onboarding = ({navigation} : OnboardingScreenNavigatorProps) => {
     const [obIndex, setObIndex] = useState(0)
-    const [intro, setIntro] = useState()
     const {isUsedApp} = useAppSelector(state => state.user)
     
     useEffect(() => {
         if(isUsedApp){
-            navigation.navigate(RootScreens.MAIN)
-        }
+            navigation.reset({
+                index: 0,
+                routes: [{ name: RootScreens.MAIN }],
+            });        }
     }, [])
 
     const animation = useRef(null);
@@ -70,7 +71,6 @@ export const Onboarding = ({navigation} : OnboardingScreenNavigatorProps) => {
                     : null    
                 }
             </View>
-            
             <View style={{
                 backgroundColor: Colors.SECONDARY20, width: 250, height: 250,
                 borderRadius: 200,
@@ -97,7 +97,6 @@ export const Onboarding = ({navigation} : OnboardingScreenNavigatorProps) => {
                 </View>
                 <Slider curIndex={obIndex} value={data.length} />
             </View>
-            
             <View style={{flexDirection:'row-reverse', justifyContent:'space-between', width:'100%'}}>
                 {
                     obIndex < 3 ?
@@ -115,7 +114,13 @@ export const Onboarding = ({navigation} : OnboardingScreenNavigatorProps) => {
                             
                         <Button 
                         size="lg" style={{ width: '100%', height: 48, alignItems: 'center', justifyContent: 'center'}}
-                        onPress={() => navigation.navigate(RootScreens.MAIN)}
+                                onPress={() => {
+                                    // navigation.navigate(RootScreens.MAIN)
+                                    navigation.reset({
+                                        index: 0,
+                                        routes: [{ name: RootScreens.MAIN }],
+                                    });
+                                }}
                         _text={{        fontSize: 18,
                             fontWeight: '800',
                             textAlign: 'center',
@@ -129,7 +134,14 @@ export const Onboarding = ({navigation} : OnboardingScreenNavigatorProps) => {
                             
                         <Button 
                         size="lg" style={{ width: '100%', height: 48, alignItems: 'center', justifyContent: 'center'}}
-                        onPress={() => navigation.navigate(RootScreens.AUTH)}
+                        onPress={() => {
+                            // navigation.navigate(RootScreens.AUTH)
+                            navigation.reset({
+                                index: 0,
+                                routes: [{ name: RootScreens.AUTH }],
+                            });
+                            
+                        }}
                         _text={{        fontSize: 18,
                             fontWeight: '800',
                             textAlign: 'center',
@@ -143,7 +155,6 @@ export const Onboarding = ({navigation} : OnboardingScreenNavigatorProps) => {
 
                         </View>
                 }
-
                 {
                     obIndex > 0 && obIndex < 3 ?
                         <Button endIcon={<Icon name="left" size={25} color={Colors.BLACK60} />}

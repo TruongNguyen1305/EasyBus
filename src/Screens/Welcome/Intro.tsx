@@ -43,10 +43,12 @@ export const Intro = ({ navigation } : WelcomeScreenNavigatorProps
         toValue: 2.8, // Giá trị phóng to, bạn có thể tùy chỉnh theo nhu cầu
         useNativeDriver: true,
       }),
-    ]).start(() => navigation.navigate("Onboarding"));
+    ]).start(() =>
+      navigation.navigate("Onboarding")
+    );
   }, []);
 
-  const animatedStyle = { transform: [{ scale: scaleValue }]};
+  const animatedStyle = { transform: [{ scale: scaleValue }] };
   const interpolatedValue = progressValue.interpolate({
     inputRange: [0, 1],
     outputRange: [0, 1],
@@ -57,7 +59,7 @@ export const Intro = ({ navigation } : WelcomeScreenNavigatorProps
 
   return (
     <View style={styles.container}>
-      <Animated.View style={[{ position: "absolute", height:Dimensions.get("window").height, width:Dimensions.get("window").width, alignItems:"center", justifyContent:'center'}, animatedStyle] }>
+      <Animated.View style={[{ position: "absolute", height:Dimensions.get("window").height, width:Dimensions.get("window").width, alignItems:"center", justifyContent:'center', top: -0}, animatedStyle] }>
           <Icon name="vectorintro" size={105} color={'white'} />
       </Animated.View>  
       <View style={styles.animationContainer}>
@@ -65,8 +67,8 @@ export const Intro = ({ navigation } : WelcomeScreenNavigatorProps
           autoPlay
           ref={animation}
           style={{
-            width: 150,
-            height: 150,
+            width: 148,
+            height: 148,
             position: 'relative',
             backgroundColor: 'white',
             marginBottom: 6
@@ -93,8 +95,6 @@ export const Intro = ({ navigation } : WelcomeScreenNavigatorProps
             </Animated.View>
         </View>
       </View>
-      <Text>{i18n.t(LocalizationKey.WELCOME)}</Text>
-      <StatusBar style="auto" translucent={true} />
     </View>
   );
 
@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    top: -50,
   },
   styleLogo: {
     fontSize: 28,
