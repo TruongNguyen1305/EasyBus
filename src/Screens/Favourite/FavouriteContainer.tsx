@@ -44,7 +44,10 @@ export default function FavouriteContxainer({ route, navigation } : RootScreenNa
     
     useEffect(() => {
         if (user.id == '') {
-            navigation.replace(RootScreens.AUTH)
+            navigation.reset({
+                index: 1,
+                routes: [{ name: RootScreens.MAIN }, { name: RootScreens.AUTH}],
+            });    
         }
         if (loading.station) fetchDataStation(true)
         else fetchDataStation()
