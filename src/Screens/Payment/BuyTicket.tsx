@@ -1,17 +1,26 @@
+import { useGetPaymentUrlMutation } from "@/Services";
 import { Icon } from "@/Theme/Icon/Icon";
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables";
-import { Radio, Button } from "native-base";
+import { Radio } from "native-base";
 import { useState } from "react";
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Image } from "react-native";
+import Spinner from "react-native-loading-spinner-overlay/lib";
+import * as Linking from 'expo-linking';
+
 
 const {width, height} = Dimensions.get('window')
 
 
 function BuyTicket() {
+    const url = Linking.useURL()
+    console.log(url)
     const [payment, setPayment] = useState<string>('MoMo')
     const [countNormalTicket, setCountNormalTicket] = useState<number>(0)
     const [countMonthTicket, setCountMonthTicket] = useState<number>(0)
     const [total, setTotal] = useState<number>(0)
+    const [loading, setLoading] = useState(false)
+
+    const [fetch, data] = useGetPaymentUrlMutation()
 
     const handleAddItem = (ticketType: string) => {
         if(ticketType === 'normal'){
@@ -40,11 +49,47 @@ function BuyTicket() {
     }
 
     const handlePayment = async () => {
-        //call momo API
+        if (payment != 'MoMo'){
+            alert('Chưa hỗ trợ phương thức thanh toán này')
+            return
+        }
+        try {
+            setLoading(true)
+            const payload = await fetch({
+                normalTicketCount: countNormalTicket,
+                monthTicketCount: countMonthTicket,
+                totalPrice: total
+            }).unwrap()
+
+            setLoading(false)
+
+            Linking.openURL(payload.deeplink).catch(err => {
+                if (err.code === 'EUNSPECIFIED') {
+                    alert('Bạn cần cài đặt ứng dụng MoMo để sử dụng dịch vụ');
+                }
+            })
+
+        } catch (error) {
+            setLoading(false)
+            alert('Invalid credentials')
+        }
     }
 
     return (
         <View style={styles.container}>
+            <Spinner
+                //visibility of Overlay Loading Spinner
+                visible={loading}
+                //Text with the Spinner
+                textContent={'Loading...'}
+                //Text style of the Spinner Text
+                textStyle={{
+                    fontSize: FontSize.HEADLINE2,
+                    fontWeight: FontWeight.HEADLINE2,
+                    color: 'white'
+                }}
+            />
+
             <View style={{ 
                 width: width - 50, 
                 padding: 20,

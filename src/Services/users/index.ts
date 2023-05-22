@@ -15,13 +15,13 @@ export interface User {
 }
 
 export interface Ticket {
-  activatedTime: DateTime;
+  remainTurn: number;
   type: TicketType
 }
 
 export enum TicketType {
-  DAY,
-  MONTH
+  DAY='DAY',
+  MONTH='MONTH',
 }
 
 const userApi = API.injectEndpoints({
@@ -74,6 +74,34 @@ const userApi = API.injectEndpoints({
       }),
     }),
 
+    getAllTicket: build.query<{
+      normalTickets: number,
+      monthTickets: number
+    }, string>({
+      query: (id) => `users/${id}/tickets`,
+    }),
+
+    getCurrentActiveTicket: build.query<{
+      currentActiveTicket: Ticket
+    }, string>({
+      query: (id) => `users/${id}/tickets/currentActive`,
+    }),
+
+    activateTicket: build.mutation<{
+      currentActiveTicket: Ticket
+    }, {
+      id: string,
+      type: string
+    }>({
+      query: (credentials) => ({
+        url: `users/${credentials.id}/tickets`,
+        method: 'PATCH',
+        body: {
+          type: credentials.type
+        },
+      }),
+    }),
+
   }),
   overrideExisting: true,
 });
@@ -94,5 +122,5 @@ const favouriteAPI = API.injectEndpoints({
 });
 
 
-export const { useLazyGetUserQuery, useSigninMutation, useSignupMutation, useUpdateProfileMutation} = userApi;
+export const { useLazyGetUserQuery, useSigninMutation, useSignupMutation, useUpdateProfileMutation, useGetCurrentActiveTicketQuery, useGetAllTicketQuery, useActivateTicketMutation} = userApi;
 export const { useGetFavouriteQuery, useUpdateFavouriteMutation} = favouriteAPI;
