@@ -20,7 +20,12 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.nam693.easybus"
+      "bundleIdentifier": "com.nam693.easybus",
+      "infoPlist": {
+        "LSApplicationQueriesSchemes": [
+          "momo"
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
