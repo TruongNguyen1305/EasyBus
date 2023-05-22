@@ -44,28 +44,33 @@ export default function FavouriteContxainer({ route, navigation } : RootScreenNa
     
     useEffect(() => {
         if (user.id == '') {
-            navigation.replace(RootScreens.AUTH)
+            navigation.reset({
+                index: 1,
+                routes: [{ name: RootScreens.MAIN }, { name: RootScreens.AUTH}],
+            });    
         }
         if (loading.station) fetchDataStation(true)
         else fetchDataStation()
-
     }, [user])
 
     const handleClickHeartStation = async (StopId: string) => {
         if (user.id != '') {
-            loading.clickLike = true
-            const station = await fetch({ route: 'station', id: StopId + '' }).unwrap()
-            const payload = { station, bus: user.favouriteBus }
+            const newState = station.filter(item => item.StopId+'' != StopId)
+            setStation(newState)
+
+            const newStation = await fetch({ route: 'station', id: StopId + '' }).unwrap()
+            const payload = { station: newStation, bus: user.favouriteBus }
             dispatch(CHANGE_FAVOURITE(payload))
-            loading.clickLike = false
         }
     }
         
     const handleClickHeartBus = async (BusID: string) => {
         if (user.id != '') {
-            const station = await fetch({ route: 'bus', id: BusID + '' }).unwrap()
+            
+
+
+            // const station = await fetch({ route: 'bus', id: BusID + '' }).unwrap()
             const payload = { bus, station: user.favouriteBus }
-            // console.log(payload)
             dispatch(CHANGE_FAVOURITE(payload))
         }
         fetchDataBus()

@@ -78,7 +78,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
   const getDataBusTop = async (latitude: number, longitude:number, latitudeDelta: number, longitudeDelta: number) => {
     console.log('đang tìm trạm mới')
     console.log( latitudeDelta, longitudeDelta)
-    if (latitudeDelta > 0.03 || longitudeDelta > 0.03) { 
+    if (latitudeDelta > 0.015 || longitudeDelta > 0.015) { 
       console.log('t ko thèm tìm')
       return
     }
@@ -131,7 +131,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
         }
         showsUserLocation={true}
         customMapStyle={
-          styleMap || 
+          // styleMap || 
           [
           {
             "featureType": "poi.business",
