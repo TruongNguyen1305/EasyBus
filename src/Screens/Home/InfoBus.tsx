@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, ScrollView, Alert } from 'react-native'
 import Header, { Status } from '../../Components/Header'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { HomeStackParamList } from './HomeContainer'
@@ -40,10 +40,16 @@ export default function InfoBus({ route, navigation }: InfoBusNavigationProps) {
                 dispatch(CHANGE_FAVOURITE(payload))
             })
             .catch(err => console.log(err))
-            
-
-
             // loading.clickLike = false
+        }
+        else {
+            Alert.alert(
+                'Thông báo',
+                'Bạn cần phải đăng nhập để thực hiện chức năng này.',
+                [
+                  { text: 'OK', style: 'cancel' },
+                ],
+            )
         }
     }
 

@@ -36,7 +36,6 @@ export function Setting({ route, navigation }: SettingScreenProps) {
     return (
         <View style={styles.container}>
             <Header cover={Status.COVER2} leftTitle="Thông tin" leftIconName="more" logoShow={false} isProfileScreen/>
-
             {user.id != '' ? (
                 <>
                     <View style={styles.avatar}>
@@ -67,7 +66,16 @@ export function Setting({ route, navigation }: SettingScreenProps) {
                             <Icon name='right' size={24} color="black" />
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.settingItem}>
+                            <TouchableOpacity style={styles.settingItem}
+                            
+                            onPress={() => Alert.alert(
+                                'Thông báo',
+                                'Tính năng đang trong giai đoạn phát triển, mong bạn thông cảm.',
+                                [
+                                  { text: 'OK', style: 'cancel' },
+                                ],
+                                )}
+                            >
                             <View style={{ flexDirection: "row", alignItems: 'center' }}>
                                 <Icon name="setting" size={24} color="black" />
                                 <Text style={styles.settingTitle}>Cài đặt</Text>
@@ -90,15 +98,27 @@ export function Setting({ route, navigation }: SettingScreenProps) {
                             <Icon name='right' size={24} color="black" />
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.settingItem}>
-                            <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                        <TouchableOpacity style={styles.settingItem}
+                            onPress={() => Alert.alert(
+                                'Thông báo',
+                                'Tính năng đang trong giai đoạn phát triển, mong bạn thông cảm.',
+                                [
+                                    { text: 'OK', style: 'cancel' },
+                                ],
+                                )}
+                            >
+                            <View style={{ flexDirection: "row", alignItems: 'center' }}
+                            >
                                 <Icon name="mail" size={24} color="black" />
                                 <Text style={styles.settingTitle}>Gửi phản hồi</Text>
                             </View>
                             <Icon name='right' size={24} color="black" />
                             </TouchableOpacity>
                             
-                        <TouchableOpacity style={styles.settingItem}>
+                        <TouchableOpacity style={styles.settingItem}
+                            onPress={() => {
+                                navigation.navigate(RootScreens.AUTH)
+                            }}>
                             <View style={{ flexDirection: "row", alignItems: 'center' }}>
                                 <Icon name="information-circle" size={24} color="black" />
                                 <Text style={styles.settingTitle}>Thông tin ứng dụng</Text>
@@ -141,7 +161,14 @@ export function Setting({ route, navigation }: SettingScreenProps) {
                 >
                     <View style = {{alignItems:'center'}}>
                     
-                    <TouchableOpacity style={styles.settingItem}>
+                    <TouchableOpacity style={styles.settingItem}
+                        onPress={() => Alert.alert(
+                            'Thông báo',
+                            'Tính năng đang trong giai đoạn phát triển, mong bạn thông cảm.',
+                            [
+                                { text: 'OK', style: 'cancel' },
+                            ],
+                        )}>
                         <View style={{ flexDirection: "row", alignItems: 'center' }}>
                             <Icon name="setting" size={24} color="black" />
                             <Text style={styles.settingTitle}>Cài đặt</Text>
@@ -165,7 +192,14 @@ export function Setting({ route, navigation }: SettingScreenProps) {
                         <Icon name='right' size={24} color="black" />
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.settingItem}>
+                    <TouchableOpacity style={styles.settingItem}
+                        onPress={() => Alert.alert(
+                            'Thông báo',
+                            'Tính năng đang trong giai đoạn phát triển, mong bạn thông cảm.',
+                            [
+                                { text: 'OK', style: 'cancel' },
+                            ],
+                        )}>
                         <View style={{ flexDirection: "row", alignItems: 'center' }}>
                             <Icon name="mail" size={24} color="black" />
                             <Text style={styles.settingTitle}>Gửi phản hồi</Text>
@@ -173,7 +207,9 @@ export function Setting({ route, navigation }: SettingScreenProps) {
                         <Icon name='right' size={24} color="black" />
                         </TouchableOpacity>
                         
-                    <TouchableOpacity style={styles.settingItem}>
+                    <TouchableOpacity style={styles.settingItem}
+                        onPress={() => navigation.navigate('InfoApp')}        
+                    >
                         <View style={{ flexDirection: "row", alignItems: 'center' }}>
                             <Icon name="information-circle" size={24} color="black" />
                             <Text style={styles.settingTitle}>Thông tin ứng dụng</Text>
@@ -226,7 +262,7 @@ const styles = StyleSheet.create({
         height: 56,
         width: '90%',
         borderRadius: 10,
-        marginVertical: 10,
+        marginVertical: 6,
         backgroundColor: Colors.SECONDARY40,
         shadowColor: "#000",
         shadowOffset: {

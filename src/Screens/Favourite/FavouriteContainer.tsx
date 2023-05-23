@@ -58,28 +58,19 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
         else fetchDataStation()
         fetchDataBus()
     }, [user])
-
+    
     useFocusEffect(
-        React.useCallback(() => {
+        () => {
             if (user.id == '') setOpenModalLogin(true)
             else setOpenModalLogin(false)
+
             // Cleanup function (nếu cần)
             return () => {
-            // Hàm này sẽ được gọi khi màn hình không còn được focus
-            // Đây là nơi để hủy bỏ các event listener (nếu có)
-          };
-        }, [])
+                // Hàm này sẽ được gọi khi màn hình không còn được focus
+                // Đây là nơi để hủy bỏ các event listener (nếu có)
+            };
+        }
     )
-
-    const AlertLogin = () => {
-        Alert.alert(
-            'Thông báo',
-            'Bạn đã thực hiện thao tác này quá nhanh, vui lòng thử lại trong giây lát.',
-            [
-              { text: 'OK', style: 'cancel' },
-            ],
-        )
-    }
 
     const handleClickHeartStation = async (StopId: string) => {
         if (user.id != '') {
@@ -160,7 +151,6 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
 
     return (
         <View>
-
             <Spinner
                 //visibility of Overlay Loading Spinner
                 visible={loading.clickLikeBus}

@@ -105,6 +105,15 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
       dispatch(CHANGE_FAVOURITE(payload))        
       setLoading({...loading, likeStation: false})
     }
+    else {
+      Alert.alert(
+        'Thông báo',
+        'Bạn cần đăng nhập để thực hiện chức năng này.',
+        [
+          { text: 'OK', style: 'cancel' },
+        ],
+    )
+    }
   }
   
   useEffect(() => {
