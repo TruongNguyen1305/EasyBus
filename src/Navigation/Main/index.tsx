@@ -79,7 +79,7 @@ export const MainNavigator = () => {
       />
       <Tab.Screen
         name="Favourite"
-        getComponent={FavouriteContainer}
+        component={FavouriteContainer}
         options={{
             tabBarIcon: ({ color, focused }) => (
                 <View style={styles.tabbar}>
