@@ -19,12 +19,10 @@ export enum PaymentPage {
     BuyTicket
 }
 
-
 type RootScreenNavigatorProps = NativeStackScreenProps<
     RootStackParamList,
     RootScreens.MAIN
 >
-
 
 export function PaymentContainer({navigation}: RootScreenNavigatorProps) {
     const {user} = useAppSelector(state => state.user)
@@ -41,7 +39,6 @@ export function PaymentContainer({navigation}: RootScreenNavigatorProps) {
             <View style={{ position: 'relative' }}>
                 <Header cover={Status.COVER2} leftTitle='Thanh toán' leftIconName='money' logoShow={false} />
             </View>
-
             {user.id ? (
                 <>
                     <View

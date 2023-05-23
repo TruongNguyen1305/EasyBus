@@ -28,6 +28,8 @@ type RootScreenNavigatorProps = NativeStackScreenProps<
 
 export default function FavouriteContxainer({ route, navigation } : RootScreenNavigatorProps) {
     const user = useAppSelector(state => state.user.user)
+
+
     const dispatch = useAppDispatch()
     const [fetch] = useUpdateFavouriteMutation()
     
@@ -40,8 +42,9 @@ export default function FavouriteContxainer({ route, navigation } : RootScreenNa
         station: true,
         clickLike: false,
     })
-    console.log("USER",  user)
-    
+
+
+
     useEffect(() => {
         if (user.id == '') {
             navigation.reset({
@@ -214,19 +217,22 @@ export default function FavouriteContxainer({ route, navigation } : RootScreenNa
                                 )
                             )
                             :
-                            user.id != '' && station.map((item, index) => (
-                                <View key={index}>
-                                    <Busstop name={item.Name} address={item.AddressNo}
-                                        buslist={item.Routes} street={item.Street} zone={item.Zone}
-                                        onPressHeart={() => handleClickHeartStation(item.StopId+'')}    
-                                    />                           
-                                </View>
+                            user.id != '' &&(
+                                station.length == 0 ?
+                                        <View style = {{width: '100%', alignItems:"center", justifyContent:"center", marginTop: 20}}>
+                                            <Text>Bạn chưa có trạm dừng yêu thích nào!</Text>
+                                        </View>
+                                    :
+                                    station.map((item, index) => (
+                                    <View key={index}>
+                                        <Busstop name={item.Name} address={item.AddressNo}
+                                            buslist={item.Routes} street={item.Street} zone={item.Zone}
+                                            onPressHeart={() => handleClickHeartStation(item.StopId+'')}    
+                                        />                           
+                                    </View>
+                                    )
                             ))
-                    
                         }
-                        
-                        
-
                          
                     </ScrollView>
                 :
@@ -239,7 +245,11 @@ export default function FavouriteContxainer({ route, navigation } : RootScreenNa
                     >
                         
                         {
-                            bus.length > 0 && 
+                            bus.length == 0 ?
+                                <View style={{ width: '100%', alignItems: "center", justifyContent: "center", marginTop: 20 }}>
+                                    <Text>Bạn chưa có tuyến xe yêu thích nào!</Text>
+                                </View>
+                            : 
                             bus.map((item, index) => (
                                 <Bus RouteName={item.RouteName} RouteNo={item.RouteNo}
                                     OperationTime={item.OperationTime} TimeOfTrip={item.TimeOfTrip}

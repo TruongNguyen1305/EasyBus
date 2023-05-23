@@ -1,6 +1,6 @@
 import { i18n, LocalizationKey } from "@/Localization";
 import React, {useCallback, useEffect, useState} from "react";
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, FlatList, Alert } from "react-native";
 import { User, useUpdateFavouriteMutation } from "@/Services";
 import { Icon } from "@/Theme/Icon/Icon";
 import { HomeStackParamList } from "./HomeContainer";
@@ -114,7 +114,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
     <MapView
         style={styles.map}
         region={mapRegion}
-        mapPadding={{ top: openHeader ? 180 : 90 , right: 0, bottom: 0, left: 0 }}
+        mapPadding={{ top: openHeader ? 180 : 90 , right: 10, bottom: 0, left: 0 }}
         onRegionChange={
           useCallback(
             debounce(
@@ -214,7 +214,14 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
       {
         openHeader ? (
           <>
-            <Header cover={Status.COVER1} leftTitle="TP. Hồ Chí Minh" leftIconName="location" logoShow={true} rightIconName="up"
+            <Header cover={Status.COVER1} leftTitle="Hồ Chí Minh" leftIconName="location" logoShow={true} rightIconName="up"
+              onPressLeftIcon={() => Alert.alert(
+                'Thông báo',
+                'EasyBus đang trong giai đoạn phát triển, hiện tại chỉ hỗ trợ khu vực TP.HCM.',
+                [
+                  { text: 'OK', style: 'cancel' },
+                ],
+              )}
               onPressRightIcon={() => setOpenHeader(!openHeader)}
             />
 
@@ -240,7 +247,8 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
             justifyContent: 'center', width: 40, height: 40,
             borderRadius: 40, backgroundColor: Colors.PRIMARY40,
             top: 36, right: 0,
-            margin: 10
+            margin: 10,
+            marginRight: 20,
           }}
             onPress={() => {setOpenHeader(!openHeader)}}
           >

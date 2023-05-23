@@ -28,6 +28,7 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
     const [busData, setBusData] = useState<any[]>([])
     const [resultData, setResultData] = useState<any[]>([])
     const [input, setInput] = useState('')
+    const [loading, setLoading] = useState(false)
 
     //Find route part
     const [location, setLocation] = useState<any>()
@@ -86,7 +87,6 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                     newResult.push(item)
                 }
             }
-
         })
         setResultData(newResult)
     } : (text: string) => {

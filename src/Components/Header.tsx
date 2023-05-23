@@ -17,13 +17,17 @@ interface IHeaderProps {
     isProfileScreen?: boolean
     rightIconName?: string,
     onPressRightIcon?: () => void,
+    onPressLeftIcon?: () => void
 }
 
 export default function Header(props: IHeaderProps) {
     return (
-        <View style={{width:Dimensions.get('window').width, height: Dimensions.get('window').width / 3.5 + 36}}>
+        <View style={{
+            width: Dimensions.get('window').width, height: Dimensions.get('window').width / 3.5 + 36,
+            borderBottomColor: 'black',
+            borderBottomWidth: 10,
+        }}>
             <View style={{ backgroundColor: Colors.SECONDARY20, height: 36, position:'relative', top:0}}>
-
             </View>
             {
                 props.cover == '1' ?
@@ -55,13 +59,12 @@ export default function Header(props: IHeaderProps) {
                             position: 'absolute', zIndex: 5,
                             width: 80,
                             height: 62,
-                            bottom: 35,
+                            bottom: 20,
                             right: Dimensions.get('window').width / 2 - 40,
                         }}
                     />
 
             }
-            
             {props.isProfileScreen ? (
                 <></>
             ) : (
@@ -70,7 +73,8 @@ export default function Header(props: IHeaderProps) {
                     justifyContent: 'center', width: 40, height: 40,
                     borderRadius: 40, backgroundColor: Colors.PRIMARY40,
                     top: 36, right: 0,
-                    margin: 10
+                    margin: 10,
+                    marginRight: 20,
                 }}
                         onPress={() => {
                             if (props.onPressRightIcon) props.onPressRightIcon()
@@ -79,7 +83,7 @@ export default function Header(props: IHeaderProps) {
                     {
                         props.rightIconName ? (
                             <View style={{top: -2}}>
-                                <Icon name={props.rightIconName || 'person'} size={20} color='black' />
+                                <Icon name={props.rightIconName || 'person'} size={22} color='black' />
                             </View>
                         ) : (
                             <Icon name='person' size={20} color='black' />
@@ -91,18 +95,22 @@ export default function Header(props: IHeaderProps) {
                 zIndex: 6, alignItems: 'center', position: 'absolute', flexDirection: 'row',
                 backgroundColor: Colors.PRIMARY40, padding: 4,
                 top: 36, margin: 10, borderRadius: 7,
-                
+                paddingRight: 6,
+                paddingLeft: 6,
+                marginLeft: 20,
             }} 
                 onPress={() => {
                     if (props.navigation)
                         props.navigation.goBack()
+                    else if (props.onPressLeftIcon)
+                        props.onPressLeftIcon()
                 }}
             >
-                <Icon name={props.leftIconName} size={props.navigation ? 18 : 14} color = 'black' />
+                <Icon name={props.leftIconName} size={props.navigation ? 18 : 18} color = 'black' />
                 <Text style={{
-                    fontSize: props.navigation ? FontSize.BUTTON_NORMAL : FontSize.BODY_SMALL2,
-                    fontWeight: props.navigation ? FontWeight.BUTTON_SMALL : FontWeight.BODY_SMALL2,
-                    marginLeft: 4
+                    fontSize: props.navigation ? FontSize.BUTTON_NORMAL : 13,
+                    fontWeight: props.navigation ? FontWeight.BUTTON_SMALL : FontWeight.BODY_SMALL1,
+                    marginLeft: 5
                 }}>{props.leftTitle}</Text>
             </TouchableOpacity>
         </View>
