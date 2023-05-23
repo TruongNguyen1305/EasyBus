@@ -59,8 +59,8 @@ export const Intro = ({ navigation } : WelcomeScreenNavigatorProps
 
   return (
     <View style={styles.container}>
-      <Animated.View style={[{ position: "absolute", height:Dimensions.get("window").height, width:Dimensions.get("window").width, alignItems:"center", justifyContent:'center', top: -0}, animatedStyle] }>
-          <Icon name="vectorintro" size={105} color={'white'} />
+      <Animated.View style={[{ position: "absolute", height:Dimensions.get("window").height, width:Dimensions.get("window").width, alignItems:"center", justifyContent:'center', top: -20}, animatedStyle] }>
+          <Icon name="vectorintro" size={110} color={'white'} />
       </Animated.View>  
       <View style={styles.animationContainer}>
         <LottieView

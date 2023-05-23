@@ -13,7 +13,7 @@
     },
     "updates": {
       "fallbackToCacheTimeout": 0,
-      // "url": "https://u.expo.dev/82716b8e-2818-4161-8a88-c571df4369a5"
+      "url": "https://u.expo.dev/ce517a2c-5620-4b40-b2b8-028ceab331f6"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -36,16 +36,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ce517a2c-5620-4b40-b2b8-028ceab331f6"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
-    ,
-    // "plugins": [],
-    // "extra": {
-    //   "eas": {
-    //     "projectId": "82716b8e-2818-4161-8a88-c571df4369a5"
-    //   }
-    // },
-    // "runtimeVersion": {
-    //   "policy": "sdkVersion"
-    // }
   }
 }
