@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { SettingStackParamList } from "./SettingContainer";
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Alert } from "react-native";
 import Header from "@/Components/Header";
 import { Status } from "@/Components/Header";
 import { Icon } from "@/Theme/Icon/Icon";
@@ -11,9 +11,8 @@ import { RootStackParamList } from "@/Navigation";
 import { RootScreens } from "..";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { useEffect } from "react";
-import { Button } from "native-base";
+import { Button, ScrollView } from "native-base";
 import { User } from "@/Services";
-
 
 type SettingScreenNavigationProps = NativeStackScreenProps<
     SettingStackParamList,
@@ -29,12 +28,10 @@ type SettingScreenProps = CompositeScreenProps<
     SettingScreenNavigationProps,
     RootScreenNavigatorProps
 >;
- 
 
 export function Setting({ route, navigation }: SettingScreenProps) {
     const {user} = useAppSelector(state => state.user)
     const dispatch = useAppDispatch()
-
 
     return (
         <View style={styles.container}>
@@ -56,7 +53,10 @@ export function Setting({ route, navigation }: SettingScreenProps) {
                         <Text style={{ fontSize: FontSize.HEADLINE4, fontWeight: FontWeight.HEADLINE4, marginTop: 6 }}>{(user as User).fullName}</Text>
                     </View> 
 
-                    <View style={{ marginTop: 100, width: '100%', alignItems: 'center' }}>
+                    <ScrollView style={{ marginTop: 70, width: '100%'}}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        <View style = {{alignItems:'center'}}>
                         <TouchableOpacity style={styles.settingItem}
                             onPress={() => navigation.navigate('Profile')}
                         >
@@ -69,21 +69,20 @@ export function Setting({ route, navigation }: SettingScreenProps) {
 
                         <TouchableOpacity style={styles.settingItem}>
                             <View style={{ flexDirection: "row", alignItems: 'center' }}>
-                                <Icon name="location-full" size={24} color="black" />
-                                <Text style={styles.settingTitle}>Địa điểm đã lưu</Text>
-                            </View>
-                            <Icon name='right' size={24} color="black" />
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.settingItem}>
-                            <View style={{ flexDirection: "row", alignItems: 'center' }}>
                                 <Icon name="setting" size={24} color="black" />
                                 <Text style={styles.settingTitle}>Cài đặt</Text>
                             </View>
                             <Icon name='right' size={24} color="black" />
                         </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.settingItem}>
+                            <TouchableOpacity style={styles.settingItem}
+                                onPress={() => Alert.alert(
+                                    'Thông báo',
+                                    'EasyBus đang trong giai đoạn phát triển, hiện tại chỉ hỗ trợ khu vực TP.HCM.',
+                                    [
+                                      { text: 'OK', style: 'cancel' },
+                                    ],
+                                  )}
+                            >
                             <View style={{ flexDirection: "row", alignItems: 'center' }}>
                                 <Icon name="location-full" size={24} color="black" />
                                 <Text style={styles.settingTitle}>Thay đổi khu vực</Text>
@@ -95,6 +94,14 @@ export function Setting({ route, navigation }: SettingScreenProps) {
                             <View style={{ flexDirection: "row", alignItems: 'center' }}>
                                 <Icon name="mail" size={24} color="black" />
                                 <Text style={styles.settingTitle}>Gửi phản hồi</Text>
+                            </View>
+                            <Icon name='right' size={24} color="black" />
+                            </TouchableOpacity>
+                            
+                        <TouchableOpacity style={styles.settingItem}>
+                            <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                                <Icon name="information-circle" size={24} color="black" />
+                                <Text style={styles.settingTitle}>Thông tin ứng dụng</Text>
                             </View>
                             <Icon name='right' size={24} color="black" />
                         </TouchableOpacity>
@@ -110,29 +117,84 @@ export function Setting({ route, navigation }: SettingScreenProps) {
                             </View>
                             <Icon name='right' size={24} color="black" />
                         </TouchableOpacity>
-
-                    </View>
+                        </View>
+                    </ScrollView>
                 </>
             ) : (
-                <Button size='lg'
-                    style={{
-                        backgroundColor: Colors.PRIMARY40,
-                        borderRadius: 10,
-                        marginTop: 200
-                    }}
-                    onPress={() => navigation.navigate(RootScreens.AUTH)}
+                <>
+                <View style={styles.avatar}>
+                    <View style={{
+                        width: 70,
+                        height: 70,
+                        borderRadius: 100,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: Colors.PRIMARY40
+                    }}>
+                        <Icon name="person" size={30} color='black' />
+                    </View>
+                    <Text style={{ fontSize: FontSize.HEADLINE4, fontWeight: FontWeight.HEADLINE4, marginTop: 6 }}>{(user as User).fullName}</Text>
+                </View> 
+
+                <ScrollView style={{ marginTop: 70, width: '100%'}}
+                    showsVerticalScrollIndicator={false}
                 >
-                    <Text
-                        style = {{
-                            fontSize: FontSize.BUTTON_LARGE,
-                            fontWeight: FontWeight.BUTTON_LARGE,
-                            color: 'white'
+                    <View style = {{alignItems:'center'}}>
+                    
+                    <TouchableOpacity style={styles.settingItem}>
+                        <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                            <Icon name="setting" size={24} color="black" />
+                            <Text style={styles.settingTitle}>Cài đặt</Text>
+                        </View>
+                        <Icon name='right' size={24} color="black" />
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity style={styles.settingItem}
+                            onPress={() => Alert.alert(
+                                'Thông báo',
+                                'EasyBus đang trong giai đoạn phát triển, hiện tại chỉ hỗ trợ khu vực TP.HCM.',
+                                [
+                                  { text: 'OK', style: 'cancel' },
+                                ],
+                              )}
+                        >
+                        <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                            <Icon name="location-full" size={24} color="black" />
+                            <Text style={styles.settingTitle}>Thay đổi khu vực</Text>
+                        </View>
+                        <Icon name='right' size={24} color="black" />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.settingItem}>
+                        <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                            <Icon name="mail" size={24} color="black" />
+                            <Text style={styles.settingTitle}>Gửi phản hồi</Text>
+                        </View>
+                        <Icon name='right' size={24} color="black" />
+                        </TouchableOpacity>
+                        
+                    <TouchableOpacity style={styles.settingItem}>
+                        <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                            <Icon name="information-circle" size={24} color="black" />
+                            <Text style={styles.settingTitle}>Thông tin ứng dụng</Text>
+                        </View>
+                        <Icon name='right' size={24} color="black" />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.settingItem}
+                        onPress={() => {
+                            navigation.navigate(RootScreens.AUTH)
                         }}
                     >
-                            Đăng nhập để tiếp tục
-                    </Text>
-                
-                </Button>
+                        <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                            <Icon name="login" size={24} color="black" />
+                            <Text style={styles.settingTitle}>Đăng nhập</Text>
+                        </View>
+                        <Icon name='right' size={24} color="black" />
+                    </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            </>
             )}
         </View>
     );

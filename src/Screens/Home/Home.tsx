@@ -47,6 +47,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
     longitudeDelta: 0.005,
   });
   const [dataBusStop, setDataBusStop] = useState<any[]>([])  
+  const [dataNearBus, setDataNearBus] = useState<any[]>([])  
   
   const [openHeader, setOpenHeader] = useState(true)
   const [nearbusOpen, setNearbusOpen] = useState(false);
@@ -66,7 +67,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        alert('Permission to access location was denied');
+        alert('Bạn chưa cấp quyền truy cập vị trí cho ứng dụng');
         return;
       }
     })();
@@ -75,7 +76,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
     
   const user = useAppSelector(state => state.user.user)
 
-  const getDataBusTop = async (latitude: number, longitude:number, latitudeDelta: number, longitudeDelta: number) => {
+  const getDataBusTop = async( latitude: number, longitude:number, latitudeDelta: number, longitudeDelta: number, firstTime = false) => {
     console.log('đang tìm trạm mới')
     console.log( latitudeDelta, longitudeDelta)
     if (latitudeDelta > 0.015 || longitudeDelta > 0.015) { 
@@ -87,6 +88,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
       .then(res => {
         setDataBusStop(res.data)
         console.log(res.data.length)
+        if (firstTime) setDataNearBus(res.data)
         setLoading({...loading, nearStation: false})
       })
       .catch(err => console.log(err)) 
@@ -105,9 +107,8 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
   }
   
   useEffect(() => {
-    getDataBusTop(mapRegion.latitude, mapRegion.longitude, mapRegion.latitudeDelta, mapRegion.longitudeDelta)
+    getDataBusTop(mapRegion.latitude, mapRegion.longitude, mapRegion.latitudeDelta, mapRegion.longitudeDelta, true)
   }, [])
-
 
   return (
     <View style={styles.container}>

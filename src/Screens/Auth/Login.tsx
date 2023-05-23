@@ -123,7 +123,17 @@ export const Login = ({ navigation }: LoginScreenProps) => {
                     onChangeText={(val) => setInfo({ ...info, password: val })}
                 />
                 <View style={{marginLeft: 20}}>
-                    <Pressable>
+                    <Pressable
+                        onPress={() => {
+                            Alert.alert(
+                                'Thông báo',
+                                'Tính năng đang trong quá trình phát triển, mong bạn thông cảm!',
+                                [
+                                { text: 'OK', style: 'cancel' },
+                                ],
+                            )
+                        }}
+                    >
                         <Text style={{
                             fontSize: FontSize.BODY_LARGE,
                             fontWeight: FontWeight.BODY_LARGE,
@@ -144,10 +154,31 @@ export const Login = ({ navigation }: LoginScreenProps) => {
             }}>Hoặc tiếp tục với</Text>
 
             <View style={{flexDirection:'row', justifyContent:'space-between', width: '100%', marginBottom: 20}}>
-                <Button width={'45%'} bg={'#F8F8F8'} borderWidth={2} borderColor={'#DDDDDD'} paddingTop={2} paddingBottom={2}>
+                <Button width={'45%'} bg={'#F8F8F8'} borderWidth={2} borderColor={'#DDDDDD'} paddingTop={2} paddingBottom={2}
+                    onPress={() => {
+                        Alert.alert(
+                            'Thông báo',
+                            'Tính năng đang trong quá trình phát triển, mong bạn thông cảm!',
+                            [
+                              { text: 'OK', style: 'cancel' },
+                            ],
+                        )
+                    }}
+                
+                >
                     <Icon name='google' size={24} color={'black'} /> 
                 </Button>
-                <Button width={'45%'} bg={'#F8F8F8'} borderWidth={2} borderColor={'#DDDDDD'} paddingTop={2} paddingBottom={2}>
+                <Button width={'45%'} bg={'#F8F8F8'} borderWidth={2} borderColor={'#DDDDDD'} paddingTop={2} paddingBottom={2}
+                    onPress={() => {
+                        Alert.alert(
+                            'Thông báo',
+                            'Tính năng đang trong quá trình phát triển, mong bạn thông cảm!',
+                            [
+                            { text: 'OK', style: 'cancel' },
+                            ],
+                        )
+                    }}
+                >
                     <Icon name='facebook' size={24} color={'black'} /> 
                 </Button>
             </View>

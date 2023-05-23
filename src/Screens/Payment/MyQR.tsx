@@ -32,7 +32,7 @@ function MyQR() {
                 }}>
                     <Icon name="person" size={24} color={Colors.BLACK100} />
                 </View>
-                {data ? (
+                {data ? ( 
                     <View style={{
                         paddingHorizontal: 20,
                         borderStyle: 'dashed',

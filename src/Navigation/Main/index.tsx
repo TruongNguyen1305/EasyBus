@@ -5,22 +5,11 @@ import { Icon } from "@/Theme/Icon/Icon";
 import { Colors } from "@/Theme/Variables";
 import { useAppSelector } from "@/Hooks/redux";
 
-
 import { HomeContainer } from "@/Screens/Home/HomeContainer";
 import NotificationContainer from "@/Screens/Notification/NotifcationContainer";
 import FavouriteContainer from "@/Screens/Favourite/FavouriteContainer";
 import SettingContainer from "@/Screens/Setting/SettingContainer";
 import { PaymentContainer } from "@/Screens/Payment/PaymentContainer";
-
-
-
-
-
-
-
-
-
-
 
 const Tab = createBottomTabNavigator();
 // @refresh reset
@@ -50,7 +39,21 @@ export const MainNavigator = () => {
                 <Text style={[styles.label, {color: color}]} >Trang chủ</Text>
             ),
         }}
-      />
+        />
+        <Tab.Screen
+        name="Notification"
+        component={NotificationContainer}
+        options={{
+            tabBarIcon: ({ color, focused }) => (
+                <View style={styles.tabbar}>
+                    <Icon name='notification' size={22} color={color}/>
+                </View> 
+            ),
+            tabBarLabel: ({ color, focused }) => (
+                <Text style={[styles.label, {color: color}]} >Thông báo</Text>
+            ),
+        }}
+        />
       <Tab.Screen
         name="Payment"
         component={PaymentContainer}
@@ -65,22 +68,6 @@ export const MainNavigator = () => {
             ),
         }}
       />
-
-      <Tab.Screen
-        name="Notification"
-        component={NotificationContainer}
-        options={{
-            tabBarIcon: ({ color, focused }) => (
-                <View style={styles.tabbar}>
-                    <Icon name='notification' size={22} color={color}/>
-                </View> 
-            ),
-            tabBarLabel: ({ color, focused }) => (
-                <Text style={[styles.label, {color: color}]} >Thông báo</Text>
-            ),
-        }}
-      />
-
       <Tab.Screen
         name="Favourite"
         component={FavouriteContainer}
@@ -110,8 +97,6 @@ export const MainNavigator = () => {
         }}
       />
     </Tab.Navigator>
-
-    
   );
 };
 

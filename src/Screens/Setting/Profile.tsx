@@ -91,11 +91,11 @@ export function Profile({route, navigation}: ProfileScreenNavigationProps) {
                 borderRadius: 10,
                 width: '90%',
                 marginTop: 10,
-                backgroundColor: Colors.PRIMARY40
+                backgroundColor: Colors.PRIMARY40,
             }}
                 onPress={()=>navigation.navigate('EditProfile', {user})}
             >
-                <Text style={{fontSize: FontSize.BUTTON_LARGE, fontWeight: FontWeight.BUTTON_LARGE, color: 'white'}}>
+                <Text style={{fontSize: 16, fontWeight: '700', color: 'white'}}>
                     Chỉnh sửa thông tin
                 </Text>
             </Button>

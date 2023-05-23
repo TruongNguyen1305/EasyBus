@@ -1,6 +1,6 @@
 import Header, { Status } from "@/Components/Header"
-import { View, Text, Dimensions, TouchableOpacity, ScrollView } from "react-native"
-import { Divider, Skeleton, VStack } from "native-base"
+import { View, Text, Dimensions, TouchableOpacity, ScrollView, Alert } from "react-native"
+import { Button, Divider, Modal, Skeleton, VStack } from "native-base"
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables"
 import { Icon } from "@/Theme/Icon/Icon"
 import { useEffect, useState } from "react"
@@ -14,7 +14,10 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { RootScreens } from ".."
 import { RootStackParamList } from "@/Navigation"
 import Spinner from "react-native-loading-spinner-overlay/lib";
-
+import { CompositeScreenProps, RouteProp, useFocusEffect } from "@react-navigation/native"
+import React from "react"
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
+import { MainScreenParams } from "@/Navigation/Main"
 
 enum Screen {
     STATION = 'STATION',
@@ -25,60 +28,78 @@ type RootScreenNavigatorProps = NativeStackScreenProps<
     RootStackParamList,
     RootScreens.MAIN
 >
+type BottomTabNavigation = BottomTabNavigationProp<MainScreenParams>;
+type BottomTabRoute = RouteProp<MainScreenParams, keyof MainScreenParams>;
+interface BottomTabNavigatorProps {
+    navigation: BottomTabNavigation;
+    route: BottomTabRoute;
+}
 
-export default function FavouriteContxainer({ route, navigation } : RootScreenNavigatorProps) {
+type FavScreenProps = CompositeScreenProps<
+    RootScreenNavigatorProps,
+    BottomTabNavigatorProps
+>;
+export default function FavouriteContxainer({ route, navigation } : FavScreenProps) {
     const user = useAppSelector(state => state.user.user)
-
-
     const dispatch = useAppDispatch()
     const [fetch] = useUpdateFavouriteMutation()
-    
     const [screen, setScreen] = useState(Screen.STATION)
     const [station, setStation] = useState<any[]>([])
     const [bus, setBus] = useState<any[]>([])
-
     const [loading, setLoading] = useState({
         bus: true,
         station: true,
         clickLike: false,
     })
-
-
+    const [openModalLogin, setOpenModalLogin] = useState(user.id == '')
+    
 
     useEffect(() => {
-        if (user.id == '') {
-            navigation.reset({
-                index: 1,
-                routes: [{ name: RootScreens.MAIN }, { name: RootScreens.AUTH}],
-            });    
-        }
         if (loading.station) fetchDataStation(true)
         else fetchDataStation()
     }, [user])
 
+    useFocusEffect(
+        React.useCallback(() => {
+            if (user.id == '') setOpenModalLogin(true)
+    
+            // Cleanup function (nếu cần)
+            return () => {
+            // Hàm này sẽ được gọi khi màn hình không còn được focus
+            // Đây là nơi để hủy bỏ các event listener (nếu có)
+          };
+        }, [])
+    )
+
     const handleClickHeartStation = async (StopId: string) => {
         if (user.id != '') {
-            const newState = station.filter(item => item.StopId+'' != StopId)
+            if (loading.clickLike) { 
+                Alert.alert(
+                    'Thông báo',
+                    'Bạn đã thực hiện thao tác này quá nhanh, vui lòng thử lại trong giây lát.',
+                    [
+                      { text: 'OK', style: 'cancel' },
+                    ],
+                )
+                return
+            }
+            loading.clickLike = true
+            const newState = station.filter(item => item.StopId + '' != StopId)
             setStation(newState)
-
             const newStation = await fetch({ route: 'station', id: StopId + '' }).unwrap()
             const payload = { station: newStation, bus: user.favouriteBus }
             dispatch(CHANGE_FAVOURITE(payload))
+            loading.clickLike = false
         }
     }
-        
     const handleClickHeartBus = async (BusID: string) => {
         if (user.id != '') {
-            
-
-
             // const station = await fetch({ route: 'bus', id: BusID + '' }).unwrap()
             const payload = { bus, station: user.favouriteBus }
             dispatch(CHANGE_FAVOURITE(payload))
         }
         fetchDataBus()
     }        
-
     const fetchDataBus = async (firstTime = false) => {
         const busData : any [] = []
         for (const item of user.favouriteBus) {
@@ -112,19 +133,22 @@ export default function FavouriteContxainer({ route, navigation } : RootScreenNa
 
     return (
         <View>
-
-            <Spinner
-                //visibility of Overlay Loading Spinner
-                visible={loading.clickLike}
-                //Text with the Spinner
-                // textContent={'Loading...'}
-                //Text style of the Spinner Text
-                textStyle={{
-                    fontSize: FontSize.HEADLINE2,
-                    fontWeight: FontWeight.HEADLINE2,
-                    color: 'white'
-                }}
-            />
+            <Modal isOpen={openModalLogin} onClose={() => { setOpenModalLogin(false);  navigation.navigate("HomeContainer")}}>
+                <Modal.Content>
+                <Modal.CloseButton />
+                <Modal.Header>Thông báo</Modal.Header>
+                <Modal.Body>
+                    Bạn cần phải đăng nhập để sử dụng tính năng này!
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="subtle" colorScheme="blueGray" onPress={() => {
+                        navigation.navigate(RootScreens.AUTH)
+                    }}>
+                        Đăng nhập tại đây
+                    </Button>
+                </Modal.Footer>
+                </Modal.Content>
+            </Modal>
 
             <View style = {{position:'relative'}}>
                 <Header cover={Status.COVER2} leftTitle='Yêu thích' leftIconName='collection' logoShow={false} />
@@ -258,7 +282,6 @@ export default function FavouriteContxainer({ route, navigation } : RootScreenNa
                                 />
                             ))
                         }                        
-
                     </ScrollView>    
                     
             }

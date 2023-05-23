@@ -93,7 +93,7 @@ export const Icon = (props: IIconProps) => {
 
           // Ionicons
           // case 'person' || 'personthin' || 'close' || 'location' || 'eyeshow' || 'eye-notshow' || 'back':
-        if (['person', 'personthin', 'close', 'location', 'eyeshow', 'eye-notshow', 'back', 'bus-sharp', 'location-full', 'setting', 'mail','logout'].includes(name)) { 
+        if (['person', 'personthin', 'close', 'location', 'eyeshow', 'eye-notshow', 'back', 'bus-sharp', 'location-full', 'setting', 'mail','logout', 'login', 'information-circle'].includes(name)) { 
             if (name == 'person' || name == 'close') iconname = name
             else if (name == 'personthin') iconname = 'person-circle-outline'
             else if (name == 'location') iconname = 'location-outline'
@@ -105,6 +105,8 @@ export const Icon = (props: IIconProps) => {
             else if (name == "setting") iconname = "settings"
             else if (name == "mail") iconname = "mail"
             else if (name == "logout") iconname = "log-out"
+            else if (name == "login") iconname = "log-in"
+            else if (name == "information-circle") iconname = "information-circle"
 
             return <IconIonicons name={iconname} size={size} color={color} />;
           }
