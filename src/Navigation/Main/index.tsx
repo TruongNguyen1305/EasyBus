@@ -13,6 +13,15 @@ import { PaymentContainer } from "@/Screens/Payment/PaymentContainer";
 
 const Tab = createBottomTabNavigator();
 // @refresh reset
+
+export type MainScreenParams = {
+    HomeContainer: undefined;
+    Notification: undefined;
+    Payment: undefined;
+    Favourite: undefined;
+    More: undefined;
+};
+
 export const MainNavigator = () => {
     const user = useAppSelector(state => state.user.user)
   return (
@@ -24,7 +33,7 @@ export const MainNavigator = () => {
             tabBarStyle: { height: 60 },
             headerShown: false,
         }}
-    initialRouteName="HomeContainer"
+        initialRouteName="HomeContainer"
     >
       <Tab.Screen
         name="HomeContainer"
@@ -70,7 +79,7 @@ export const MainNavigator = () => {
       />
       <Tab.Screen
         name="Favourite"
-        component={FavouriteContainer}
+        getComponent={FavouriteContainer}
         options={{
             tabBarIcon: ({ color, focused }) => (
                 <View style={styles.tabbar}>

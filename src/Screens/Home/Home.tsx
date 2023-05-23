@@ -40,12 +40,13 @@ const initialStation = {
 export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
   const { data, isLoading } = route.params;
   const dispatch = useAppDispatch()
-  const [mapRegion, setMapRegion] = useState({
+  const initMapRegion = {
     latitude: 10.880035901459214,
     longitude: 106.80625226368548,
     latitudeDelta: 0.005,
     longitudeDelta: 0.005,
-  });
+  }
+  const [mapRegion, setMapRegion] = useState(initMapRegion);
   const [dataBusStop, setDataBusStop] = useState<any[]>([])  
   const [dataNearBus, setDataNearBus] = useState<any[]>([])  
   
@@ -71,7 +72,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
         return;
       }
     })();
-  }, []);
+  }, []); 
 
     
   const user = useAppSelector(state => state.user.user)
@@ -314,7 +315,12 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
               <TouchableOpacity style = {{width: '40%', alignItems:'center', padding: 10,
                 borderRadius:4, borderWidth:1, borderColor: Colors.BLACK60
             }}
-                onPress={() => navigation.navigate('FindRoute', { status: 'FindRoute', target: modal.data })}
+                onPress={() => { 
+                  setMapRegion(initMapRegion)
+                  setDataBusStop([])
+                  navigation.navigate('FindRoute', { status: 'FindRoute', target: modal.data })
+                } 
+              }
             >
                   <Icon name='findroute' size={24} color={Colors.PRIMARY40} />
               </TouchableOpacity>
@@ -358,7 +364,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
             <View style={{width:'80%', marginBottom: 40 }}>
                 {
                   <FlatList
-                  data={dataBusStop}
+                  data={dataNearBus}
                   renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => setMapRegion({...mapRegion, latitude: item.Lat-0.000001, longitude: item.Lng})} >
                       <Busstop name={item.Name} address={item.AddressNo}

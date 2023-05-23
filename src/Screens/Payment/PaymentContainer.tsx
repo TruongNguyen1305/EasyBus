@@ -10,7 +10,9 @@ import { RootStackParamList } from "@/Navigation";
 import { RootScreens } from "..";
 import { useAppSelector } from "@/Hooks/redux";
 import { Button, Modal } from "native-base";
-import { useFocusEffect } from "@react-navigation/native";
+import { CompositeScreenProps, RouteProp, useFocusEffect } from "@react-navigation/native";
+import { MainScreenParams } from "@/Navigation/Main";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 
 
 
@@ -27,8 +29,20 @@ type RootScreenNavigatorProps = NativeStackScreenProps<
     RootStackParamList,
     RootScreens.MAIN
 >
+type BottomTabNavigation = BottomTabNavigationProp<MainScreenParams>;
+type BottomTabRoute = RouteProp<MainScreenParams, keyof MainScreenParams>;
+interface BottomTabNavigatorProps {
+    navigation: BottomTabNavigation;
+    route: BottomTabRoute;
+}
 
-export function PaymentContainer({navigation}: RootScreenNavigatorProps) {
+type PaymentScreenProps = CompositeScreenProps<
+    RootScreenNavigatorProps,
+    BottomTabNavigatorProps
+>;
+
+
+export function PaymentContainer({navigation}: PaymentScreenProps) {
     const {user} = useAppSelector(state => state.user)
     const [page, setPage] = useState(PaymentPage.QR)
     const [openModalLogin, setOpenModalLogin] = useState(user.id == '')
@@ -41,7 +55,8 @@ export function PaymentContainer({navigation}: RootScreenNavigatorProps) {
     useFocusEffect(
         React.useCallback(() => {
             if (user.id == '') setOpenModalLogin(true)
-    
+            else setOpenModalLogin(false)
+
             // Cleanup function (nếu cần)
             return () => {
             // Hàm này sẽ được gọi khi màn hình không còn được focus
@@ -49,8 +64,6 @@ export function PaymentContainer({navigation}: RootScreenNavigatorProps) {
           };
         }, [])
     )
-
-
     return (
         <View style={{flex: 1, alignItems: 'center'}}>
             <Modal isOpen={openModalLogin} onClose={() => { setOpenModalLogin(false);  navigation.navigate("HomeContainer")}}>
@@ -71,12 +84,11 @@ export function PaymentContainer({navigation}: RootScreenNavigatorProps) {
             </Modal>
             
             
-            
             <View style={{ position: 'relative' }}>
                 <Header cover={Status.COVER2} leftTitle='Thanh toán' leftIconName='money' logoShow={false} />
             </View>
-            
-                <View
+ 
+               <View
                     style={{
                         flexDirection: 'row',
                         justifyContent: 'space-around',
@@ -105,8 +117,6 @@ export function PaymentContainer({navigation}: RootScreenNavigatorProps) {
                         <View style={[styles.line, { borderColor: page === PaymentPage.BuyTicket ? 'black' : 'transparent' }]}></View>
                     </TouchableOpacity>
                 </View>
-
-
                 {Content[page]}
             </View>
     );

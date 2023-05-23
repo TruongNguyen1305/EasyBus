@@ -35,12 +35,17 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
 
     const [startInput, setStartInput] = useState("")
     const [startData, setStartData] = useState<any>()
-
     const [targetInput, setTargetInput] = useState(route.params.target ? route.params.target.Name : "")
-    const [targetData, setTargetData] = useState<any>()
-
+    const [targetData, setTargetData] = useState<any>({
+        name: route.params.target ? route.params.target.Name : "",
+        latitude: route.params.target ? route.params.target.Lat : '',
+        longitude: route.params.target ? route.params.target.Lng: '',
+        }   
+    )
     const [isStartInputFocused, setIsStartInputFocused] = useState(false)
-
+    
+    console.log("TargetINPUT", targetData)
+    console.log("TargetSTART", startData)
 
     useEffect(() => {
         const fetchBusData =  async () => {
@@ -285,6 +290,50 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                             </Button>
                         </View>
 
+                        {
+                                startInput == '' && isStartInputFocused && (
+                                    <Pressable style={{ width: '100%', alignItems: "center", margin: 10 }}
+                                        onPress={async () => {
+                                            const { status } = await Location.getForegroundPermissionsAsync()
+                                            if (status === Location.PermissionStatus.GRANTED) {
+                                                let location = await Location.getCurrentPositionAsync({});
+                                                setLocation(location);
+                                                setStartInput('Vị trí hiện tại')
+                                                setStartData({
+                                                    name: "Vị trí hiện tại",
+                                                    latitude: location.coords.latitude,
+                                                    longitude: location.coords.longitude
+                                                })
+                                            }
+                                        }}
+                                    >
+                                        <Text style={{fontSize: 16, fontWeight: '500', paddingVertical:6, borderColor: Colors.PRIMARY40, borderWidth: 1, paddingHorizontal: 50}}>Vị trí của tôi</Text>
+                                    </Pressable>
+                                    
+                                )  
+                                
+                        }
+                        {
+                            targetInput == '' && !isStartInputFocused && (
+                                <Pressable style={{ width: '100%', alignItems: "center", margin: 10 }}
+                                    onPress={async () => {
+                                        const { status } = await Location.getForegroundPermissionsAsync()
+                                        if (status === Location.PermissionStatus.GRANTED) {
+                                            let location = await Location.getCurrentPositionAsync({});
+                                            setLocation(location);
+                                            setTargetInput('Vị trí hiện tại')
+                                            setTargetData({
+                                                name: "Vị trí hiện tại",
+                                                latitude: location.coords.latitude,
+                                                longitude: location.coords.longitude
+                                            })
+                                        }
+                                    }}
+                                >
+                                    <Text style={{fontSize: 16, fontWeight: '500', paddingVertical:6, borderColor: Colors.PRIMARY40, borderWidth: 1, paddingHorizontal: 50}}>Vị trí của tôi</Text>
+                                </Pressable>
+                            )       
+                        }
                         {resultData.length > 0 && (
                                 <View style={{ height: 320 }} >
                                     <FlatList

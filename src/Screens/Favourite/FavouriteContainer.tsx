@@ -34,7 +34,6 @@ interface BottomTabNavigatorProps {
     navigation: BottomTabNavigation;
     route: BottomTabRoute;
 }
-
 type FavScreenProps = CompositeScreenProps<
     RootScreenNavigatorProps,
     BottomTabNavigatorProps
@@ -62,7 +61,7 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
     useFocusEffect(
         React.useCallback(() => {
             if (user.id == '') setOpenModalLogin(true)
-    
+            else setOpenModalLogin(false)
             // Cleanup function (nếu cần)
             return () => {
             // Hàm này sẽ được gọi khi màn hình không còn được focus

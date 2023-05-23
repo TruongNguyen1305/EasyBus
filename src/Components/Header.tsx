@@ -23,7 +23,7 @@ interface IHeaderProps {
 export default function Header(props: IHeaderProps) {
     return (
         <View style={{
-            width: Dimensions.get('window').width, height: Dimensions.get('window').width / 3.5 + 36,
+            width: Dimensions.get('window').width, height: Dimensions.get('window').width / 3.5 + 30,
             borderBottomColor: 'black',
             borderBottomWidth: 10,
         }}>
