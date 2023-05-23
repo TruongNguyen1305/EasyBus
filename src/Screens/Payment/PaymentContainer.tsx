@@ -53,17 +53,29 @@ export function PaymentContainer({navigation}: PaymentScreenProps) {
         [PaymentPage.BuyTicket]: <BuyTicket />
     }
     useFocusEffect(
-        React.useCallback(() => {
+        // React.useCallback(() => {
+        //     if (user.id == '') setOpenModalLogin(true)
+        //     else setOpenModalLogin(false)
+
+        //     // Cleanup function (nếu cần)
+        //     return () => {
+        //     // Hàm này sẽ được gọi khi màn hình không còn được focus
+        //     // Đây là nơi để hủy bỏ các event listener (nếu có)
+        //   };
+        // }, [])
+        () => {
             if (user.id == '') setOpenModalLogin(true)
             else setOpenModalLogin(false)
 
             // Cleanup function (nếu cần)
             return () => {
-            // Hàm này sẽ được gọi khi màn hình không còn được focus
-            // Đây là nơi để hủy bỏ các event listener (nếu có)
-          };
-        }, [])
+                // Hàm này sẽ được gọi khi màn hình không còn được focus
+                // Đây là nơi để hủy bỏ các event listener (nếu có)
+            };
+        }
     )
+    
+
     return (
         <View style={{flex: 1, alignItems: 'center'}}>
             <Modal isOpen={openModalLogin} onClose={() => { setOpenModalLogin(false);  navigation.navigate("HomeContainer")}}>
@@ -88,36 +100,40 @@ export function PaymentContainer({navigation}: PaymentScreenProps) {
                 <Header cover={Status.COVER2} leftTitle='Thanh toán' leftIconName='money' logoShow={false} />
             </View>
  
-               <View
-                    style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-around',
-                        alignItems: 'center',
-                        paddingTop: 10,
-                        paddingHorizontal: 40,
-                        width: width
-                    }
-                    }>
-                    <TouchableOpacity
-                        onPress={() => setPage(PaymentPage.QR)}
-                    >
-                        <Text style={styles.heading}>Mã QR</Text>
-                        <View style={[styles.line, { borderColor: page === PaymentPage.QR ? 'black' : 'transparent' }]}></View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => setPage(PaymentPage.MyTicket)}
-                    >
-                        <Text style={styles.heading}>Vé của tôi</Text>
-                        <View style={[styles.line, { borderColor: page === PaymentPage.MyTicket ? 'black' : 'transparent' }]}></View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => setPage(PaymentPage.BuyTicket)}
-                    >
-                        <Text style={styles.heading}>Mua vé</Text>
-                        <View style={[styles.line, { borderColor: page === PaymentPage.BuyTicket ? 'black' : 'transparent' }]}></View>
-                    </TouchableOpacity>
-                </View>
-                {Content[page]}
+            {user.id && (
+                <>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            alignItems: 'center',
+                            paddingTop: 10,
+                            paddingHorizontal: 40,
+                            width: width
+                        }
+                        }>
+                        <TouchableOpacity
+                            onPress={() => setPage(PaymentPage.QR)}
+                        >
+                            <Text style={styles.heading}>Mã QR</Text>
+                            <View style={[styles.line, { borderColor: page === PaymentPage.QR ? 'black' : 'transparent' }]}></View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => setPage(PaymentPage.MyTicket)}
+                        >
+                            <Text style={styles.heading}>Vé của tôi</Text>
+                            <View style={[styles.line, { borderColor: page === PaymentPage.MyTicket ? 'black' : 'transparent' }]}></View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => setPage(PaymentPage.BuyTicket)}
+                        >
+                            <Text style={styles.heading}>Mua vé</Text>
+                            <View style={[styles.line, { borderColor: page === PaymentPage.BuyTicket ? 'black' : 'transparent' }]}></View>
+                        </TouchableOpacity>
+                    </View>
+                    {Content[page]}
+                </>
+            )}
             </View>
     );
 }

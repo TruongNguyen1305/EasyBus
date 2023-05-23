@@ -36,7 +36,7 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
     const [startInput, setStartInput] = useState("")
     const [startData, setStartData] = useState<any>()
     const [targetInput, setTargetInput] = useState(route.params.target ? route.params.target.Name : "")
-    const [targetData, setTargetData] = useState<any>({
+    const [targetData, setTargetData] = useState<any>(route.params.target && {
         name: route.params.target ? route.params.target.Name : "",
         latitude: route.params.target ? route.params.target.Lat : '',
         longitude: route.params.target ? route.params.target.Lng: '',
@@ -438,7 +438,6 @@ const styles = StyleSheet.create({
     routesContainer: {
         marginTop: 10,
         maxHeight: 300,
-        paddingHorizontal: 15,
         paddingTop: 10
     },
     form: {

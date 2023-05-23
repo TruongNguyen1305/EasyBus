@@ -189,10 +189,10 @@ const styles = StyleSheet.create({
         width: 40
     },
     hintsContainer: {
-        marginTop: 150,
+        marginTop: 5,
+        paddingVertical: 155,
         width: Dimensions.get('window').width,
         alignSelf: 'center',
-        marginBottom: 180
     },
 
     hints: {
