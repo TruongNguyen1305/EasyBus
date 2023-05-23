@@ -49,13 +49,14 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
         bus: true,
         station: true,
         clickLike: false,
+        clickLikeBus: false
     })
     const [openModalLogin, setOpenModalLogin] = useState(user.id == '')
     
-
     useEffect(() => {
         if (loading.station) fetchDataStation(true)
         else fetchDataStation()
+        fetchDataBus()
     }, [user])
 
     useFocusEffect(
@@ -69,6 +70,16 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
           };
         }, [])
     )
+
+    const AlertLogin = () => {
+        Alert.alert(
+            'Thông báo',
+            'Bạn đã thực hiện thao tác này quá nhanh, vui lòng thử lại trong giây lát.',
+            [
+              { text: 'OK', style: 'cancel' },
+            ],
+        )
+    }
 
     const handleClickHeartStation = async (StopId: string) => {
         if (user.id != '') {
@@ -90,15 +101,32 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
             dispatch(CHANGE_FAVOURITE(payload))
             loading.clickLike = false
         }
+        else {
+            setOpenModalLogin(true)
+        }
     }
     const handleClickHeartBus = async (BusID: string) => {
+        console.log('aloo')
+        setLoading({...loading, clickLikeBus: true})
         if (user.id != '') {
-            // const station = await fetch({ route: 'bus', id: BusID + '' }).unwrap()
-            const payload = { bus, station: user.favouriteBus }
-            dispatch(CHANGE_FAVOURITE(payload))
+            fetch({ route: 'bus', id: BusID + '' }).unwrap()
+            .then(res => {
+                const payload = { station: user.favouriteStation, bus: res }
+                dispatch(CHANGE_FAVOURITE(payload))
+                console.log('aloo')
+                setLoading({...loading, clickLikeBus: false})
+            })
+            .catch(err => console.log(err))
+
+            fetchDataBus()
         }
-        fetchDataBus()
-    }        
+        else {
+            setOpenModalLogin(true)
+        }
+
+
+    } 
+    
     const fetchDataBus = async (firstTime = false) => {
         const busData : any [] = []
         for (const item of user.favouriteBus) {
@@ -132,6 +160,21 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
 
     return (
         <View>
+
+            <Spinner
+                //visibility of Overlay Loading Spinner
+                visible={loading.clickLikeBus}
+                //Text with the Spinner
+                textContent={'Loading...'}
+                //Text style of the Spinner Text
+                textStyle={{
+                    fontSize: FontSize.HEADLINE2,
+                    fontWeight: FontWeight.HEADLINE2,
+                    color: 'white'
+                }}
+            />
+
+
             <Modal isOpen={openModalLogin} onClose={() => { setOpenModalLogin(false);  navigation.navigate("HomeContainer")}}>
                 <Modal.Content>
                 <Modal.CloseButton />
@@ -261,23 +304,24 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
                 :
                     <ScrollView style={{
                         margin: 30,
-                        marginTop: 30,
+                        marginTop: 40,
                         paddingTop: 20
                     }}
                         showsVerticalScrollIndicator = {false}
                     >
-                        
                         {
                             bus.length == 0 ?
                                 <View style={{ width: '100%', alignItems: "center", justifyContent: "center", marginTop: 20 }}>
                                     <Text>Bạn chưa có tuyến xe yêu thích nào!</Text>
                                 </View>
                             : 
+                            
                             bus.map((item, index) => (
                                 <Bus RouteName={item.RouteName} RouteNo={item.RouteNo}
                                     OperationTime={item.OperationTime} TimeOfTrip={item.TimeOfTrip}
                                     Distance={item.Distance} Headway={item.Headway} key={index}
                                     Tickets={getFareTickets(item.Tickets)}
+                                    onPressHeart={() => handleClickHeartBus(item.RouteId+'')}
                                 />
                             ))
                         }                        

@@ -35,11 +35,11 @@ export default function BusSearchItem(props: IBusSearch) {
                 <TouchableOpacity
                     onPress = {() => props.onClickHeart && props.onClickHeart()}
                 >
-                    <View style={{}}>
+                    <View style={{position:'relative', top: 12}}>
                     <Icon name='heart' size={22} color={Colors.PRIMARY40} />
                     </View>
-                    <View style={{}}>
-                    <Icon name='heart-o' size={23} color={'#262626'} />
+                    <View style={{top:-12}}>
+                    <Icon name='heart-o' size={24} color={'#262626'} />
                     </View>
                 </TouchableOpacity>
               :

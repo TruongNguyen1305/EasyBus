@@ -1,8 +1,8 @@
-import { View, Text } from "react-native"
+import { View, Text, TouchableOpacity } from "react-native"
 import { Icon } from "@/Theme/Icon/Icon"
 import { FontSize, FontWeight, Colors } from "@/Theme/Variables"
 import BusIconContainer from "./BusIconContainer"
-import { Divider } from "native-base"
+import { Divider,  } from "native-base"
 
 interface IBusProps {
     RouteNo: string;
@@ -12,6 +12,7 @@ interface IBusProps {
     Distance: number;
     Headway: string;
     Tickets: string[];
+    onPressHeart?: () => void
 }
 
 export default function Bus(props: IBusProps) {
@@ -68,9 +69,11 @@ export default function Bus(props: IBusProps) {
                         </View>   
                 </View>
             </View>
-            <View style={{width:'10%'}}>
+                <TouchableOpacity style={{ width: '10%' }}
+                    onPress={() => props.onPressHeart && props.onPressHeart()}
+                >
                 <Icon name='heart' size = {22} color = {Colors.PRIMARY40} />
-            </View>         
+            </TouchableOpacity>         
         </View>
             <Divider bg={Colors.BLACK30} thickness="1" mx="1"
                 orientation="horizontal" marginY={3}

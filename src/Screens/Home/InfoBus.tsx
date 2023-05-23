@@ -5,9 +5,8 @@ import { HomeStackParamList } from './HomeContainer'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Divider } from 'native-base'
-import Bus from '@/Components/Home/Bus'
 import BusSearchItem from '@/Components/Home/BusSearchItem'
-import { useAppSelector } from '@/Hooks/redux'
+import { useAppDispatch, useAppSelector } from '@/Hooks/redux'
 import { useUpdateFavouriteMutation } from '@/Services'
 import { CHANGE_FAVOURITE } from '@/Store/reducers'
 
@@ -20,10 +19,11 @@ export default function InfoBus({ route, navigation }: InfoBusNavigationProps) {
     const user = useAppSelector(state => state.user.user)
     const [data, setData] = useState<any>()
     const [fetch] = useUpdateFavouriteMutation()
+    const dispatch = useAppDispatch()
 
     const handleClickHeartStation = async (RouteNo: string) => {
         if (user.id != '') {
-            // if (loading.clickLike) { 
+            // if (loading.clickLike) {
             //     Alert.alert(
             //         'Thông báo',
             //         'Bạn đã thực hiện thao tác này quá nhanh, vui lòng thử lại trong giây lát.',
@@ -34,9 +34,15 @@ export default function InfoBus({ route, navigation }: InfoBusNavigationProps) {
             //     return
             // }
             // loading.clickLike = true
-            const newStation = await fetch({ route: 'bus', id: RouteNo + '' }).unwrap()
-            const payload = { bus: newStation, station: user.favouriteStation }
-            dispatch(CHANGE_FAVOURITE(payload))
+            fetch({ route: 'bus', id: RouteNo + '' }).unwrap()
+            .then(res => {
+                const payload = { station: user.favouriteStation, bus: res }
+                dispatch(CHANGE_FAVOURITE(payload))
+            })
+            .catch(err => console.log(err))
+            
+
+
             // loading.clickLike = false
         }
     }

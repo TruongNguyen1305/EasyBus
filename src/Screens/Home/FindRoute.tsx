@@ -189,7 +189,11 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                                 )}
                             </View>
                         </View>
-                        
+                        {
+                            resultData.length == 0 && input !== "" && (
+                                <Text style={{marginTop: 20}}>Không tìm thấy tuyến xe thoã mãn!</Text>
+                            )
+                        }
                         <ScrollView
                             style={styles.routesContainer}
                             showsVerticalScrollIndicator={false}
@@ -223,6 +227,7 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                                     }}
                                         onPress={() => {
                                             dispatch(UPDATE_HISTORY({ search: item }))
+                                            navigation.navigate('BusInfo', {data: item.RouteId})
                                         }}
                                     >
                                         <BusSearchItem busName={item.RouteName} busNo={item.RouteNo} />
