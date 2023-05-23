@@ -1,16 +1,17 @@
-import {View, Text} from 'react-native'
+import {View, Text, TouchableOpacity} from 'react-native'
 import BusIconContainer from './BusIconContainer';
 import { useAppSelector } from '@/Hooks/redux';
 import { Icon } from '@/Theme/Icon/Icon';
 import { Colors } from '@/Theme/Variables';
 interface IBusSearch {
     busNo: string;
-    busName: string
+    busName: string;
+    onClickHeart?: () => void
 }
 
 export default function BusSearchItem(props: IBusSearch) {
     const user = useAppSelector(state => state.user.user)
-    
+    console.log(user)
     return (
         <View style={{
             flexDirection: 'row',
@@ -31,21 +32,23 @@ export default function BusSearchItem(props: IBusSearch) {
             </View>
             {
                 user.favouriteBus.includes(props.busNo) ?
-                <View>
+                <TouchableOpacity
+                    onPress = {() => props.onClickHeart && props.onClickHeart()}
+                >
                     <View style={{}}>
                     <Icon name='heart' size={22} color={Colors.PRIMARY40} />
                     </View>
                     <View style={{}}>
                     <Icon name='heart-o' size={23} color={'#262626'} />
                     </View>
-                </View>
+                </TouchableOpacity>
               :
-              <View style = {{}}>
+                <TouchableOpacity 
+                    onPress = {() => props.onClickHeart && props.onClickHeart()}
+              >
                 <Icon name='heart-o' size={23} color='black' />
-              </View>
+              </TouchableOpacity>
             }
-
-
         </View>
     )
 }

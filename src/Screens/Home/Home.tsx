@@ -309,7 +309,6 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
                     <View style = {{top: 10}}>
                       <Icon name='heart-o' size={20} color='black' />
                     </View>
-
                 }
               </TouchableOpacity>
               <TouchableOpacity style = {{width: '40%', alignItems:'center', padding: 10,

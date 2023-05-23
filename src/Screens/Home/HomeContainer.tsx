@@ -7,14 +7,14 @@ import { useLazyGetUserQuery } from "@/Services";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useAppDispatch, useAppSelector } from "@/Hooks/redux";
 import { SETISUSED } from "@/Store/reducers";
+import InfoBus from "./InfoBus";
 
 export type HomeStackParamList = {
   ["Home"]: { data: any; isLoading: boolean },
   ['FindRoute']: {status: string, target?: any},
   ['HintRoutes']: {startData: any, targetData: any},
   ['Guide']: { data: any, startData: any, targetData: any },
-  ['FindBus']: undefined,
-  ['FindBusStop']: undefined,
+  ['BusInfo'] : {data: string}
 }
 
 const HomeStack = createNativeStackNavigator<HomeStackParamList>()
@@ -58,6 +58,11 @@ export const HomeContainer = ():JSX.Element => {
       <HomeStack.Screen
         name="Guide"
         component={Guide}
+      />
+      
+      <HomeStack.Screen
+        name="BusInfo"
+        component={InfoBus}
       />
       
     </HomeStack.Navigator>

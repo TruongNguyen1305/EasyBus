@@ -133,15 +133,10 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
             targetData
         })
     }
-
-    
-
-    // console.log(input, resultData)
     
     return ( 
         <View style={styles.container}> 
             <Header cover={Status.COVER1} leftTitle="Back" leftIconName="back" logoShow navigation={navigation}/>
-            
             <View style={styles.modalContainer}>
                 <View style={styles.modalHeader}>
                     <Icon name={status === 'FindRoute' ? 'findroute' : 'magnifying' } size={24} color={Colors.PRIMARY40} />
@@ -210,6 +205,7 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                                         onPress={() => {
                                             dispatch(UPDATE_HISTORY({search: item}))
                                             console.log(item.RouteId)
+                                            navigation.navigate('BusInfo', {data: item.RouteId})
                                         }}
                                     >
                                         <BusSearchItem busName={item.RouteName} busNo={item.RouteNo} />
@@ -227,7 +223,6 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                                     }}
                                         onPress={() => {
                                             dispatch(UPDATE_HISTORY({ search: item }))
-                                            console.log(item.RouteId)
                                         }}
                                     >
                                         <BusSearchItem busName={item.RouteName} busNo={item.RouteNo} />
