@@ -21,7 +21,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.daihoceasy.easybus",
+      "bundleIdentifier": "com.nam693.easybus",
       "infoPlist": {
         "LSApplicationQueriesSchemes": [
           "momo"
@@ -33,7 +33,7 @@
         "foregroundImage": "./assets/logo-app.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.daihoceasy.easybus",
+      "package": "com.nam693.easybus",
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION",
@@ -51,7 +51,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "5a27c196-be3f-4013-9284-97d54cc8e984"
+        "projectId": "ce517a2c-5620-4b40-b2b8-028ceab331f6"
       }
     }
   }

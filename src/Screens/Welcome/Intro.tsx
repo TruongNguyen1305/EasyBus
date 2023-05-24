@@ -31,7 +31,7 @@ export const Intro = ({ navigation } : WelcomeScreenNavigatorProps
     Animated.sequence([
       Animated.timing(progressValue, {
         toValue: 1,
-        duration: 1500,
+        duration: 1000,
         useNativeDriver: true,
       }),
       Animated.timing(scaleValue, {

@@ -145,7 +145,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
         width: Dimensions.get('window').width,
-        maxHeight: Dimensions.get('window').height,
         position: 'relative',
     },
     modalContainer: {
@@ -191,12 +190,12 @@ const styles = StyleSheet.create({
     },
     hintsContainer: {
         marginTop: 5,
-        paddingVertical: 148,
-        width: Dimensions.get('window').width,
+        paddingTop: 148,
         alignSelf: 'center',
     },
 
     hints: {
         paddingHorizontal: 20,
+        marginBottom: 110,
     }
 })

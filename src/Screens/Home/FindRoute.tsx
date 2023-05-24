@@ -45,9 +45,6 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
     )
     const [isStartInputFocused, setIsStartInputFocused] = useState(false)
     
-    console.log("TargetINPUT", targetData)
-    console.log("TargetSTART", startData)
-
     useEffect(() => {
         const fetchBusData =  async () => {
             let endpoint = route.params.status === 'LookUp' ? "getallroute" : "getstopsinbounds/106/10/107/11"
@@ -335,48 +332,52 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                                 </Pressable>
                             )       
                         }
-                        {resultData.length > 0 && (
-                                <View style={{ height: 320 }} >
-                                    <FlatList
-                                        data={resultData}
-                                        renderItem={({ item }) => (
-                                            <TouchableOpacity
-                                                style={{ paddingHorizontal: 20 }}
-                                                onPress={() => {
-                                                    if (isStartInputFocused) {
-                                                        setStartData({
-                                                            name: item.Name,
-                                                            latitude: item.Lat,
-                                                            longitude: item.Lng
-                                                        })
-                                                        setStartInput(item.Name)
-                                                    }
-                                                    else {
-                                                        setTargetData({
-                                                            name: item.Name,
-                                                            latitude: item.Lat,
-                                                            longitude: item.Lng
-                                                        })
-                                                        setTargetInput(item.Name)
-                                                    }
-                                                    setResultData([])
-                                                }}
-                                            >
-                                                <Busstop name={item.Name} address={item.AddressNo}
-                                                    buslist={item.Routes}
-                                                    street={item.Street} zone={item.Zone}
-                                                    onPressHeart={() => {
-                                                        console.log('cc')
+                        {resultData.length == 0 && ((isStartInputFocused && startInput != "") || (!isStartInputFocused && targetInput != "")) ? 
+                                <Text>Không tìm thấy địa điểm thoả mãn</Text>
+                                :
+                                (
+                                    <View style={{ maxHeight: resultData.length == 0 ? 10 : 300 }} >
+                                        <FlatList
+                                            data={resultData}
+                                            renderItem={({ item }) => (
+                                                <TouchableOpacity
+                                                    style={{ paddingHorizontal: 20 }}
+                                                    onPress={() => {
+                                                        if (isStartInputFocused) {
+                                                            setStartData({
+                                                                name: item.Name,
+                                                                latitude: item.Lat,
+                                                                longitude: item.Lng
+                                                            })
+                                                            setStartInput(item.Name)
+                                                        }
+                                                        else {
+                                                            setTargetData({
+                                                                name: item.Name,
+                                                                latitude: item.Lat,
+                                                                longitude: item.Lng
+                                                            })
+                                                            setTargetInput(item.Name)
+                                                        }
+                                                        setResultData([])
                                                     }}
-                                                />
-                                            </TouchableOpacity>
-                                        )}
-                                        keyExtractor={item => item.StopId}
-                                        maxToRenderPerBatch={3}
-                                        showsVerticalScrollIndicator={false}
-                                    />
-                                </View>
-                        )}
+                                                >
+                                                    <Busstop name={item.Name} address={item.AddressNo}
+                                                        buslist={item.Routes}
+                                                        street={item.Street} zone={item.Zone}
+                                                        onPressHeart={() => {
+                                                            console.log('cc')
+                                                        }}
+                                                    />
+                                                </TouchableOpacity>
+                                            )}
+                                            keyExtractor={item => item.StopId}
+                                            maxToRenderPerBatch={3}
+                                            showsVerticalScrollIndicator={false}
+                                        />
+                                    </View>
+                                )
+                        }
                     </>
                 )}
             </View>
