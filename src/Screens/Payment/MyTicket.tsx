@@ -16,10 +16,12 @@ LogBox.ignoreLogs([
 const {width, height} = Dimensions.get('window')
 
 
-function MyTicket(props: {
-    page: PaymentPage,
-    setPage: React.Dispatch<React.SetStateAction<PaymentPage>>
-}) {
+function MyTicket(
+//     props: {
+//     page: PaymentPage,
+//     setPage: React.Dispatch<React.SetStateAction<PaymentPage>>
+// }
+) {
     const {user} = useAppSelector(state => state.user)
     const [loading, setLoading] = useState(false)
     
@@ -155,7 +157,7 @@ function MyTicket(props: {
                     borderColor: Colors.PRIMARY60,
                     borderWidth: 2
                 }}
-                onPress={() => props.setPage(PaymentPage.BuyTicket)}
+                // onPress={() => props.setPage(PaymentPage.BuyTicket)}
             >
                 <Text style={{ fontSize: FontSize.BUTTON_LARGE, fontWeight: FontWeight.BUTTON_LARGE, color: Colors.BLACK100 }}>+ Mua thêm vé</Text>
             </Pressable>
