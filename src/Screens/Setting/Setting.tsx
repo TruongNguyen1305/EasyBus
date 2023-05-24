@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         alignSelf: 'center',
         zIndex: 1,
-        top: Dimensions.get('window').width / 3.5 - 35 + getStatusBarHeight(),
+        top: Dimensions.get('window').width / 3.5 - 35 ,
         justifyContent: 'center',
         alignItems: 'center'
     },
