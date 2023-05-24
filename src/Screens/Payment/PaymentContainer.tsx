@@ -49,8 +49,7 @@ export function PaymentContainer({navigation}: PaymentScreenProps) {
 
     const Content = {
         [PaymentPage.QR]: <MyQR />,
-        //[PaymentPage.MyTicket]: <MyTicket page={page} setPage={setPage}/>,
-        [PaymentPage.MyTicket]: <MyTicket />,
+        [PaymentPage.MyTicket]: <MyTicket page={page} setPage={setPage}/>,
         [PaymentPage.BuyTicket]: <BuyTicket />
     }
     useFocusEffect(
