@@ -10,7 +10,6 @@ import { RootStackParamList } from "@/Navigation";
 import { Slider } from "@/Components";
 import { useAppSelector } from "@/Hooks/redux";
 import {useEffect} from 'react'
-import Location from 'expo-location'
 const data = [
     {
         title: "EasyBus - Đi xe buýt chưa bao giờ dễ dàng đến thế!",
@@ -57,16 +56,6 @@ export const Onboarding = ({navigation} : OnboardingScreenNavigatorProps) => {
                 routes: [{ name: RootScreens.MAIN }],
             });        }
     }, [])
-
-    useEffect(() => {
-        (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                alert('Bạn chưa cấp quyền truy cập vị trí cho ứng dụng');
-                return;
-            }
-        })();
-    }, []); 
 
     const animation = useRef(null);
 
