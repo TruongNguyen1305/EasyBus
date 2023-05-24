@@ -21,16 +21,13 @@ interface IHeaderProps {
 }
 
 export default function Header(props: IHeaderProps) {
-    console.log(getStatusBarHeight())
 
     return (
         <View style={{
-            width: Dimensions.get('window').width, height: Dimensions.get('window').width / 3.5 + getStatusBarHeight(),
+            width: Dimensions.get('window').width, height: Dimensions.get('window').width / 3.5,
             borderBottomColor: 'black',
             borderBottomWidth: 1,
         }}>
-            <View style={{ backgroundColor: Colors.SECONDARY20, height: getStatusBarHeight(), position:'relative', top:1}}>
-            </View>
             {
                 props.cover == '1' ?
                     <Image
@@ -62,7 +59,7 @@ export default function Header(props: IHeaderProps) {
                             zIndex: 5,
                             width: 80,
                             height: 62,
-                            top: 18 + getStatusBarHeight(),
+                            top: 18 ,
                             right: Dimensions.get('window').width / 2 - 40,
                         }}
                     />
@@ -75,7 +72,7 @@ export default function Header(props: IHeaderProps) {
                     zIndex: 6, alignItems: 'center', position: 'absolute',
                     justifyContent: 'center', width: 40, height: 40,
                     borderRadius: 40, backgroundColor: Colors.PRIMARY40,
-                    top: getStatusBarHeight(), right: 0,
+                    right: 0,
                     margin: 10,
                     marginRight: 20,
                 }}
@@ -97,7 +94,7 @@ export default function Header(props: IHeaderProps) {
             <TouchableOpacity style={{
                 zIndex: 6, alignItems: 'center', position: 'absolute', flexDirection: 'row',
                 backgroundColor: Colors.PRIMARY40, padding: 4,
-                top: getStatusBarHeight(), margin: 10, borderRadius: 7,
+                margin: 10, borderRadius: 7,
                 paddingRight: 6,
                 paddingLeft: 6,
                 marginLeft: 20,
