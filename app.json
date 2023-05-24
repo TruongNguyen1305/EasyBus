@@ -41,7 +41,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon-app.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.nam693.easybus",
