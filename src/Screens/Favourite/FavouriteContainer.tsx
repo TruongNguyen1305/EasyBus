@@ -18,6 +18,7 @@ import { CompositeScreenProps, RouteProp, useFocusEffect } from "@react-navigati
 import React from "react"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { MainScreenParams } from "@/Navigation/Main"
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 enum Screen {
     STATION = 'STATION',
@@ -192,7 +193,7 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
                 height: 60,
                 width:'100%',
                 position: 'absolute',
-                top: 130,
+                top: Dimensions.get('window').width / 3.5 + getStatusBarHeight(),
                 shadowOffset: {
                     width: 0,
                     height: 5,

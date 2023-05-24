@@ -37,11 +37,11 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "extra": {
-      "eas": {
-        "projectId": "ce517a2c-5620-4b40-b2b8-028ceab331f6"
-      }
-    },
+    // "extra": {
+    //   "eas": {
+    //     "projectId": "ce517a2c-5620-4b40-b2b8-028ceab331f6"
+    //   }
+    // },
     "runtimeVersion": {
       "policy": "sdkVersion"
     }
