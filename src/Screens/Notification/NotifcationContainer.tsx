@@ -19,7 +19,7 @@ export default function NotificationContainer() {
                     time="Tuần trước"
                 />
                 <NotificationItem
-                    title="Công bố mở tuyến xe buýt không trợ giá kết nối Bến xe Miền Đông cũ và Bến xe Miền Đông mới"
+                    title="Công bố mở tuyến xe buýt kết nối Bến xe Miền Đông cũ và Bến xe Miền Đông mới"
                     content="Kể từ ngày 15 tháng 03 năm 2023, Trung tâm Quản lý Giao thông công cộng thông báo điều chỉnh lộ trình hoạt động trên tuyến xe buýt có trợ giá số 71 (Bến xe An Sương – Phật Cô Đơn)"
                     time="Tuần trước"
                 />
@@ -30,11 +30,11 @@ export default function NotificationContainer() {
                 />
                 <NotificationItem
                     title="Công bố mở tuyến kết nối Bến xe Miền Đông cũ và Bến xe Miền Đông mới"
-                    content="Công bố mở tuyến xe buýt không trợ giá kết nối Bến xe Miền Đông cũ và Bến xe Miền Đông mới"
+                    content="Công bố mở tuyến xe buýt kết nối Bến xe Miền Đông cũ và Bến xe Miền Đông mới"
                     time="Tuần trước"
                 />
                 <NotificationItem
-                    title="Công bố mở tuyến xe buýt không trợ giá kết nối Bến xe Miền Đông cũ và Bến xe Miền Đông mới"
+                    title="Công bố mở tuyến xe buýt kết nối Bến xe Miền Đông cũ và Bến xe Miền Đông mới"
                     content="Kể từ ngày 15 tháng 03 năm 2023, Trung tâm Quản lý Giao thông công cộng thông báo điều chỉnh lộ trình hoạt động trên tuyến xe buýt có trợ giá số 71 (Bến xe An Sương – Phật Cô Đơn)"
                     time="Tuần trước"
                 />

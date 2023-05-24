@@ -8,8 +8,6 @@ import { PersistGate } from "redux-persist/integration/react";
 import { ApplicationNavigator } from "./Navigation";
 import { BackHandler, Alert } from 'react-native';
 
-
-
 i18n.locale = Localization.locale;
 i18n.enableFallback = true;
 i18n.defaultLocale = Language.ENGLISH;

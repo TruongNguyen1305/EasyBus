@@ -7,7 +7,7 @@ import { HomeStackParamList } from "./HomeContainer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import MapView, {Callout, Marker, Polyline} from 'react-native-maps';
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables";
-import { Divider, Pressable, ScrollView, Modal, Spinner} from 'native-base';
+import { Divider, Pressable, ScrollView, Modal, Spinner } from 'native-base';
 import Header from "@/Components/Header";
 import Busstop from "@/Components/Home/Busstop";
 import { Status } from "@/Components/Header";
@@ -15,10 +15,10 @@ import { debounce, set } from 'lodash';
 import * as Location from 'expo-location';
 import { useAppSelector, useAppDispatch } from "@/Hooks/redux";
 
-
 import axios from 'axios'
 import { CHANGE_FAVOURITE } from "@/Store/reducers/user";
 import BusIconContainer from "@/Components/Home/BusIconContainer";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 type HomeScreenNavigationProps = NativeStackScreenProps<
   HomeStackParamList,
@@ -405,12 +405,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor:Colors.SECONDARY20
   },
-  statusBar: {
-    width: '100%',
-    backgroundColor: Colors.SECONDARY20,
-    height: 36, position: 'absolute',
-    zIndex: 5
-  },
   coverImg: {
     position: 'absolute', zIndex: 5, width: Dimensions.get('window').width,
     height: Dimensions.get('window').width / 3.5, top: 36
@@ -430,7 +424,8 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width - 40,
     justifyContent: 'center',
     borderRadius: 5,
-    position: 'absolute', top: 110,
+    position: 'absolute', 
+    top: 74 + getStatusBarHeight(),
     backgroundColor: "white", height: 70,
     alignSelf: 'center',
     shadowColor: "#000",

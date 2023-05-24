@@ -41,7 +41,6 @@ const data = [
     }
 ]
 
-
 type OnboardingScreenNavigatorProps = NativeStackScreenProps<
   RootStackParamList
 >;

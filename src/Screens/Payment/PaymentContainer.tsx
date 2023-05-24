@@ -53,16 +53,6 @@ export function PaymentContainer({navigation}: PaymentScreenProps) {
         [PaymentPage.BuyTicket]: <BuyTicket />
     }
     useFocusEffect(
-        // React.useCallback(() => {
-        //     if (user.id == '') setOpenModalLogin(true)
-        //     else setOpenModalLogin(false)
-
-        //     // Cleanup function (nếu cần)
-        //     return () => {
-        //     // Hàm này sẽ được gọi khi màn hình không còn được focus
-        //     // Đây là nơi để hủy bỏ các event listener (nếu có)
-        //   };
-        // }, [])
         () => {
             if (user.id == '') setOpenModalLogin(true)
             else setOpenModalLogin(false)

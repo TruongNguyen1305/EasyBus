@@ -17,7 +17,7 @@ export default function Busstop(props: IBusstopProps) {
     const buslist = props.buslist.split(', ')
     return (
         <>
-        <View style={{flexDirection:'row'}}>
+        <View style={{flexDirection:'row', marginTop: 10,}}>
             <View style={{width:'10%'}}>
                 <Icon name='busstop' size = {24} color = 'black' />
             </View>
@@ -53,10 +53,9 @@ export default function Busstop(props: IBusstopProps) {
                     }
                 </View>
             </View>
-         
         </View>
             <Divider bg={Colors.BLACK30} thickness="1" mx="1"
-                orientation="horizontal" marginY={3}
+                orientation="horizontal" marginY={1}
             />
         </>
     )
