@@ -58,6 +58,7 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
     const [isFinding, setIsFinding] = useState(false)
     const isFocused = useIsFocused()
     const [openHeader, setOpenHeader] = useState(true)
+    const [permission, setPermission] = useState(true)
 
 
     const [mapRegion, setMapRegion] = useState({
@@ -97,7 +98,6 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
                 return 
             }
         }
-        
     }
 
 
@@ -117,7 +117,16 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
             })
         }
 
-        checkLocationChange()
+        const checkLocationPermission = async() => {
+            const { status } = await Location.getForegroundPermissionsAsync()
+            if (status !== Location.PermissionStatus.GRANTED) {
+                setPermission(false)
+                return
+            }
+            await checkLocationChange()
+        }
+
+        checkLocationPermission()
 
         return () => {
             watcher.remove()
@@ -125,6 +134,37 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
         }
 
     }, [isFocused])
+
+    if(!permission)
+        return (
+            <View style={styles.container}>
+                {
+                    openHeader ?
+                        <Header cover={Status.COVER1} leftTitle="Back" leftIconName="back" logoShow navigation={navigation}
+                            onPressRightIcon={() => setOpenHeader(!openHeader)}
+                            rightIconName="up"
+                        />
+                        :
+                        <TouchableOpacity style={{
+                            zIndex: 6, alignItems: 'center', position: 'absolute',
+                            justifyContent: 'center', width: 40, height: 40,
+                            borderRadius: 40, backgroundColor: Colors.PRIMARY40,
+                            top: 36, right: 0,
+                            margin: 10,
+                            marginRight: 20,
+                        }}
+                            onPress={() => { setOpenHeader(!openHeader) }}
+                        >
+                            {
+                                <View style={{ top: -2 }}>
+                                    <Icon name={'down'} size={20} color='black' />
+                                </View>
+                            }
+                        </TouchableOpacity>
+                }
+                <Text style={{alignSelf: 'center', fontSize: FontSize.BODY_LARGE, fontWeight: FontWeight.BODY_LARGE, color: Colors.BLACK60, marginTop: 100, width: width - 100, textAlign: 'center'}}>Bạn chưa cấp quyền truy cập vị trí cho ứng dụng</Text>
+            </View>
+        )
         
     return (
         <View style={styles.container}>
