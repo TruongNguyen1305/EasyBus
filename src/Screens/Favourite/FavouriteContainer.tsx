@@ -183,7 +183,7 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
                 </Modal.Content>
             </Modal>
 
-            <View style = {{position:'relative'}}>
+            <View style = {{position:'relative', marginBottom: 10}}>
                 <Header cover={Status.COVER2} leftTitle='Yêu thích' leftIconName='collection' logoShow={false} />
             </View>
 
@@ -200,7 +200,6 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
                 },
                 shadowOpacity: 0.34,
                 shadowRadius: 6.27,
-
                 elevation: 10,
                 zIndex:20,
             }}>

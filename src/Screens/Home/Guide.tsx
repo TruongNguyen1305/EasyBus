@@ -57,6 +57,7 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
     const [loading, setLoading] = useState(false)
     const [isFinding, setIsFinding] = useState(false)
     const isFocused = useIsFocused()
+    const [openHeader, setOpenHeader] = useState(true)
 
 
     const [mapRegion, setMapRegion] = useState({
@@ -127,7 +128,30 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
         
     return (
         <View style={styles.container}>
-            <Header cover={Status.COVER1} leftTitle="Back" leftIconName="back" logoShow navigation={navigation} />
+            {
+                openHeader ?
+                <Header cover={Status.COVER1} leftTitle="Back" leftIconName="back" logoShow navigation={navigation}
+                    onPressRightIcon={() => setOpenHeader(!openHeader)}
+                    rightIconName="up"
+                />
+                    :
+                <TouchableOpacity style={{
+                    zIndex: 6, alignItems: 'center', position: 'absolute',
+                    justifyContent: 'center', width: 40, height: 40,
+                    borderRadius: 40, backgroundColor: Colors.PRIMARY40,
+                    top: 36, right: 0,
+                    margin: 10,
+                    marginRight: 20,
+                    }}
+                    onPress={() => {setOpenHeader(!openHeader)}}
+                    >
+                    {
+                        <View style={{top: -2}}>
+                            <Icon name={'down'} size={20} color='black' />
+                        </View>
+                    }     
+                </TouchableOpacity>
+            }
 
             <Spinner
                 //visibility of Overlay Loading Spinner
@@ -144,7 +168,7 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
 
             <Button
                 backgroundColor={isFinding ? Colors.RED60 : Colors.PRIMARY60}
-                style={styles.btn}
+                style={[styles.btn, {top: openHeader ? Dimensions.get('window').width / 3.5 + getStatusBarHeight() + 20 : getStatusBarHeight() }]}
                 leftIcon={
                     isFinding ? <Icon name="pause" size={20} color="white" /> : <Icon name="location-arrow" size={20} color="white" />
                 }
@@ -152,6 +176,7 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
                     setLoading(true)
                     if(!isFinding){
                         const location: Location.LocationObject = await Location.getCurrentPositionAsync()
+                        
                         setMapRegion({
                             latitude: location.coords.latitude,
                             longitude: location.coords.longitude,
@@ -172,6 +197,7 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
                 // provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                 style={styles.map}
                 region={mapRegion}
+                mapPadding={{ top: openHeader ? 10 : 90 , right: 10, bottom: 0, left: 0 }}
                 onRegionChange={
                     debounce(
                         (region, details) => {
@@ -371,7 +397,6 @@ const styles = StyleSheet.create({
         zIndex: 10,
         position: 'absolute',
         left: 15,
-        top: Dimensions.get('window').width / 3.5 + getStatusBarHeight() + 60,
         borderRadius: 20,
     },
     modal: {

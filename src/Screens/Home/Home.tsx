@@ -125,7 +125,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
     <MapView
         style={styles.map}
         region={mapRegion}
-        mapPadding={{ top: openHeader ? 180 : 90 , right: 10, bottom: 0, left: 0 }}
+        mapPadding={{ top: openHeader ? 190 : 90 , right: 10, bottom: 0, left: 0 }}
         onRegionChange={
           useCallback(
             debounce(
