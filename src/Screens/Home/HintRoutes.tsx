@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: Dimensions.get('window').width - 40,
         position: 'absolute',
-        top: Dimensions.get('window').width / 3.5 - 30 + getStatusBarHeight(),
+        top: Dimensions.get('window').width / 3.5 - 30 ,
         alignSelf: 'center',
         backgroundColor: 'white',
         borderRadius: 5,

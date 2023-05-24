@@ -196,8 +196,12 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
                     longitude: item.Lng,
                   }}
                   tracksViewChanges={false}
-                  image={require('@/../assets/image/markicon-bus_liked.png')}
                 >
+                  <Image
+                      source={require('@/../assets/image/markicon-bus_liked.png')}
+                      style={{ width: 10, height: 10 }}
+                      resizeMode="contain"
+                  />
                   <Callout style={{ width: 200, flexDirection: 'column' }} onPress={() => setModal({isOpen: true, data: item})}>
                       <Text style={{fontSize: 13, fontWeight: '700'}}>{item.StopId} - {item.Name}</Text>  
                       <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
@@ -214,8 +218,12 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
                   longitude: item.Lng,
                 }}
                 tracksViewChanges={false}
-                image={require('@/../assets/image/markicon-bus.png')}
-              >
+                >
+                  <Image
+                      source={require('@/../assets/image/markicon-bus.png')}
+                      style={{ width: 20, height: 20 }}
+                      resizeMode="contain"
+                  />
                 <Callout style={{ width: 200, flexDirection: 'column' }} onPress={() => setModal({isOpen: true, data: item})}>
                     <Text style={{fontSize: 13, fontWeight: '700'}}>{item.StopId} - {item.Name}</Text>  
                     <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
