@@ -122,7 +122,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
 
   return (
     <View style={styles.container}>
-    <MapView
+    {/* <MapView
         style={styles.map}
         region={mapRegion}
         mapPadding={{ top: openHeader ? 190 : 90 , right: 10, bottom: 0, left: 0 }}
@@ -221,7 +221,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
             }
           )
         }
-      </MapView>
+      </MapView> */}
       {
         openHeader ? (
           <>
