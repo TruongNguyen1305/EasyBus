@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Dimensions, FlatList } from "react-native";
 import { HomeStackParamList } from "./HomeContainer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Header, { Status } from "@/Components/Header";
-import MapView from "react-native-maps";
+import MapView, {PROVIDER_GOOGLE} from "react-native-maps";
 import { Icon } from "@/Theme/Icon/Icon";
 import { FontSize, FontWeight, Colors } from "@/Theme/Variables";
 import { Button, Divider, Input, Pressable, ScrollView } from "native-base";
@@ -10,7 +10,7 @@ import Busstop from "@/Components/Home/Busstop";
 import { TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { debounce, set } from "lodash";
+import { debounce } from "lodash";
 import BusSearchItem from "@/Components/Home/BusSearchItem";
 import { useAppDispatch, useAppSelector } from "@/Hooks/redux";
 import { CLEAR_HISTORY, UPDATE_HISTORY } from "@/Store/reducers";
@@ -382,6 +382,7 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
             </View>
 
             <MapView 
+                provider={PROVIDER_GOOGLE}
                 style={styles.map}
                 region={{
                     latitude: 10.880035901459214,

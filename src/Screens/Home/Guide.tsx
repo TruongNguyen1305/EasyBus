@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Dimensions, FlatList, Animated, TouchableOpacit
 import { HomeStackParamList } from "./HomeContainer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Header, { Status } from "@/Components/Header";
-import MapView, { Callout, Marker, Polyline, UserLocationChangeEvent } from "react-native-maps";
+import MapView, { Callout, Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "native-base";
 import { Icon } from "@/Theme/Icon/Icon";
@@ -234,7 +234,7 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
             </Button>
 
             <MapView
-                // provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                 style={styles.map}
                 region={mapRegion}
                 mapPadding={{ top: openHeader ? 10 : 90 , right: 10, bottom: 0, left: 0 }}

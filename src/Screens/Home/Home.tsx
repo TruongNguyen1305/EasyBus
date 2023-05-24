@@ -5,7 +5,7 @@ import { User, useUpdateFavouriteMutation } from "@/Services";
 import { Icon } from "@/Theme/Icon/Icon";
 import { HomeStackParamList } from "./HomeContainer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import MapView, {Callout, Marker, Polyline} from 'react-native-maps';
+import MapView, {Callout, Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables";
 import { Divider, Pressable, ScrollView, Modal, Spinner } from 'native-base';
 import Header from "@/Components/Header";
@@ -123,6 +123,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
   return (
     <View style={styles.container}>
     <MapView
+        provider={PROVIDER_GOOGLE}
         style={styles.map}
         region={mapRegion}
         mapPadding={{ top: openHeader ? 190 : 90 , right: 10, bottom: 0, left: 0 }}

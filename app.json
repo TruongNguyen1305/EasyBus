@@ -22,7 +22,7 @@
     ],
     "updates": {
       "fallbackToCacheTimeout": 0,
-      "url": "https://u.expo.dev/ce517a2c-5620-4b40-b2b8-028ceab331f6"
+      "url": "https://u.expo.dev/3d6f9613-aabb-48ea-ae3d-e4c15d0d8a98"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -30,6 +30,9 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.nam693.easybus",
+      "config": {
+        "googleMapsApiKey": "AIzaSyBwxO-IovIwke9fWAhf3h8BPShNsFp_lk8"
+      },
       "infoPlist": {
         "LSApplicationQueriesSchemes": [
           "momo"
@@ -41,7 +44,17 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.nam693.easybus"
+      "package": "com.nam693.easybus",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBwxO-IovIwke9fWAhf3h8BPShNsFp_lk8"
+        }
+      },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -51,7 +64,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "2deef80b-54a6-47c8-8431-304ba89d373c"
+        "projectId": "3d6f9613-aabb-48ea-ae3d-e4c15d0d8a98"
       }
     }
   }
