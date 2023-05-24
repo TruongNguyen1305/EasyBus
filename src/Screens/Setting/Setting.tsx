@@ -10,9 +10,9 @@ import { LOGOUT } from "@/Store/reducers";
 import { RootStackParamList } from "@/Navigation";
 import { RootScreens } from "..";
 import { CompositeScreenProps } from "@react-navigation/native";
-import { useEffect } from "react";
-import { Button, ScrollView } from "native-base";
+import { ScrollView } from "native-base";
 import { User } from "@/Services";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 type SettingScreenNavigationProps = NativeStackScreenProps<
     SettingStackParamList,
@@ -117,7 +117,7 @@ export function Setting({ route, navigation }: SettingScreenProps) {
                             
                         <TouchableOpacity style={styles.settingItem}
                             onPress={() => {
-                                navigation.navigate(RootScreens.AUTH)
+                                navigation.navigate('InfoApp')
                             }}>
                             <View style={{ flexDirection: "row", alignItems: 'center' }}>
                                 <Icon name="information-circle" size={24} color="black" />
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         alignSelf: 'center',
         zIndex: 1,
-        top: Dimensions.get('window').width / 3.5 + 1,
+        top: Dimensions.get('window').width / 3.5 - 35 + getStatusBarHeight(),
         justifyContent: 'center',
         alignItems: 'center'
     },

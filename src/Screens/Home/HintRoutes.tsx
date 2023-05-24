@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { Hint } from "@/Components/Home/Hint";
 import { Spinner } from "native-base";
 import axios from "axios";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 type HintRoutesNavigationProps = NativeStackScreenProps<
     HomeStackParamList,
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: Dimensions.get('window').width - 40,
         position: 'absolute',
-        top: 110,
+        top: Dimensions.get('window').width / 3.5 - 30 + getStatusBarHeight(),
         alignSelf: 'center',
         backgroundColor: 'white',
         borderRadius: 5,
@@ -190,7 +191,7 @@ const styles = StyleSheet.create({
     },
     hintsContainer: {
         marginTop: 5,
-        paddingVertical: 155,
+        paddingVertical: 148,
         width: Dimensions.get('window').width,
         alignSelf: 'center',
     },

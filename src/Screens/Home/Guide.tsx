@@ -14,6 +14,7 @@ import { Platform } from "react-native";
 import * as Location from 'expo-location'
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import { useIsFocused } from "@react-navigation/native";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 
 type GuideNavigationProps = NativeStackScreenProps<
@@ -370,7 +371,7 @@ const styles = StyleSheet.create({
         zIndex: 10,
         position: 'absolute',
         left: 15,
-        top: Dimensions.get('window').width / 3.5 + 80,
+        top: Dimensions.get('window').width / 3.5 + getStatusBarHeight() + 60,
         borderRadius: 20,
     },
     modal: {

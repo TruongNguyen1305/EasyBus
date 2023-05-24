@@ -15,6 +15,7 @@ import BusSearchItem from "@/Components/Home/BusSearchItem";
 import { useAppDispatch, useAppSelector } from "@/Hooks/redux";
 import { CLEAR_HISTORY, UPDATE_HISTORY } from "@/Store/reducers";
 import * as Location from 'expo-location';
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 
 type FindRouteNavigationProps = NativeStackScreenProps<
@@ -407,7 +408,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: Dimensions.get('window').width - 40,
         position: 'absolute',
-        top: 110,
+        top: Dimensions.get('window').width / 3.5 - 30 + getStatusBarHeight(),
         alignSelf: 'center',
         backgroundColor: 'white',
         borderRadius: 5,
