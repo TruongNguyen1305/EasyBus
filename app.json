@@ -12,6 +12,14 @@
       "backgroundColor": "#ffffff"
     },
     "scheme": "easybus",
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ]
+    ],
     "updates": {
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/ce517a2c-5620-4b40-b2b8-028ceab331f6"
