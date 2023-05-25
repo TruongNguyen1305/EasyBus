@@ -323,7 +323,7 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
                                 <Callout
                                     style={{justifyContent: 'center', alignItems: 'center'}}
                                 >
-                                    <Text style={{fontSize: FontSize.BUTTON_SMALL, fontWeight: FontWeight.BUTTON_SMALL}}>{stop.Name}</Text>
+                                    <Text style={{fontSize: FontSize.BUTTON_SMALL, fontWeight: FontWeight.BUTTON_SMALL, width: 100}}>{stop.Name}</Text>
                                 </Callout>
                             </Marker>
                         )
