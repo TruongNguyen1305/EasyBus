@@ -131,7 +131,6 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         region={mapRegion}
-        provider={PROVIDER_GOOGLE}
         mapPadding={{ top: openHeader ? 140 : 50 , right: 10, bottom: 0, left: 0 }}
         onRegionChange={
           useCallback(
@@ -280,7 +279,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
         </TouchableOpacity>
         )
       }
-      <Text style={{fontSize: 11, color: '#999', top: openHeader ? 32 : 10, textAlign:'center'}}>Nhấn vào trạm dừng trên bản đồ để xem thông tin.</Text>
+      <Text style={{ fontSize: 11, color: '#999', top: openHeader ? 150 - (Dimensions.get('window').width / 3.5) : 10, textAlign:'center'}}>Nhấn vào trạm dừng trên bản đồ để xem thông tin.</Text>
 
 
       <Modal isOpen={modal.isOpen} onClose={() => setModal({ isOpen: false, data: initialStation })}

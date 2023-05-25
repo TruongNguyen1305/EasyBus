@@ -333,7 +333,7 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                             )       
                         }
                         {resultData.length == 0 && ((isStartInputFocused && startInput != "") || (!isStartInputFocused && targetInput != "")) ? 
-                                <Text>Không tìm thấy địa điểm thoả mãn</Text>
+                                <Text style={{padding: 5}}>Không tìm thấy địa điểm thoả mãn</Text>
                                 :
                                 (
                                     <View style={{ maxHeight: resultData.length == 0 ? 10 : 300 }} >
