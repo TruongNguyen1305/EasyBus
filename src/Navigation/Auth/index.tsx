@@ -4,6 +4,7 @@ import React, {useEffect} from 'react'
 
 import { Login } from '@/Screens/Auth/Login'
 import  Signup  from '@/Screens/Auth/Signup'
+import { StatusBar } from 'native-base'
 
 
 export type AuthStackParamList = {

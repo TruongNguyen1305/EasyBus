@@ -179,6 +179,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         margin: 20,
         marginTop: 60,
+        flex: 1,
     },
     title: {
         fontSize: 18,
