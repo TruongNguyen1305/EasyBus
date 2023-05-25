@@ -146,34 +146,34 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
           )
         }
         showsUserLocation={true}
-        // customMapStyle={
-        //   [
-        //   {
-        //     "featureType": "poi.business",
-        //     "stylers": [
-        //       {
-        //         "visibility": "off"
-        //       }
-        //     ]
-        //   },
-        //   {
-        //     "featureType": "transit.station",
-        //     "stylers": [
-        //       {
-        //         "visibility": "off"
-        //       }
-        //     ]
-        //   },
-        //   {
-        //     "featureType": "transit.station",
-        //     "elementType": "geometry",
-        //     "stylers": [
-        //       {
-        //         "visibility": "off"
-        //       }
-        //     ]
-        //   },
-        // ]}
+        customMapStyle={
+          [
+          {
+            "featureType": "poi.business",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "transit.station",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "transit.station",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+        ]}
       >
         {
           dataBusStop.map((item, index) => {

@@ -249,42 +249,42 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
                         }, 1000, { trailing: true, leading: false })
                 }
                 showsUserLocation={true}
-                // customMapStyle={[
-                //     {
-                //         "featureType": "poi.business",
-                //         "stylers": [
-                //             {
-                //                 "visibility": "off"
-                //             }
-                //         ]
-                //     },
-                //     {
-                //         "featureType": "transit.station",
-                //         "stylers": [
-                //             {
-                //                 "visibility": "off"
-                //             }
-                //         ]
-                //     },
-                //     {
-                //         "featureType": "transit.station",
-                //         "elementType": "geometry",
-                //         "stylers": [
-                //             {
-                //                 "visibility": "off"
-                //             }
-                //         ]
-                //     },
-                //     {
-                //         "featureType": "transit.station",
-                //         "elementType": "geometry.fill",
-                //         "stylers": [
-                //             {
-                //                 "color": "#dfd2ae"
-                //             }
-                //         ]
-                //     }
-                // ]}
+                customMapStyle={[
+                    {
+                        "featureType": "poi.business",
+                        "stylers": [
+                            {
+                                "visibility": "off"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "transit.station",
+                        "stylers": [
+                            {
+                                "visibility": "off"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "transit.station",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {
+                                "visibility": "off"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "transit.station",
+                        "elementType": "geometry.fill",
+                        "stylers": [
+                            {
+                                "color": "#dfd2ae"
+                            }
+                        ]
+                    }
+                ]}
             >
                 {route.params.data.stops.map((stop: any, index: number) => {
                     if(index === 0){
