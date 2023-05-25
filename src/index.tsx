@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import * as Localization from "expo-localization";
 import { i18n, Language } from "@/Localization";
-import { NativeBaseProvider } from "native-base";
+import { NativeBaseProvider, StatusBar } from "native-base";
 import { store, persistor } from "@/Store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
@@ -41,6 +41,7 @@ export default function App() {
     <NativeBaseProvider>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
+          <StatusBar hidden={true} />
           <ApplicationNavigator />
         </PersistGate>
       </Provider>

@@ -1,6 +1,6 @@
 import { i18n, LocalizationKey } from "@/Localization";
 import React, {useCallback, useEffect, useState} from "react";
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, FlatList, Alert } from "react-native";
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, FlatList, Alert, StatusBar } from "react-native";
 import { User, useUpdateFavouriteMutation } from "@/Services";
 import { Icon } from "@/Theme/Icon/Icon";
 import { HomeStackParamList } from "./HomeContainer";
@@ -122,11 +122,16 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
 
   return (
     <View style={styles.container}>
+      <StatusBar
+        backgroundColor="#DDEEF9"
+        barStyle={"dark-content"}
+        hidden={false}
+      />
     <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         region={mapRegion}
-        mapPadding={{ top: openHeader ? 190 : 90 , right: 10, bottom: 0, left: 0 }}
+        mapPadding={{ top: openHeader ? 140 : 50 , right: 10, bottom: 0, left: 0 }}
         onRegionChange={
           useCallback(
             debounce(
@@ -258,7 +263,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
             zIndex: 6, alignItems: 'center', position: 'absolute',
             justifyContent: 'center', width: 40, height: 40,
             borderRadius: 40, backgroundColor: Colors.PRIMARY40,
-            top: 36, right: 0,
+            top: 0, right: 0,
             margin: 10,
             marginRight: 20,
           }}
@@ -426,7 +431,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 5,
     position: 'absolute', 
-    top: 74 + getStatusBarHeight(),
+    top: 74 ,
     backgroundColor: "white", height: 70,
     alignSelf: 'center',
     shadowColor: "#000",

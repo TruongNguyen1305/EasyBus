@@ -12,7 +12,6 @@ import { useAppDispatch } from "@/Hooks/redux";
 import { useUpdateProfileMutation } from "@/Services";
 import { UPDATEUSER } from "@/Store/reducers";
 import Spinner from "react-native-loading-spinner-overlay/lib";
-import { getStatusBarHeight } from "react-native-status-bar-height";
 
 type EditProfileScreenNavigationProps = NativeStackScreenProps<
     SettingStackParamList,
@@ -208,7 +207,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         alignSelf: 'center',
         zIndex: 1,
-        top: Dimensions.get('window').width / 3.5 - 35 + getStatusBarHeight(),
+        top: Dimensions.get('window').width / 3.5 - 35,
         justifyContent: 'center',
         alignItems: 'center'
     },

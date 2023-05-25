@@ -5,6 +5,7 @@ import { Intro } from "@/Screens/Welcome/Intro";
 import { useAppSelector } from "@/Hooks/redux";
 import { RootStackParamList } from "..";
 import { RootScreens } from "@/Screens";
+import { StatusBar } from "native-base";
 
 
 export type WelcomeStackParamList = {

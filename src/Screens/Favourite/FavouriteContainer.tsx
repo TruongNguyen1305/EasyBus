@@ -193,7 +193,7 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
                 height: 60,
                 width:'100%',
                 position: 'absolute',
-                top: Dimensions.get('window').width / 3.5 + getStatusBarHeight(),
+                top: Dimensions.get('window').width / 3.5 - 20,
                 shadowOffset: {
                     width: 0,
                     height: 5,
