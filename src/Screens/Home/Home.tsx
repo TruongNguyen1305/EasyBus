@@ -257,8 +257,6 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
                 <Text style={[styles.tbuttonsm, {marginTop: 6}]}>Tra cứu</Text>
               </TouchableOpacity>
             </View>
-
-
           </>
         ) : (
           <TouchableOpacity style={{
@@ -279,9 +277,8 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
         </TouchableOpacity>
         )
       }
-      <Text style={{ fontSize: 11, color: '#999', top: openHeader ? 150 - (Dimensions.get('window').width / 3.5) : 10, textAlign:'center'}}>Nhấn vào trạm dừng trên bản đồ để xem thông tin.</Text>
 
-
+      <Text style={{ fontSize: 11, color: '#999', top: openHeader ? 145 - (Dimensions.get('window').width / 3.5) : 5, textAlign:'center'}}>Nhấn vào trạm dừng trên bản đồ để xem thông tin.</Text>
       <Modal isOpen={modal.isOpen} onClose={() => setModal({ isOpen: false, data: initialStation })}
         avoidKeyboard justifyContent="flex-end"
         bottom="4" size="lg">
@@ -389,7 +386,6 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
                       <Busstop name={item.Name} address={item.AddressNo}
                         buslist={item.Routes}
                         street={item.Street} zone={item.Zone}
-                        onPressHeart={() => console.log('haha')}
                       />
                     </TouchableOpacity>
                   )}
@@ -430,7 +426,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.BUTTON_NORMAL,
     fontWeight: FontWeight.BUTTON_NORMAL,
   },
-   options: {
+  options: {
     zIndex: 10, flexDirection: 'row',
     width: Dimensions.get('window').width - 40,
     justifyContent: 'center',
