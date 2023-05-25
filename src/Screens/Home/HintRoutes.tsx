@@ -196,6 +196,6 @@ const styles = StyleSheet.create({
 
     hints: {
         paddingHorizontal: 20,
-        marginBottom: 110,
+        marginBottom: 100,
     }
 })

@@ -134,6 +134,7 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
     
     return ( 
         <View style={styles.container}> 
+        
             <Header cover={Status.COVER1} leftTitle="Back" leftIconName="back" logoShow navigation={navigation}/>
             <View style={styles.modalContainer}>
                 <View style={styles.modalHeader}>
@@ -189,7 +190,7 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                         </View>
                         {
                             resultData.length == 0 && input !== "" && (
-                                <Text style={{marginTop: 20}}>Không tìm thấy tuyến xe thoã mãn!</Text>
+                                <Text style={{marginTop: 20}}>Không tìm thấy tuyến xe thoả mãn!</Text>
                             )
                         }
                         <ScrollView
@@ -333,7 +334,7 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                             )       
                         }
                         {resultData.length == 0 && ((isStartInputFocused && startInput != "") || (!isStartInputFocused && targetInput != "")) ? 
-                                <Text>Không tìm thấy địa điểm thoả mãn</Text>
+                                <Text style={{padding: 5}}>Không tìm thấy địa điểm thoả mãn</Text>
                                 :
                                 (
                                     <View style={{ maxHeight: resultData.length == 0 ? 10 : 300 }} >

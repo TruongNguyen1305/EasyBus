@@ -9,6 +9,8 @@ import BusSearchItem from '@/Components/Home/BusSearchItem'
 import { useAppDispatch, useAppSelector } from '@/Hooks/redux'
 import { useUpdateFavouriteMutation } from '@/Services'
 import { CHANGE_FAVOURITE } from '@/Store/reducers'
+import { FontSize, FontWeight } from '@/Theme/Variables'
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
 type InfoBusNavigationProps = NativeStackScreenProps<
     HomeStackParamList,
@@ -19,28 +21,17 @@ export default function InfoBus({ route, navigation }: InfoBusNavigationProps) {
     const user = useAppSelector(state => state.user.user)
     const [data, setData] = useState<any>()
     const [fetch] = useUpdateFavouriteMutation()
+    const [loading, setLoading] = useState(true)
     const dispatch = useAppDispatch()
 
     const handleClickHeartStation = async (RouteNo: string) => {
         if (user.id != '') {
-            // if (loading.clickLike) {
-            //     Alert.alert(
-            //         'Thông báo',
-            //         'Bạn đã thực hiện thao tác này quá nhanh, vui lòng thử lại trong giây lát.',
-            //         [
-            //           { text: 'OK', style: 'cancel' },
-            //         ],
-            //     )
-            //     return
-            // }
-            // loading.clickLike = true
             fetch({ route: 'bus', id: RouteNo + '' }).unwrap()
             .then(res => {
                 const payload = { station: user.favouriteStation, bus: res }
                 dispatch(CHANGE_FAVOURITE(payload))
             })
             .catch(err => console.log(err))
-            // loading.clickLike = false
         }
         else {
             Alert.alert(
@@ -55,7 +46,11 @@ export default function InfoBus({ route, navigation }: InfoBusNavigationProps) {
 
     useEffect(() => {
         axios.get(`http://apicms.ebms.vn/businfo/getroutebyid/${route.params.data}`)
-            .then(res => setData(res.data))
+            .then(res => { 
+                setData(res.data)
+                setLoading(false)
+            }
+            )
             .catch(err => console.log(err))
     }, [])
     
@@ -65,13 +60,25 @@ export default function InfoBus({ route, navigation }: InfoBusNavigationProps) {
         <View style = {{position:'relative'}}>
             <Header cover={Status.COVER1} leftTitle="Back" leftIconName="back" logoShow navigation={navigation}/>
         </View>
-
+        <Spinner
+                //visibility of Overlay Loading Spinner
+                visible={loading}
+                //Text with the Spinner
+                textContent={'Loading...'}
+                //Text style of the Spinner Text
+                textStyle={{
+                    fontSize: FontSize.HEADLINE2,
+                    fontWeight: FontWeight.HEADLINE2,
+                    color: 'white'
+                }}
+            />
         <View style={{
             zIndex: 10, flexDirection: 'row',
             width: Dimensions.get('window').width - 40,
             justifyContent: 'center',
             borderRadius: 5,
-            position: 'absolute', top: 110,
+            position: 'absolute',
+            top: 74,
             backgroundColor: "white", height: 70,
             alignSelf: 'center',
             shadowColor: "#000",
@@ -194,7 +201,6 @@ const styles = StyleSheet.create({
     container: {
         margin: 30,
         marginTop: 50,
-        // paddingBottom: 30,
         marginBottom: 30,
     },
     header: {
@@ -212,7 +218,3 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     }
 })
-
-function dispatch(arg0: any) {
-    throw new Error('Function not implemented.')
-}
