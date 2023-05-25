@@ -42,17 +42,12 @@
       ],
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyBwxO-IovIwke9fWAhf3h8BPShNsFp_lk8"
+          "apiKey": "AIzaSyDc7PnOq3Hxzq6dxeUVaY8WGLHIePl0swY"
         }
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "ce517a2c-5620-4b40-b2b8-028ceab331f6"
-      }
     }
   }
 }

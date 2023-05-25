@@ -5,7 +5,7 @@ import { User, useUpdateFavouriteMutation } from "@/Services";
 import { Icon } from "@/Theme/Icon/Icon";
 import { HomeStackParamList } from "./HomeContainer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import MapView, {Callout, Marker, Polyline} from 'react-native-maps';
+import MapView, {Callout, Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import { Colors, FontSize, FontWeight } from "@/Theme/Variables";
 import { Divider, Pressable, ScrollView, Modal, Spinner } from 'native-base';
 import Header from "@/Components/Header";
@@ -130,6 +130,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
     <MapView
         style={styles.map}
         region={mapRegion}
+        provider={PROVIDER_GOOGLE}
         mapPadding={{ top: openHeader ? 140 : 50 , right: 10, bottom: 0, left: 0 }}
         onRegionChange={
           useCallback(
@@ -196,6 +197,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
                       <Text style={{fontSize: 13, fontWeight: '700'}}>{item.StopId} - {item.Name}</Text>  
                       <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
                       <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes != '' ? item.Routes : 'Tạm dừng khai thác'}</Text>
+                      <Text style={{fontSize: 10, color: Colors.PRIMARY40}}>Nhấn vào đây để xem thêm thông tin.</Text>
                   </Callout>
                 </Marker>
                 )
@@ -218,6 +220,7 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
                     <Text style={{fontSize: 13, fontWeight: '700'}}>{item.StopId} - {item.Name}</Text>  
                     <Text style={{fontSize: 11}}>{item.AddressNo}, {item.Street}, {item.Zone}</Text> 
                     <Text style={{fontSize: 12, fontWeight: '600'}}>Tuyến xe: {item.Routes != '' ? item.Routes : 'Tạm dừng khai thác'}</Text>
+                    <Text style={{fontSize: 10, color: Colors.PRIMARY40}}>Nhấn vào đây để xem thêm thông tin.</Text>
                 </Callout>
               </Marker>
               )
@@ -250,10 +253,12 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
               </View>
 
               <TouchableOpacity style={{ width: '45%', alignItems: 'center', justifyContent: 'center' }} onPress={() => navigation.navigate('FindRoute', {status: 'LookUp'})}>
-          <Icon name = 'magnifying' size={24} color={Colors.PRIMARY40} />
-          <Text style={[styles.tbuttonsm, {marginTop: 6}]}>Tra cứu</Text>
-        </TouchableOpacity>
+                <Icon name = 'magnifying' size={24} color={Colors.PRIMARY40} />
+                <Text style={[styles.tbuttonsm, {marginTop: 6}]}>Tra cứu</Text>
+              </TouchableOpacity>
             </View>
+
+
           </>
         ) : (
           <TouchableOpacity style={{
@@ -274,6 +279,9 @@ export const Home = ({ route, navigation }: HomeScreenNavigationProps) => {
         </TouchableOpacity>
         )
       }
+      <Text style={{fontSize: 11, color: '#999', top: openHeader ? 32 : 10, textAlign:'center'}}>Nhấn vào trạm dừng trên bản đồ để xem thông tin.</Text>
+
+
       <Modal isOpen={modal.isOpen} onClose={() => setModal({ isOpen: false, data: initialStation })}
         avoidKeyboard justifyContent="flex-end"
         bottom="4" size="lg">
@@ -422,7 +430,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.BUTTON_NORMAL,
     fontWeight: FontWeight.BUTTON_NORMAL,
   },
-  options: {
+   options: {
     zIndex: 10, flexDirection: 'row',
     width: Dimensions.get('window').width - 40,
     justifyContent: 'center',
