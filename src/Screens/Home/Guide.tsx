@@ -10,7 +10,7 @@ import { FontSize, FontWeight, Colors } from "@/Theme/Variables";
 import { StartMarker, TargetMarker } from "@/Theme/Marker/Marker";
 import { debounce } from "lodash";
 import { Float } from "react-native/Libraries/Types/CodegenTypes";
-import { Platform } from "react-native";
+import { Platform, Image} from "react-native";
 import * as Location from 'expo-location'
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import { useIsFocused } from "@react-navigation/native";
@@ -179,7 +179,7 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
                     zIndex: 6, alignItems: 'center', position: 'absolute',
                     justifyContent: 'center', width: 40, height: 40,
                     borderRadius: 40, backgroundColor: Colors.PRIMARY40,
-                    top: 36, right: 0,
+                    top: 0, right: 0,
                     margin: 10,
                     marginRight: 20,
                     }}
@@ -208,7 +208,7 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
 
             <Button
                 backgroundColor={isFinding ? Colors.RED60 : Colors.PRIMARY60}
-                style={[styles.btn, {top: openHeader ? Dimensions.get('window').width / 3.5 + getStatusBarHeight() + 20 : getStatusBarHeight() }]}
+                style={[styles.btn, {top: openHeader ? Dimensions.get('window').width / 3.5 + 20 : 20 }]}
                 leftIcon={
                     isFinding ? <Icon name="pause" size={20} color="white" /> : <Icon name="location-arrow" size={20} color="white" />
                 }
@@ -237,7 +237,7 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
                 provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                 style={styles.map}
                 region={mapRegion}
-                mapPadding={{ top: openHeader ? 10 : 90 , right: 10, bottom: 0, left: 0 }}
+                mapPadding={{ top: openHeader ? 10 : 50 , right: 10, bottom: 0, left: 0 }}
                 onRegionChange={
                     debounce(
                         (region, details) => {
@@ -314,8 +314,12 @@ export function Guide({ route, navigation }: GuideNavigationProps) {
                                     longitude: stop.Lng,
                                 }}
                                 tracksViewChanges={false}
-                                image={require('@/../assets/image/markicon-bus_liked.png')}
                             >
+                                <Image
+                                    source={require('@/../assets/image/markicon-bus_liked.png')}
+                                    style={{ width: 20, height: 20 }}
+                                    resizeMode="contain"
+                                />
                                 <Callout
                                     style={{justifyContent: 'center', alignItems: 'center'}}
                                 >
