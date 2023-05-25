@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import { Hint } from "@/Components/Home/Hint";
 import { Spinner } from "native-base";
 import axios from "axios";
-import { getStatusBarHeight } from "react-native-status-bar-height";
 
 type HintRoutesNavigationProps = NativeStackScreenProps<
     HomeStackParamList,

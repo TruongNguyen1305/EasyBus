@@ -12,9 +12,17 @@
       "backgroundColor": "#ffffff"
     },
     "scheme": "easybus",
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ]
+    ],
     "updates": {
       "fallbackToCacheTimeout": 0,
-      "url": "https://u.expo.dev/ce517a2c-5620-4b40-b2b8-028ceab331f6"
+      "url": "https://u.expo.dev/3d6f9613-aabb-48ea-ae3d-e4c15d0d8a98"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -22,6 +30,9 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.nam693.easybus",
+      "config": {
+        "googleMapsApiKey": "AIzaSyBwxO-IovIwke9fWAhf3h8BPShNsFp_lk8"
+      },
       "infoPlist": {
         "LSApplicationQueriesSchemes": [
           "momo"

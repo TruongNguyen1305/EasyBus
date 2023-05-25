@@ -10,7 +10,7 @@ import Busstop from "@/Components/Home/Busstop";
 import { TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { debounce, set } from "lodash";
+import { debounce } from "lodash";
 import BusSearchItem from "@/Components/Home/BusSearchItem";
 import { useAppDispatch, useAppSelector } from "@/Hooks/redux";
 import { CLEAR_HISTORY, UPDATE_HISTORY } from "@/Store/reducers";
