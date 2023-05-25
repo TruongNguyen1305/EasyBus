@@ -6,12 +6,14 @@ import { Colors } from '@/Theme/Variables';
 interface IBusSearch {
     busNo: string;
     busName: string;
+    busID: string;
     onClickHeart?: () => void
 }
 
 export default function BusSearchItem(props: IBusSearch) {
     const user = useAppSelector(state => state.user.user)
-    console.log(user)
+    console.log(user.favouriteBus)
+    console.log(user.favouriteBus.includes(props.busID+''))
     return (
         <View style={{
             flexDirection: 'row',
@@ -30,25 +32,48 @@ export default function BusSearchItem(props: IBusSearch) {
                 }}>{props.busName}
                 </Text>
             </View>
+            
             {
-                user.favouriteBus.includes(props.busNo) ?
-                <TouchableOpacity
-                    onPress = {() => props.onClickHeart && props.onClickHeart()}
-                >
-                    <View style={{position:'relative', top: 12}}>
-                    <Icon name='heart' size={22} color={Colors.PRIMARY40} />
-                    </View>
-                    <View style={{top:-12}}>
-                    <Icon name='heart-o' size={24} color={'#262626'} />
-                    </View>
-                </TouchableOpacity>
-              :
-                <TouchableOpacity 
-                    onPress = {() => props.onClickHeart && props.onClickHeart()}
-              >
-                <Icon name='heart-o' size={23} color='black' />
-              </TouchableOpacity>
+                user.favouriteBus.includes(props.busID+'') ?
+                    (
+                        props.onClickHeart ?
+                        <TouchableOpacity
+                            onPress = {() => props.onClickHeart && props.onClickHeart()}
+                        >
+                            <View style={{position:'relative', top: 12}}>
+                            <Icon name='heart' size={22} color={Colors.PRIMARY40} />
+                            </View>
+                            <View style={{top:-12}}>
+                            <Icon name='heart-o' size={24} color={'#262626'} />
+                            </View>
+                        </TouchableOpacity>
+                        :
+                        <View>
+                            <View style={{position:'relative', top: 12}}>
+                            <Icon name='heart' size={22} color={Colors.PRIMARY40} />
+                            </View>
+                            <View style={{top:-12}}>
+                            <Icon name='heart-o' size={24} color={'#262626'} />
+                            </View>
+                        </View>
+                    )
+                    : (
+                        props.onClickHeart ? 
+                        <TouchableOpacity
+                            onPress = {() => props.onClickHeart && props.onClickHeart()}
+                        >
+                            <Icon name='heart-o' size={23} color='black' />
+                        </TouchableOpacity>
+                            :
+                        <View>
+                            <Icon name='heart-o' size={23} color='black' />
+                        </View>    
+                    )
             }
+
+
+
+
         </View>
     )
 }

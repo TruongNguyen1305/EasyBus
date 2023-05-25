@@ -15,7 +15,6 @@ import BusSearchItem from "@/Components/Home/BusSearchItem";
 import { useAppDispatch, useAppSelector } from "@/Hooks/redux";
 import { CLEAR_HISTORY, UPDATE_HISTORY } from "@/Store/reducers";
 import * as Location from 'expo-location';
-import { getStatusBarHeight } from "react-native-status-bar-height";
 
 
 type FindRouteNavigationProps = NativeStackScreenProps<
@@ -134,6 +133,7 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
     
     return ( 
         <View style={styles.container}> 
+        
             <Header cover={Status.COVER1} leftTitle="Back" leftIconName="back" logoShow navigation={navigation}/>
             <View style={styles.modalContainer}>
                 <View style={styles.modalHeader}>
@@ -189,7 +189,7 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                         </View>
                         {
                             resultData.length == 0 && input !== "" && (
-                                <Text style={{marginTop: 20}}>Không tìm thấy tuyến xe thoã mãn!</Text>
+                                <Text style={{marginTop: 20}}>Không tìm thấy tuyến xe thoả mãn!</Text>
                             )
                         }
                         <ScrollView
@@ -210,7 +210,7 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                                             navigation.navigate('BusInfo', {data: item.RouteId})
                                         }}
                                     >
-                                        <BusSearchItem busName={item.RouteName} busNo={item.RouteNo} />
+                                        <BusSearchItem busName={item.RouteName} busNo={item.RouteNo} busID={item.RouteId} />
                                         {
                                             index != historySearch.length - 1 && <Divider marginTop={4} />
                                         }
@@ -228,7 +228,7 @@ export function FindRoute({ route, navigation }: FindRouteNavigationProps) {
                                             navigation.navigate('BusInfo', {data: item.RouteId})
                                         }}
                                     >
-                                        <BusSearchItem busName={item.RouteName} busNo={item.RouteNo} />
+                                        <BusSearchItem busName={item.RouteName} busNo={item.RouteNo} busID={item.RouteId} />
                                         {
                                             index != resultData.length - 1 && <Divider marginTop={4} />
                                         }

@@ -60,12 +60,9 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "runtimeVersion": {
-      "policy": "sdkVersion"
-    },
     "extra": {
       "eas": {
-        "projectId": "3d6f9613-aabb-48ea-ae3d-e4c15d0d8a98"
+        "projectId": "ce517a2c-5620-4b40-b2b8-028ceab331f6"
       }
     }
   }

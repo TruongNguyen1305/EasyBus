@@ -98,9 +98,18 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
         }
     }
     const handleClickHeartBus = async (BusID: string) => {
-        console.log('aloo')
         setLoading({...loading, clickLikeBus: true})
         if (user.id != '') {
+            if (loading.clickLike) { 
+                Alert.alert(
+                    'Thông báo',
+                    'Bạn đã thực hiện thao tác này quá nhanh, vui lòng thử lại trong giây lát.',
+                    [
+                      { text: 'OK', style: 'cancel' },
+                    ],
+                )
+                return
+            }
             fetch({ route: 'bus', id: BusID + '' }).unwrap()
             .then(res => {
                 const payload = { station: user.favouriteStation, bus: res }
@@ -241,13 +250,14 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
                 screen == Screen.STATION ?
                     <ScrollView style={{
                         margin: 30,
-                        marginTop: 30,
                         paddingTop: 20,
-                        marginBottom: 60,
+                        marginBottom: 110,
                     }}
                     showsVerticalScrollIndicator = {false}
                     >
-                        
+                        <View>
+                            
+                        </View>
                         {
                             loading.station ? 
                                 Array(4).fill(0).map((item, index) => (
@@ -259,7 +269,7 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
                                         mb={3}
                                         key={index}
                                         >
-                                            <Skeleton h="6" />
+                                            <Skeleton h="6"  />
                                             <View style={{flexDirection:'row'}}>
                                                 <Skeleton.Text px="4" my={2} w={'80%'} lines={1} ml={4} marginTop={0} />
                                                 <View>
@@ -280,7 +290,7 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
                                         </View>
                                     :
                                     station.map((item, index) => (
-                                    <View key={index}>
+                                    <View key={index} style={{marginBottom: index == station.length - 1 ? 50 : 0}}>
                                         <Busstop name={item.Name} address={item.AddressNo}
                                             buslist={item.Routes} street={item.Street} zone={item.Zone}
                                             onPressHeart={() => handleClickHeartStation(item.StopId+'')}    
@@ -289,7 +299,6 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
                                     )
                             ))
                         }
-                         
                     </ScrollView>
                 :
                     <ScrollView style={{
@@ -306,13 +315,15 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
                                 </View>
                             : 
                             
-                            bus.map((item, index) => (
-                                <Bus RouteName={item.RouteName} RouteNo={item.RouteNo}
-                                    OperationTime={item.OperationTime} TimeOfTrip={item.TimeOfTrip}
-                                    Distance={item.Distance} Headway={item.Headway} key={index}
-                                    Tickets={getFareTickets(item.Tickets)}
-                                    onPressHeart={() => handleClickHeartBus(item.RouteId+'')}
-                                />
+                                bus.map((item, index) => (
+                                <View key={index} style={{ marginBottom: index == bus.length - 1 ? 100 : 0 }}>
+                                    <Bus RouteName={item.RouteName} RouteNo={item.RouteNo}
+                                        OperationTime={item.OperationTime} TimeOfTrip={item.TimeOfTrip}
+                                        Distance={item.Distance} Headway={item.Headway} key={index}
+                                        Tickets={getFareTickets(item.Tickets)}
+                                        onPressHeart={() => handleClickHeartBus(item.RouteId+'')}
+                                    />
+                                </View>
                             ))
                         }                        
                     </ScrollView>    

@@ -10,7 +10,7 @@ interface IBusstopProps {
     buslist: string;
     street: string;
     zone: string;
-    onPressHeart: () => void;
+    onPressHeart?: () => void;
 }
 
 export default function Busstop(props: IBusstopProps) {
@@ -36,11 +36,14 @@ export default function Busstop(props: IBusstopProps) {
                             {props.address}, {props.street}, {props.zone}
                         </Text>
                     </View>
-                        <TouchableOpacity style={{ width: '10%', margin: 4 }}
-                            onPress={props.onPressHeart}
-                        >
-                            <Icon name='heart' size = {22} color = {Colors.PRIMARY40} />
-                        </TouchableOpacity>     
+                        {
+                            props.onPressHeart &&
+                            <TouchableOpacity style={{ width: '10%', margin: 4 }}
+                                onPress={props.onPressHeart}
+                            >
+                                <Icon name='heart' size = {22} color = {Colors.PRIMARY40} />
+                            </TouchableOpacity>     
+                        }
                 </View>
                     
 
