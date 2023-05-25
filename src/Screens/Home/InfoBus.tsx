@@ -45,6 +45,7 @@ export default function InfoBus({ route, navigation }: InfoBusNavigationProps) {
     }
 
     useEffect(() => {
+        console.log(route.params.data)
         axios.get(`http://apicms.ebms.vn/businfo/getroutebyid/${route.params.data}`)
             .then(res => { 
                 setData(res.data)
@@ -91,9 +92,9 @@ export default function InfoBus({ route, navigation }: InfoBusNavigationProps) {
             elevation: 5,
         }}>
             {
-                data && <BusSearchItem busNo={data.RouteNo} busName={data.RouteName} onClickHeart={() => {
-                    handleClickHeartStation(data.RouteNo)
-               }} />
+                data && <BusSearchItem busID={data.RouteId} busNo={data.RouteNo} busName={data.RouteName} onClickHeart={() => {
+                    handleClickHeartStation(data.RouteId)
+                }}  />
             }
         </View>
         
@@ -120,7 +121,7 @@ export default function InfoBus({ route, navigation }: InfoBusNavigationProps) {
                     <Text style={styles.header}>Mã số tuyến:    
                     </Text>
                         <Text style={styles.content}>
-                        {data.RouteId}
+                        {data.RouteNo}
                     </Text>
                 </View>
 

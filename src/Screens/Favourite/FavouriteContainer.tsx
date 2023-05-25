@@ -98,9 +98,18 @@ export default function FavouriteContxainer({ route, navigation } : FavScreenPro
         }
     }
     const handleClickHeartBus = async (BusID: string) => {
-        console.log('aloo')
         setLoading({...loading, clickLikeBus: true})
         if (user.id != '') {
+            if (loading.clickLike) { 
+                Alert.alert(
+                    'Thông báo',
+                    'Bạn đã thực hiện thao tác này quá nhanh, vui lòng thử lại trong giây lát.',
+                    [
+                      { text: 'OK', style: 'cancel' },
+                    ],
+                )
+                return
+            }
             fetch({ route: 'bus', id: BusID + '' }).unwrap()
             .then(res => {
                 const payload = { station: user.favouriteStation, bus: res }
