@@ -6,12 +6,14 @@ import { Colors } from '@/Theme/Variables';
 interface IBusSearch {
     busNo: string;
     busName: string;
+    busID: string;
     onClickHeart?: () => void
 }
 
 export default function BusSearchItem(props: IBusSearch) {
     const user = useAppSelector(state => state.user.user)
-    console.log(user)
+    console.log(user.favouriteBus)
+    console.log(user.favouriteBus.includes(props.busID+''))
     return (
         <View style={{
             flexDirection: 'row',
@@ -32,7 +34,7 @@ export default function BusSearchItem(props: IBusSearch) {
             </View>
             
             {
-                user.favouriteBus.includes(props.busNo) ?
+                user.favouriteBus.includes(props.busID+'') ?
                     (
                         props.onClickHeart ?
                         <TouchableOpacity

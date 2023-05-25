@@ -92,9 +92,9 @@ export default function InfoBus({ route, navigation }: InfoBusNavigationProps) {
             elevation: 5,
         }}>
             {
-                data && <BusSearchItem busNo={data.RouteNo} busName={data.RouteName} onClickHeart={() => {
+                data && <BusSearchItem busID={data.RouteId} busNo={data.RouteNo} busName={data.RouteName} onClickHeart={() => {
                     handleClickHeartStation(data.RouteId)
-               }} />
+                }}  />
             }
         </View>
         
